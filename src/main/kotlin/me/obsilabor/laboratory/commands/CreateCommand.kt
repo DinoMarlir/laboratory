@@ -32,26 +32,23 @@ class CreateCommand : CliktCommand(
     ).default("latest")
 
     override fun run() {
-        println("test")
         mainScope.launch {
-            println("test 2")
             val platform = when(software) {
                 "papermc" -> PaperPlatform
                 else -> throw RuntimeException("Unknown platform $software")
             }
-            println("Resolved $platform")
-            var chosenBuild = build
-            if (chosenBuild == "latest") {
-                val spinner = SpinnerAnimation()
-                spinner.start()
-                chosenBuild = platform.getBuilds().last()
-                spinner.stop()
-            }
             var chosenVersion = version
             if (chosenVersion == "latest") {
-                val spinner = SpinnerAnimation()
+                val spinner = SpinnerAnimation("Resolving minecraft versions for ${platform.name}")
                 spinner.start()
                 chosenVersion = platform.getMcVersions().last()
+                spinner.stop()
+            }
+            var chosenBuild = build
+            if (chosenBuild == "latest") {
+                val spinner = SpinnerAnimation("Resolving ${platform.name} builds")
+                spinner.start()
+                chosenBuild = platform.getBuilds(chosenVersion).last()
                 spinner.stop()
             }
             val jarFile = Architecture.findOrCreateJar(platform, chosenVersion, chosenBuild)

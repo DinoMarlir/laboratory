@@ -15,9 +15,10 @@ object Architecture {
         Templates
     }
 
-    val Live by lazy { getDirectory("live") }
+    val Root by lazy { getDirectory(System.getProperty("user.home") + "/laboratory") }
+    val Live by lazy { getDirectory(Root, "live") }
     val Servers by lazy { getDirectory(Live, "servers") }
-    val Containers by lazy { getDirectory("containers") }
+    val Containers by lazy { getDirectory(Root, "containers") }
     val Platforms by lazy { getDirectory(Containers, "platforms") }
     val Templates by lazy { getDirectory(Containers, "templates") }
 

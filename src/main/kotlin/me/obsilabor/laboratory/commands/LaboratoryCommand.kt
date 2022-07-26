@@ -9,7 +9,8 @@ class LaboratoryCommand : CliktCommand(
 ) {
     init {
         subcommands(
-            CreateCommand()
+            CreateCommand(),
+            ClearCommand()
         )
     }
 

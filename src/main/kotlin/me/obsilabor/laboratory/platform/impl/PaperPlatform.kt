@@ -12,19 +12,12 @@ object PaperPlatform : IPlatform {
     override val name = "papermc"
     override val jarNamePattern = "paper-\$mcVersion-\$build.jar"
 
-    override suspend fun getBuilds(): List<String> {
-        val builds = arrayListOf<String>()
-        val projectInfo = httpClient.get("https://api.papermc.io/v2/projects/paper/").body<ProjectResponse>()
-        for (version in projectInfo.versions) {
-            val versionInfo = httpClient.get("https://api.papermc.io/v2/projects/paper/versions/$version").body<ProjectVersionsResponse>()
-            versionInfo.builds.map { it.toString() }.forEach { builds+=it }
-        }
-        return builds
+    override suspend fun getBuilds(mcVersion: String): List<String> {
+        return httpClient.get("https://api.papermc.io/v2/projects/paper/versions/$mcVersion").body<ProjectVersionsResponse>().builds.map { it.toString() }
     }
 
     override suspend fun getMcVersions(): List<String> {
-        val projectInfo = httpClient.get("https://api.papermc.io/v2/projects/paper/").body<ProjectResponse>()
-        return projectInfo.versions
+        return httpClient.get("https://api.papermc.io/v2/projects/paper/").body<ProjectResponse>().versions
     }
 
     override suspend fun downloadJarFile(path: Path, mcVersion: String, build: String): Boolean {
