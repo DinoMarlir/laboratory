@@ -16,8 +16,8 @@ object JsonDatabase {
     private fun writeFile(db: Database?) {
         if (!file.exists()) {
             file.createNewFile()
-            file.writeText(json.encodeToString(db ?: Database(arrayListOf())))
         }
+        file.writeText(json.encodeToString(db ?: Database(arrayListOf())))
     }
 
     val db: Database
@@ -36,20 +36,25 @@ object JsonDatabase {
 
     fun registerServer(server: Server) {
         val database = db
-        database.servers.add(server)
+        val serverList = arrayListOf<Server>(server)
+        serverList.addAll(servers)
+        database.servers = serverList
         writeFile(database)
     }
 
     fun editServer(server: Server) {
         val database = db
-        database.servers.removeIf { it.id == server.id }
-        database.servers.add(server)
+        val serverList = arrayListOf<Server>(server)
+        servers.filter { it.id != server.id }.forEach { serverList.add(it) }
+        database.servers = serverList
         writeFile(database)
     }
 
     fun deleteServer(server: Server) {
         val database = db
-        database.servers.removeIf { it.id == server.id }
+        val serverList = arrayListOf<Server>()
+        servers.filter { it.id != server.id }.forEach { serverList.add(it) }
+        database.servers = serverList
         writeFile(database)
     }
 }
