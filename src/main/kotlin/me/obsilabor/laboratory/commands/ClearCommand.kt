@@ -6,7 +6,7 @@ import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.mordant.rendering.TextColors
 import me.obsilabor.laboratory.arch.Architecture
 import me.obsilabor.laboratory.terminal
-import me.obsilabor.laboratory.utils.askYesOrNo
+import me.obsilabor.laboratory.terminal.promptYesOrNo
 
 class ClearCommand : CliktCommand(
     name = "clear",
@@ -18,7 +18,7 @@ class ClearCommand : CliktCommand(
     ).flag()
 
     override fun run() {
-        if (!terminal.askYesOrNo("This action will delete every cached file. Proceed?", default = true, yesFlag = yesFlag)) {
+        if (!terminal.promptYesOrNo("This action will delete every cached file. Proceed?", default = true, yesFlag = yesFlag)) {
             terminal.println(TextColors.brightRed("Aborting!"))
             return
         }
