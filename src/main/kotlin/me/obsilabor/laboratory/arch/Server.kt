@@ -9,6 +9,7 @@ import me.obsilabor.laboratory.platform.PlatformResolver
 import me.obsilabor.laboratory.terminal
 import me.obsilabor.laboratory.terminal.SpinnerAnimation
 import me.obsilabor.laboratory.utils.OperatingSystem
+import me.obsilabor.laboratory.utils.copyFolder
 import me.obsilabor.laboratory.utils.getDirectory
 import me.obsilabor.laboratory.utils.getFile
 import java.awt.Dimension
@@ -20,6 +21,7 @@ import java.nio.file.StandardCopyOption
 import javax.swing.JFrame
 import javax.swing.JLabel
 import javax.swing.WindowConstants
+import kotlin.io.path.Path
 
 @Serializable
 data class Server(
@@ -46,6 +48,11 @@ data class Server(
             if (!static) {
                 directory.deleteRecursively()
                 directory.mkdir()
+            }
+            if (!static || copyTemplates) {
+                templates.forEach {
+                    copyFolder(Path.of(Architecture.Templates.absolutePath, it), Path.of(directory.absolutePath))
+                }
             }
             val resolvedPlatform = PlatformResolver.resolvePlatform(platform)
             if (automaticUpdates) {
@@ -92,7 +99,6 @@ data class Server(
             args.add("-jar")
             args.add("server.jar")
             args.addAll(processArguments)
-            println(args)
             val process = ProcessBuilder(args,)
                 .directory(directory)
                 .redirectErrorStream(true)
