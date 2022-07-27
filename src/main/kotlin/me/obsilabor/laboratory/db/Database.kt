@@ -5,5 +5,5 @@ import me.obsilabor.laboratory.arch.Server
 
 @Serializable
 data class Database(
-    val servers: ArrayList<Server>
+    var servers: ArrayList<Server>
 )
