@@ -8,6 +8,7 @@ import java.nio.file.Path
 object Architecture {
 
     fun setupArchitecture() {
+        Root
         Live
         Servers
         Containers
@@ -16,6 +17,7 @@ object Architecture {
     }
 
     val Root by lazy { getDirectory(System.getProperty("user.home") + "/laboratory") }
+    val Database by lazy { File(Root, "db.json") }
     val Live by lazy { getDirectory(Root, "live") }
     val Servers by lazy { getDirectory(Live, "servers") }
     val Containers by lazy { getDirectory(Root, "containers") }
