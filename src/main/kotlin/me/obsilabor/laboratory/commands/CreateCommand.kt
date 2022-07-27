@@ -13,6 +13,7 @@ import me.obsilabor.laboratory.platform.PlatformResolver
 import me.obsilabor.laboratory.terminal
 import me.obsilabor.laboratory.terminal.SpinnerAnimation
 import me.obsilabor.laboratory.terminal.promptYesOrNo
+import java.awt.Desktop
 import java.util.Random
 
 class CreateCommand : CliktCommand(
@@ -66,8 +67,8 @@ class CreateCommand : CliktCommand(
                 chosenVersion,
                 true,
                 1024,
-                emptyList(),
-                listOf("nogui")
+                listOf("-Dlog4j2.formatMsgNoLookups=true"),
+                if (!Desktop.isDesktopSupported()) listOf("nogui") else emptyList()
             )
             spinner = SpinnerAnimation("Saving server configuration to database")
             spinner.start()
