@@ -16,6 +16,7 @@ import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.StandardCopyOption
 import javax.swing.JFrame
 import javax.swing.JLabel
 import javax.swing.WindowConstants
@@ -55,7 +56,7 @@ data class Server(
                 spinner.stop("Updated your server to $platform-$mcVersion-$platformBuild")
             }
             val jar = Architecture.findOrCreateJar(resolvedPlatform, mcVersion, platformBuild)
-            Files.copy(jar, Path.of(directory.absolutePath, "server.jar"))
+            Files.copy(jar, Path.of(directory.absolutePath, "server.jar"), StandardCopyOption.REPLACE_EXISTING)
             val spinner = SpinnerAnimation("Accepting mojang EULA")
             spinner.start()
             val eula = getFile(directory, "eula.txt")
