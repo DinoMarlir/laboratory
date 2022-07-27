@@ -12,6 +12,7 @@ import me.obsilabor.laboratory.mainScope
 import me.obsilabor.laboratory.platform.PlatformResolver
 import me.obsilabor.laboratory.terminal
 import me.obsilabor.laboratory.terminal.SpinnerAnimation
+import me.obsilabor.laboratory.terminal.awaitMemoryInput
 import me.obsilabor.laboratory.terminal.promptYesOrNo
 import java.awt.Desktop
 import java.util.Random
@@ -55,7 +56,6 @@ class CreateCommand : CliktCommand(
                 chosenBuild = platform.getBuilds(chosenVersion).last()
             }
             spinner.stop("Resolved versions")
-            terminal.println("We're going with the default server configuration for this server. You can modify it later.")
             val server = Server(
                 Random().nextInt(700000), // TODO: lookup database to avoid duplicates
                 name,
@@ -70,6 +70,11 @@ class CreateCommand : CliktCommand(
                 listOf("-Dlog4j2.formatMsgNoLookups=true"),
                 if (!Desktop.isDesktopSupported()) listOf("nogui") else emptyList()
             )
+            if (terminal.promptYesOrNo("Do you want to configure your new server right now?", true)) {
+                server.static = terminal.promptYesOrNo("Do you want your new server to be static?", true)
+                server.automaticUpdates = terminal.promptYesOrNo("Do you want laboratory to keep your server up-to-date?", true)
+                server.maxHeapMemory = terminal.awaitMemoryInput("How much heap space do you want to give your server?", "1024M")
+            }
             spinner = SpinnerAnimation("Saving server configuration to database")
             spinner.start()
             JsonDatabase.registerServer(server)
