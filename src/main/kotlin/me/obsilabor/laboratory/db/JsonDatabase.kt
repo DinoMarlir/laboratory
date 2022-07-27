@@ -10,14 +10,16 @@ object JsonDatabase {
     private val file = Architecture.Database
 
     init {
-        writeFile(null)
+        if (!file.exists()) {
+            writeFile(null)
+        }
     }
 
     private fun writeFile(db: Database?) {
         if (!file.exists()) {
             file.createNewFile()
-            file.writeText(json.encodeToString(db ?: Database(arrayListOf())))
         }
+        file.writeText(json.encodeToString(db ?: Database(arrayListOf())))
     }
 
     val db: Database

@@ -11,7 +11,7 @@ val terminal = Terminal()
 
 val json = Json {
     prettyPrint = true
-    ignoreUnknownKeys
+    ignoreUnknownKeys = true
 }
 
 lateinit var mainScope: CoroutineScope
