@@ -21,7 +21,7 @@ fun getDirectory(f: File, s: String): File {
 fun getFile(s: String): File {
     val file = File(s)
     if (!file.exists()) {
-        file.mkdir()
+        file.createNewFile()
     }
     return file
 }
@@ -29,7 +29,7 @@ fun getFile(s: String): File {
 fun getFile(f: File, s: String): File {
     val file = File(f, s)
     if (!file.exists()) {
-        file.mkdir()
+        file.createNewFile()
     }
     return file
 }
