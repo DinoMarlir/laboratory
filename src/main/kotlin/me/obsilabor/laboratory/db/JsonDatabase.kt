@@ -28,8 +28,8 @@ object JsonDatabase {
     val servers: List<Server>
         get() = db.servers
 
-    fun findServer(id: Int): Server {
-        return servers.first { it.id == id }
+    fun findServer(id: Int): Server? {
+        return servers.firstOrNull { it.id == id }
     }
 
     fun findServer(name: String): List<Server> {
