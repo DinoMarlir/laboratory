@@ -5,19 +5,15 @@ import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.arguments.default
 import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.mordant.rendering.TextColors
-import io.ktor.http.content.*
 import kotlinx.coroutines.launch
-import me.obsilabor.laboratory.arch.Architecture
 import me.obsilabor.laboratory.arch.Server
 import me.obsilabor.laboratory.db.JsonDatabase
 import me.obsilabor.laboratory.mainScope
 import me.obsilabor.laboratory.platform.PlatformResolver
-import me.obsilabor.laboratory.platform.impl.PaperPlatform
 import me.obsilabor.laboratory.terminal
 import me.obsilabor.laboratory.terminal.SpinnerAnimation
-import me.obsilabor.laboratory.utils.askYesOrNo
+import me.obsilabor.laboratory.terminal.promptYesOrNo
 import java.util.Random
-import kotlin.io.path.absolute
 
 class CreateCommand : CliktCommand(
     name = "create",
@@ -69,13 +65,15 @@ class CreateCommand : CliktCommand(
                 chosenBuild,
                 chosenVersion,
                 true,
-                1024
+                1024,
+                emptyList(),
+                listOf("nogui")
             )
             spinner = SpinnerAnimation("Saving server configuration to database")
             spinner.start()
             JsonDatabase.registerServer(server)
             spinner.stop("Saved server configuration to database")
-            if (!terminal.askYesOrNo("Should the server be automatically started now?", true)) {
+            if (!terminal.promptYesOrNo("Should the server be automatically started now?", true)) {
                 terminal.println(TextColors.brightGreen("Server setup complete"))
             } else {
                 server.start()
