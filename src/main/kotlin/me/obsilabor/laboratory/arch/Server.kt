@@ -5,6 +5,8 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import me.obsilabor.laboratory.platform.PlatformResolver
 import me.obsilabor.laboratory.utils.getDirectory
+import me.obsilabor.laboratory.utils.getFile
+import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 
@@ -18,7 +20,8 @@ data class Server(
     var platform: String,
     var platformBuild: String,
     var mcVersion: String,
-    var automaticUpdates: Boolean = true
+    var automaticUpdates: Boolean = true,
+    var maxHeapMemory: Long = 1024
 ) {
 
     val directory by lazy { getDirectory(Architecture.Servers, "$name-$id") }
@@ -31,6 +34,14 @@ data class Server(
             }
             val jar = Architecture.findOrCreateJar(PlatformResolver.resolvePlatform(platform), mcVersion, platformBuild)
             Files.copy(jar, Path.of(directory.absolutePath, "server.jar"))
+            val eula = getFile(directory, "eula.txt")
+            eula.writeText("""
+                # By using laboratory you automatically agree to the Mojang and Laboratory Terms of Service
+                eula=true
+            """.trimIndent())
+            val process = ProcessBuilder("java -Xmx${maxHeapMemory}M", "-jar", "server.jar").directory(directory).redirectErrorStream(true).redirectOutput(
+                ProcessBuilder.Redirect.INHERIT)
+            process.start()
         }
     }
 }
