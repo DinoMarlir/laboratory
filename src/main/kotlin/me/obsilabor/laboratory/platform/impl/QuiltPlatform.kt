@@ -22,7 +22,7 @@ import kotlin.io.path.absolutePathString
 object QuiltPlatform : IPlatform {
     override val name = "quiltmc"
     override val jarNamePattern = "quiltmc-\$build.jar"
-    override val coloredName = TextColors.blue(name)
+    override val coloredName = TextColors.brightMagenta(name)
 
     override suspend fun getMcVersions(): List<String> {
         return httpClient.get("https://meta.quiltmc.org/v3/versions/game").body<List<QuiltGameVersion>>().map { it.version }.reversed()
