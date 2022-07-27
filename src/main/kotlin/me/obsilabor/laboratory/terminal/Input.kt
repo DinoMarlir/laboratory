@@ -1,7 +1,7 @@
 package me.obsilabor.laboratory.terminal
 
+import com.github.ajalt.mordant.rendering.TextColors
 import com.github.ajalt.mordant.terminal.Terminal
-import me.obsilabor.laboratory.terminal
 
 fun Terminal.promptYesOrNo(question: String, default: Boolean? = null, yesFlag: Boolean = false): Boolean {
     val keyString = if (default == null) "(y/n)" else (if (default) "(Y/n)" else "(y/N)")
@@ -38,7 +38,7 @@ fun Terminal.awaitMemoryInput(
     default: String = "1024M"
 ): Long {
     val input = prompt("$message (Default: $default)") ?: default
-    var amount = input.replace("M", "").replace("G", "").toLong()
+    var amount = input.replace("M", "").replace("G", "").toLongOrNull() ?: 1024
     if (input.endsWith("G")) {
         amount *= 1024L
     }
@@ -50,8 +50,11 @@ fun <T> Terminal.choose(
     entries: List<Pair<T, String>>,
 ): T? {
     entries.forEachIndexed { index, (_, string) ->
-        print("${index + 1}) ")
-        println(string)
+        if (index + 1 <= 9) {
+            println(TextColors.magenta("  ${index+1} $string"))
+        } else {
+            println(TextColors.magenta(" ${index+1} $string"))
+        }
     }
     while (true) {
         print("$message (enter the number): ")

@@ -8,8 +8,8 @@ import kotlinx.coroutines.launch
 import me.obsilabor.laboratory.arch.Server
 import me.obsilabor.laboratory.db.JsonDatabase
 import me.obsilabor.laboratory.mainScope
+import me.obsilabor.laboratory.platform.PlatformResolver
 import me.obsilabor.laboratory.terminal
-import me.obsilabor.laboratory.terminal.SpinnerAnimation
 import me.obsilabor.laboratory.terminal.choose
 
 class StartCommand : CliktCommand(
@@ -38,10 +38,12 @@ class StartCommand : CliktCommand(
                 }
                 servers = listOf(server)
             }
-            if (servers.size > 1) {
-                resolvedServer = terminal.choose("Multiple servers found, which one did you mean?", servers.map { it to "${it.name}-${it.id}" }) ?: return@launch
+            resolvedServer = if (servers.size > 1) {
+                terminal.choose("Multiple servers found, which one did you mean?", servers.map {
+                    it to it.terminalString
+                }) ?: return@launch
             } else {
-                resolvedServer = servers.first()
+                servers.first()
             }
             terminal.println(TextStyles.italic("Starting server.."))
             resolvedServer.start()

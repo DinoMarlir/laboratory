@@ -5,6 +5,7 @@ import java.nio.file.Path
 interface IPlatform {
     val name: String
     val jarNamePattern: String
+    val coloredName: String
 
     suspend fun getMcVersions(): List<String>
     suspend fun getBuilds(mcVersion: String): List<String>

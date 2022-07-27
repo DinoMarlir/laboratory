@@ -36,6 +36,8 @@ data class Server(
     var jvmArguments: List<String>,
     var processArguments: List<String>
 ) {
+    val terminalString: String
+        get() = "${TextStyles.bold(PlatformResolver.resolvePlatform(platform).coloredName)}${TextColors.white("/")}${TextStyles.bold("${TextColors.brightWhite("$name-$id ")}${TextColors.green("$mcVersion-$platformBuild")}")}"
 
     val directory by lazy { getDirectory(Architecture.Servers, "$name-$id") }
 

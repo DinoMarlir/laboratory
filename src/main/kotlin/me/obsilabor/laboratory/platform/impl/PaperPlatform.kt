@@ -1,5 +1,6 @@
 package me.obsilabor.laboratory.platform.impl
 
+import com.github.ajalt.mordant.rendering.TextColors
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import kotlinx.serialization.SerialName
@@ -11,6 +12,7 @@ import java.nio.file.Path
 object PaperPlatform : IPlatform {
     override val name = "papermc"
     override val jarNamePattern = "paper-\$mcVersion-\$build.jar"
+    override val coloredName = TextColors.brightRed(name)
 
     override suspend fun getBuilds(mcVersion: String): List<String> {
         return httpClient.get("https://api.papermc.io/v2/projects/paper/versions/$mcVersion").body<ProjectVersionsResponse>().builds.map { it.toString() }
