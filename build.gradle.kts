@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "me.obsilabor"
-version = "0.0.1"
+version = "jvm"
 
 application {
     mainClass.set("me.obsilabor.laboratory.ApplicationKt")
