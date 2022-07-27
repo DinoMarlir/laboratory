@@ -65,7 +65,6 @@ data class Server(
             val process = ProcessBuilder(args).directory(directory).start()
             terminal.println("Server is now running with PID ${process.pid()}. Attach using ${TextStyles.dim(TextColors.brightWhite("screen -dr $name-$id"))}")
         } else {
-            terminal.println("Server is now running with PID windows-moment. Attach using ${TextStyles.dim(TextColors.brightWhite("screen -dr $name-$id"))}")
             val args = arrayListOf(
                 "java",
                 "-Xmx${maxHeapMemory}M",
