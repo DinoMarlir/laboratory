@@ -1,8 +1,8 @@
-package me.obsilabor.laboratory.utils
+package me.obsilabor.laboratory.terminal
 
 import com.github.ajalt.mordant.terminal.Terminal
 
-fun Terminal.askYesOrNo(question: String, default: Boolean? = null, yesFlag: Boolean = false): Boolean {
+fun Terminal.promptYesOrNo(question: String, default: Boolean? = null, yesFlag: Boolean = false): Boolean {
     val keyString = if (default == null) "(y/n)" else (if (default) "(Y/n)" else "(y/N)")
     while (true) {
         print("$question $keyString ")
