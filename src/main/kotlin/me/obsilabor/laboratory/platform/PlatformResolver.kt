@@ -1,9 +1,6 @@
 package me.obsilabor.laboratory.platform
 
-import me.obsilabor.laboratory.platform.impl.PaperPlatform
-import me.obsilabor.laboratory.platform.impl.QuiltPlatform
-import me.obsilabor.laboratory.platform.impl.VanillaPlatform
-import me.obsilabor.laboratory.platform.impl.VelocityPlatform
+import me.obsilabor.laboratory.platform.impl.*
 
 object PlatformResolver {
     fun resolvePlatform(input: String): IPlatform {
@@ -12,6 +9,7 @@ object PlatformResolver {
             "quiltmc" -> QuiltPlatform
             "vanilla" -> VanillaPlatform
             "velocity" -> VelocityPlatform
+            "waterfall" -> WaterfallPlatform
             else -> throw RuntimeException("Unknown platform $input")
         }
     }
