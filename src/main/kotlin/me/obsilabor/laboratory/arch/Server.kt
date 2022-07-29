@@ -37,7 +37,8 @@ data class Server(
     var automaticUpdates: Boolean,
     var maxHeapMemory: Long,
     var jvmArguments: MutableSet<String>,
-    var processArguments: MutableSet<String>
+    var processArguments: MutableSet<String>,
+    var port: Int
 ) {
     val terminalString: String
         get() = "${TextStyles.bold(PlatformResolver.resolvePlatform(platform).coloredName)}${TextColors.white("/")}${TextStyles.bold("${TextColors.brightWhite("$name-$id ")}${TextColors.green("$mcVersion-$platformBuild")}")}"
@@ -82,6 +83,7 @@ data class Server(
             args.addAll(jvmArguments)
             args.add("-jar")
             args.add("server.jar")
+            args.add("--port $port")
             args.addAll(processArguments)
             val process = ProcessBuilder(args).directory(directory).start()
             terminal.println("Server is now running with PID ${process.pid()}. Attach using ${TextStyles.dim(TextColors.brightWhite("screen -dr $name-$id"))}")
@@ -93,6 +95,7 @@ data class Server(
             args.addAll(jvmArguments)
             args.add("-jar")
             args.add("server.jar")
+            args.add("--port $port")
             args.addAll(processArguments)
             val process = ProcessBuilder(args,)
                 .directory(directory)
@@ -114,12 +117,12 @@ data class Server(
     }
 
     suspend fun update(platform: IPlatform) {
-        val spinner = SpinnerAnimation("Resolving latest $platform build")
+        val spinner = SpinnerAnimation("Resolving latest ${platform.name} build")
         spinner.start()
         mcVersion = platform.getMcVersions().last()
         platformBuild = platform.getBuilds(mcVersion).last()
         spinner.update("Updating..")
         JsonDatabase.editServer(this@Server)
-        spinner.stop("Updated your server to $platform-$mcVersion-$platformBuild")
+        spinner.stop("Updated your server to ${platform.name}-$mcVersion-$platformBuild")
     }
 }

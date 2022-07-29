@@ -31,6 +31,11 @@ enum class ServerEditAction(val actionString: String, val perform: (Server) -> U
             terminal.println(TextColors.brightGreen("The server $oldName has been renamed to $newName"))
         }
     }),
+    COPY_TEMPLATES("Enable/disable templates", perform = {
+        it.copyTemplates = !it.copyTemplates
+        JsonDatabase.editServer(it)
+        terminal.println(TextColors.brightGreen("The server ${it.name} is no${if (it.copyTemplates) "w copying templates" else "no longer using templates"}"))
+    }),
     STATIC("Make the server static/dynamic", perform = {
         it.static = !it.static
         JsonDatabase.editServer(it)
