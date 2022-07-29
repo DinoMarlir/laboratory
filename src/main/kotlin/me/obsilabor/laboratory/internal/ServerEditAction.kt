@@ -40,6 +40,7 @@ enum class ServerEditAction(val actionString: String, val perform: (Server) -> U
         val template = terminal.choose("Please provide the template to add", Architecture.Templates.listFiles().map { t -> t.name to t.name })
         template?.let { chosenTemplate ->
             it.templates.add(chosenTemplate)
+            me.obsilabor.laboratory.db.JsonDatabase.editServer(it)
             terminal.println(TextColors.brightGreen("The template $chosenTemplate has been added to the server ${it.name}"))
         }
     }),
@@ -47,6 +48,7 @@ enum class ServerEditAction(val actionString: String, val perform: (Server) -> U
         val template = terminal.choose("Please provide the template to remove", it.templates.map { t -> t to t })
         template?.let { chosenTemplate ->
             it.templates.remove(chosenTemplate)
+            JsonDatabase.editServer(it)
             terminal.println(TextColors.brightRed("The template $chosenTemplate has been removed from the server ${it.name}"))
         }
     }),
