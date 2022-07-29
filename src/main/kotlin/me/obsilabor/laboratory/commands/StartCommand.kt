@@ -12,6 +12,7 @@ import me.obsilabor.laboratory.mainScope
 import me.obsilabor.laboratory.platform.PlatformResolver
 import me.obsilabor.laboratory.terminal
 import me.obsilabor.laboratory.terminal.choose
+import me.obsilabor.laboratory.terminal.chooseServer
 
 class StartCommand : CliktCommand(
     name = "start",
@@ -24,37 +25,9 @@ class StartCommand : CliktCommand(
 
     override fun run() {
         mainScope.launch {
-            val resolvedServer: Server
-            var servers = JsonDatabase.findServer(query ?: "").toMutableSet()
-            if (servers.isEmpty()) {
-                val id = query?.toIntOrNull()
-                if (id == null) {
-                    if (JsonDatabase.servers.isEmpty()) {
-                        terminal.println(TextColors.brightRed("No server found."))
-                        return@launch
-                    }
-                    servers.addAll(JsonDatabase.servers)
-                }
-                val server = JsonDatabase.findServer(id ?: 0)
-                if (server == null) {
-                    if (JsonDatabase.servers.isEmpty()) {
-                        terminal.println(TextColors.brightRed("No server found."))
-                        return@launch
-                    }
-                    servers.addAll(JsonDatabase.servers)
-                } else {
-                    servers = mutableSetOf(server)
-                }
-            }
-            resolvedServer = if (servers.size > 1) {
-                terminal.choose("Multiple servers found, which one did you mean?", servers.map {
-                    it to it.terminalString
-                }) ?: return@launch
-            } else {
-                servers.first()
-            }
+            val resolvedServer = terminal.chooseServer(query ?: "")
             terminal.println(TextStyles.italic("Starting server.."))
-            resolvedServer.start()
+            resolvedServer?.start()
         }
     }
 }

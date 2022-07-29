@@ -5,6 +5,7 @@ import com.github.ajalt.mordant.rendering.TextStyles
 import kotlinx.coroutines.*
 import kotlinx.serialization.Serializable
 import me.obsilabor.laboratory.db.JsonDatabase
+import me.obsilabor.laboratory.platform.IPlatform
 import me.obsilabor.laboratory.platform.PlatformResolver
 import me.obsilabor.laboratory.terminal
 import me.obsilabor.laboratory.terminal.SpinnerAnimation
@@ -56,13 +57,7 @@ data class Server(
             }
             val resolvedPlatform = PlatformResolver.resolvePlatform(platform)
             if (automaticUpdates) {
-                val spinner = SpinnerAnimation("Resolving latest $platform build")
-                spinner.start()
-                mcVersion = resolvedPlatform.getMcVersions().last()
-                platformBuild = resolvedPlatform.getBuilds(mcVersion).last()
-                spinner.update("Updating..")
-                JsonDatabase.editServer(this@Server)
-                spinner.stop("Updated your server to $platform-$mcVersion-$platformBuild")
+                update(resolvedPlatform)
             }
             val jar = Architecture.findOrCreateJar(resolvedPlatform, mcVersion, platformBuild)
             Files.copy(jar, Path.of(directory.absolutePath, "server.jar"), StandardCopyOption.REPLACE_EXISTING)
@@ -116,5 +111,15 @@ data class Server(
             frame.isVisible = true
             frame.size = Dimension(780, 80)
         }
+    }
+
+    suspend fun update(platform: IPlatform) {
+        val spinner = SpinnerAnimation("Resolving latest $platform build")
+        spinner.start()
+        mcVersion = platform.getMcVersions().last()
+        platformBuild = platform.getBuilds(mcVersion).last()
+        spinner.update("Updating..")
+        JsonDatabase.editServer(this@Server)
+        spinner.stop("Updated your server to $platform-$mcVersion-$platformBuild")
     }
 }

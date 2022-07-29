@@ -2,6 +2,8 @@ package me.obsilabor.laboratory.terminal
 
 import com.github.ajalt.mordant.rendering.TextColors
 import com.github.ajalt.mordant.terminal.Terminal
+import me.obsilabor.laboratory.arch.Server
+import me.obsilabor.laboratory.db.JsonDatabase
 
 fun Terminal.promptYesOrNo(question: String, default: Boolean? = null, yesFlag: Boolean = false): Boolean {
     val keyString = if (default == null) "(y/n)" else (if (default) "(Y/n)" else "(y/N)")
@@ -78,4 +80,37 @@ fun <T> Terminal.choose(
 
         return entries.getOrNull(index)?.first
     }
+}
+
+fun Terminal.chooseServer(query: String): Server? {
+    val resolvedServer: Server
+    var servers = JsonDatabase.findServer(query).toMutableSet()
+    if (servers.isEmpty()) {
+        val id = query?.toIntOrNull()
+        if (id == null) {
+            if (JsonDatabase.servers.isEmpty()) {
+                println(TextColors.brightRed("No server found."))
+                return null
+            }
+            servers.addAll(JsonDatabase.servers)
+        }
+        val server = JsonDatabase.findServer(id ?: 0)
+        if (server == null) {
+            if (JsonDatabase.servers.isEmpty()) {
+                println(TextColors.brightRed("No server found."))
+                return null
+            }
+            servers.addAll(JsonDatabase.servers)
+        } else {
+            servers = mutableSetOf(server)
+        }
+    }
+    resolvedServer = if (servers.size > 1) {
+        choose("Multiple servers found, which one did you mean?", servers.map {
+            it to it.terminalString
+        }) ?: return null
+    } else {
+        servers.first()
+    }
+    return resolvedServer
 }
