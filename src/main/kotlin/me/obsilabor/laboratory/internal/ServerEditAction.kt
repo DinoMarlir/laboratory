@@ -34,19 +34,19 @@ enum class ServerEditAction(val actionString: String, val perform: (Server) -> U
     COPY_TEMPLATES("Enable/disable templates", perform = {
         it.copyTemplates = !it.copyTemplates
         JsonDatabase.editServer(it)
-        terminal.println(TextColors.brightGreen("The server ${it.name} is no${if (it.copyTemplates) "w copying templates" else "no longer using templates"}"))
+        terminal.println(TextColors.brightGreen("The server ${it.terminalString} is no${if (it.copyTemplates) "w copying templates" else "no longer using templates"}"))
     }),
     STATIC("Make the server static/dynamic", perform = {
         it.static = !it.static
         JsonDatabase.editServer(it)
-        terminal.println(TextColors.brightGreen("The server ${it.name} is now ${if (it.static) "static" else "dynamic"}"))
+        terminal.println(TextColors.brightGreen("The server ${it.terminalString} is now ${if (it.static) "static" else "dynamic"}"))
     }),
     ADD_TEMPLATE("Add a template", perform = {
         val template = terminal.choose("Please provide the template to add", Architecture.Templates.listFiles().map { t -> t.name to t.name })
         template?.let { chosenTemplate ->
             it.templates.add(chosenTemplate)
             JsonDatabase.editServer(it)
-            terminal.println(TextColors.brightGreen("The template $chosenTemplate has been added to the server ${it.name}"))
+            terminal.println(TextColors.brightGreen("The template $chosenTemplate has been added to the server ${it.terminalString}"))
         }
     }),
     REMOVE_TEMPLATE("Remove a template", perform = {
@@ -54,7 +54,7 @@ enum class ServerEditAction(val actionString: String, val perform: (Server) -> U
         template?.let { chosenTemplate ->
             it.templates.remove(chosenTemplate)
             JsonDatabase.editServer(it)
-            terminal.println(TextColors.brightRed("The template $chosenTemplate has been removed from the server ${it.name}"))
+            terminal.println(TextColors.brightRed("The template $chosenTemplate has been removed from the server ${it.terminalString}"))
         }
     }),
     PLATFORM("Migrate the servers platform", perform = {
@@ -98,20 +98,20 @@ enum class ServerEditAction(val actionString: String, val perform: (Server) -> U
     AUTOMATIC_UPDATES("Toggle automatic updates", perform = {
         it.automaticUpdates = !it.automaticUpdates
         JsonDatabase.editServer(it)
-        terminal.println(TextColors.brightGreen("The server ${it.name} is no${if (it.automaticUpdates) "w updating itself automatically" else " longer updating itself."}"))
+        terminal.println(TextColors.brightGreen("The server ${it.terminalString} is no${if (it.automaticUpdates) "w updating itself automatically" else " longer updating itself."}"))
     }),
     RAM("Modify the servers heap memory", perform = {
         val newRam = terminal.awaitMemoryInput("Enter the new amount of heap memory for the server", default = "${it.maxHeapMemory*2}M")
         it.maxHeapMemory = newRam
         JsonDatabase.editServer(it)
-        terminal.println(TextColors.brightGreen("The max heap memory for the server ${it.name} has been changed to ${newRam}M"))
+        terminal.println(TextColors.brightGreen("The max heap memory for the server ${it.terminalString} has been changed to ${newRam}M"))
     }),
     ADD_JVM_ARG("Add a jvm argument", perform = {
         mainScope.launch {
             val argument = terminal.prompt("Please enter the argument to add") ?: return@launch
             it.jvmArguments.add(argument)
             JsonDatabase.editServer(it)
-            terminal.println(TextColors.brightGreen("JVM argument '$argument' added to server ${it.name}"))
+            terminal.println(TextColors.brightGreen("JVM argument '$argument' added to server ${it.terminalString}"))
         }
     }),
     REMOVE_JVM_ARG("Remove a jvm argument", perform = {
@@ -127,7 +127,7 @@ enum class ServerEditAction(val actionString: String, val perform: (Server) -> U
             val argument = terminal.prompt("Please enter the argument to add") ?: return@launch
             it.processArguments.add(argument)
             JsonDatabase.editServer(it)
-            terminal.println(TextColors.brightGreen("Process argument '$argument' added to server ${it.name}"))
+            terminal.println(TextColors.brightGreen("Process argument '$argument' added to server ${it.terminalString}"))
         }
     }),
     REMOVE_PROCESS_ARG("Remove a process argument", perform = {
@@ -138,4 +138,12 @@ enum class ServerEditAction(val actionString: String, val perform: (Server) -> U
             terminal.println(TextColors.brightGreen("Process argument '$argument' removed"))
         }
     }),
+    CHANGE_PORT("Change the servers port", perform = {
+        mainScope.launch {
+            val port = terminal.prompt("Please enter the new port to listen on", "25565")?.toIntOrNull() ?: return@launch
+            it.port = port
+            JsonDatabase.editServer(it)
+            terminal.println(TextColors.brightGreen("Port of server ${it.terminalString} changed to $port"))
+        }
+    })
 }

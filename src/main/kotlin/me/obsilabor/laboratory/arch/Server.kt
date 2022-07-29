@@ -38,7 +38,7 @@ data class Server(
     var maxHeapMemory: Long,
     var jvmArguments: MutableSet<String>,
     var processArguments: MutableSet<String>,
-    var port: Int
+    var port: Int? = 25565
 ) {
     val terminalString: String
         get() = "${TextStyles.bold(PlatformResolver.resolvePlatform(platform).coloredName)}${TextColors.white("/")}${TextStyles.bold("${TextColors.brightWhite("$name-$id ")}${TextColors.green("$mcVersion-$platformBuild")}")}"
