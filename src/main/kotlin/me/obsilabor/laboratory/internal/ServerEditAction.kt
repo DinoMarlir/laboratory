@@ -40,7 +40,7 @@ enum class ServerEditAction(val actionString: String, val perform: (Server) -> U
         val template = terminal.choose("Please provide the template to add", Architecture.Templates.listFiles().map { t -> t.name to t.name })
         template?.let { chosenTemplate ->
             it.templates.add(chosenTemplate)
-            me.obsilabor.laboratory.db.JsonDatabase.editServer(it)
+            JsonDatabase.editServer(it)
             terminal.println(TextColors.brightGreen("The template $chosenTemplate has been added to the server ${it.name}"))
         }
     }),
