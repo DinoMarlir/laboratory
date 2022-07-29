@@ -3,14 +3,15 @@ package me.obsilabor.laboratory.platform
 import me.obsilabor.laboratory.platform.impl.*
 
 object PlatformResolver {
+    val platforms = hashMapOf<String, IPlatform>(
+        "papermc" to PaperPlatform,
+        "quiltmc" to QuiltPlatform,
+        "vanilla" to VanillaPlatform,
+        "velocity" to VelocityPlatform,
+        "waterfall" to WaterfallPlatform
+    )
+
     fun resolvePlatform(input: String): IPlatform {
-        return when(input) {
-            "papermc" -> PaperPlatform
-            "quiltmc" -> QuiltPlatform
-            "vanilla" -> VanillaPlatform
-            "velocity" -> VelocityPlatform
-            "waterfall" -> WaterfallPlatform
-            else -> throw RuntimeException("Unknown platform $input")
-        }
+        return platforms[input.lowercase()] ?: throw RuntimeException("Unknown platform $input")
     }
 }

@@ -32,12 +32,10 @@ class ServerCommand : CliktCommand(
 
         override fun run() {
             val server = terminal.chooseServer(query) ?: return
-            if (server != null) {
-                val action = terminal.choose("What do you want to do?", ServerEditAction.values().map {
-                    it to it.actionString
-                }) ?: return
-                action.perform.invoke(server)
-            }
+            val action = terminal.choose("What do you want to do?", ServerEditAction.values().map {
+                it to it.actionString
+            }) ?: return
+            action.perform.invoke(server)
         }
     }
 

@@ -86,7 +86,7 @@ fun Terminal.chooseServer(query: String): Server? {
     val resolvedServer: Server
     var servers = JsonDatabase.findServer(query).toMutableSet()
     if (servers.isEmpty()) {
-        val id = query?.toIntOrNull()
+        val id = query.toIntOrNull()
         if (id == null) {
             if (JsonDatabase.servers.isEmpty()) {
                 println(TextColors.brightRed("No server found."))

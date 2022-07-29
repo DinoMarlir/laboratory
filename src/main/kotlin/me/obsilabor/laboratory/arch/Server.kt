@@ -30,14 +30,14 @@ data class Server(
     var name: String,
     var static: Boolean,
     var copyTemplates: Boolean,
-    val templates: List<String>,
+    val templates: MutableSet<String>,
     var platform: String,
     var platformBuild: String,
     var mcVersion: String,
     var automaticUpdates: Boolean,
     var maxHeapMemory: Long,
-    var jvmArguments: List<String>,
-    var processArguments: List<String>
+    var jvmArguments: MutableSet<String>,
+    var processArguments: MutableSet<String>
 ) {
     val terminalString: String
         get() = "${TextStyles.bold(PlatformResolver.resolvePlatform(platform).coloredName)}${TextColors.white("/")}${TextStyles.bold("${TextColors.brightWhite("$name-$id ")}${TextColors.green("$mcVersion-$platformBuild")}")}"

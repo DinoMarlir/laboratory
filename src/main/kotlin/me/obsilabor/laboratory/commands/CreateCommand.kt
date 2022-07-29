@@ -29,7 +29,7 @@ class CreateCommand : CliktCommand(
     private val software by argument(
         "software",
         help = "The server-software that should be used for the new server"
-    ).choice(ignoreCase = true, choices = arrayOf("papermc", "quiltmc", "vanilla", "velocity", "waterfall"))
+    ).choice(ignoreCase = true, choices = PlatformResolver.platforms.keys.toTypedArray())
 
     private val version by argument(
         "version",
@@ -61,14 +61,14 @@ class CreateCommand : CliktCommand(
                 name,
                 true,
                 true,
-                emptyList(),
+                mutableSetOf(),
                 software,
                 chosenBuild,
                 chosenVersion,
                 true,
                 1024,
-                listOf("-Dlog4j2.formatMsgNoLookups=true"),
-                if (!Desktop.isDesktopSupported()) listOf("nogui") else emptyList()
+                mutableSetOf("-Dlog4j2.formatMsgNoLookups=true"),
+                if (!Desktop.isDesktopSupported()) mutableSetOf("nogui") else mutableSetOf()
             )
             if (terminal.promptYesOrNo("Do you want to configure your new server right now?", true)) {
                 server.static = terminal.promptYesOrNo("Do you want your new server to be static?", true)

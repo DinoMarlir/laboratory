@@ -13,7 +13,8 @@ class LaboratoryCommand : CliktCommand(
             ClearCommand(),
             StartCommand(),
             ListCommand(),
-            TemplateCommand()
+            TemplateCommand(),
+            ServerCommand()
         )
     }
 
