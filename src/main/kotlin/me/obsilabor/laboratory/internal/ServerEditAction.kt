@@ -89,7 +89,7 @@ enum class ServerEditAction(val actionString: String, val perform: (Server) -> U
     }),
     PLATFORM_BUILD("Change the platform build", perform = {
         mainScope.launch {
-            val newBuild = terminal.choose("Please provide the new platform build", PlatformResolver.resolvePlatform(it.platform).getBuilds(it.mcVersion).map { it to it }) ?: return@launch
+            val newBuild = terminal.choose("Please provide the new platform build", PlatformResolver.resolvePlatform(it.platform).getBuilds(it.mcVersion).map { it to TextColors.brightWhite(it) }) ?: return@launch
             it.platformBuild = newBuild
             JsonDatabase.editServer(it)
             terminal.println(TextColors.brightGreen("Platform build was changed successful"))
@@ -97,7 +97,7 @@ enum class ServerEditAction(val actionString: String, val perform: (Server) -> U
     }),
     MC_VERSION("Migrate the servers mc version", perform = {
         mainScope.launch {
-            val newVersion = terminal.choose("Please provide the new minecraft version", PlatformResolver.resolvePlatform(it.platform).getMcVersions().map { it to it }) ?: return@launch
+            val newVersion = terminal.choose("Please provide the new minecraft version", PlatformResolver.resolvePlatform(it.platform).getMcVersions().map { it to TextColors.brightWhite(it) }) ?: return@launch
             it.mcVersion = newVersion
             PLATFORM_BUILD.perform.invoke(it)
             terminal.println(TextColors.brightGreen("Minecraft version was changed successful"))
