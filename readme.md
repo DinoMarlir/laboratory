@@ -28,7 +28,7 @@ To start an existing server run `laboratory start [server-name]` and select the 
 
 ## Notes
 
-laboratory currently supports [PaperMC](https://papermc.io), [QuiltMC](https://quiltmc.org), [Waterfall](https://papermc.io/downloads#Waterfall), [Velocity](https://papermc.io/downloads#Velocity) and [Vanilla](https://minecraft.net)
+laboratory currently supports [PaperMC](https://papermc.io), [QuiltMC](https://quiltmc.org), [Waterfall](https://papermc.io/downloads#Waterfall), [Velocity](https://papermc.io/downloads#Velocity) and [Vanilla](https://minecraft.net).
 Support for other servers like [SpongeVanilla](https://spongepowered.org/downloads/spongevanilla) and [Fabric](https://fabricmc.net/) is planned
 
 This project was inspired by [pacmc](https://github.com/jakobkmar/pacmc) and [CloudNet](https://github.com/CloudNetService/CloudNet-v3)
