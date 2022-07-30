@@ -66,7 +66,7 @@ enum class ServerEditAction(val actionString: String, val perform: (Server) -> U
                 return@launch
             }
             if ((oldPlatform != VelocityPlatform && oldPlatform != WaterfallPlatform) && (newPlatform.value == WaterfallPlatform || newPlatform.value == VelocityPlatform)) {
-                println(TextColors.brightRed("Cannot migrate from a non-proxy platform to a proxy platform."))
+                terminal.println(TextColors.brightRed("Cannot migrate from a non-proxy platform to a proxy platform."))
                 return@launch
             }
             val spinner = SpinnerAnimation("Migrating your server..")
@@ -74,7 +74,7 @@ enum class ServerEditAction(val actionString: String, val perform: (Server) -> U
             it.platform = newPlatform.key
             it.platformBuild = newPlatform.value.getBuilds(it.mcVersion).last()
             JsonDatabase.editServer(it)
-            if (oldPlatform == PaperPlatform && (newPlatform.value == me.obsilabor.laboratory.platform.impl.VanillaPlatform || newPlatform.value == me.obsilabor.laboratory.platform.impl.QuiltPlatform)) {
+            if (oldPlatform == PaperPlatform && (newPlatform.value == VanillaPlatform || newPlatform.value == me.obsilabor.laboratory.platform.impl.QuiltPlatform)) {
                 val worldNether = getDirectory(it.directory, "world_nether")
                 val worldTheEnd = getDirectory(it.directory, "world_the_end")
                 val dim1 = getDirectory(File(it.directory, "DIM1"), "world/DIM1")
@@ -87,14 +87,22 @@ enum class ServerEditAction(val actionString: String, val perform: (Server) -> U
             spinner.stop(TextColors.brightGreen("Migration completed"))
         }
     }),
-    /*
     PLATFORM_BUILD("Change the platform build", perform = {
-
+        mainScope.launch {
+            val newBuild = terminal.choose("Please provide the new platform build", PlatformResolver.resolvePlatform(it.platform).getBuilds(it.mcVersion).map { it to it }) ?: return@launch
+            it.platformBuild = newBuild
+            JsonDatabase.editServer(it)
+            terminal.println(TextColors.brightGreen("Platform build was changed successful"))
+        }
     }),
     MC_VERSION("Migrate the servers mc version", perform = {
-
+        mainScope.launch {
+            val newVersion = terminal.choose("Please provide the new minecraft version", PlatformResolver.resolvePlatform(it.platform).getMcVersions().map { it to it }) ?: return@launch
+            it.mcVersion = newVersion
+            PLATFORM_BUILD.perform.invoke(it)
+            terminal.println(TextColors.brightGreen("Minecraft version was changed successful"))
+        }
     }),
-     */
     AUTOMATIC_UPDATES("Toggle automatic updates", perform = {
         it.automaticUpdates = !it.automaticUpdates
         JsonDatabase.editServer(it)
