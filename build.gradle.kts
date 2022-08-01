@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "me.obsilabor"
-version = "jvm"
+version = "jvm" // I suck at bash therefore I want the archive name to be laboratory-jvm.zip
 
 application {
     mainClass.set("me.obsilabor.laboratory.ApplicationKt")

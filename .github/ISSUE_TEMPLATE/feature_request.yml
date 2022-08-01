@@ -1,0 +1,24 @@
+name: Feature request
+description: Request a new feature
+labels: [ "enhancement", "feature request" ]
+body:
+  - type: textarea
+    attributes:
+      label: Describe the new feature
+      description: A explanation of the feature you request
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Why do you need this feature?
+      description: Explain in as much detail as possible why this feature is needed
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Other
+      description: Attach images or videos if you want to
+    validations:
+      required: false

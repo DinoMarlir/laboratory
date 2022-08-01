@@ -1,0 +1,36 @@
+name: Bug report
+description: Report crashes or incorrect behaviour you encounter while using laboratory
+labels: [ "bug" ]
+body:
+  - type: textarea
+    attributes:
+      label: Stacktrace
+      description: |
+        Please share a stack trace (if you get one) with us. If you don't share one it will be very hard to impossible for us to spot the bug. Please use a paste service like [pastes.dev](https://pastes.dev/)
+      value: |
+        Paste a link to the stacktrace or the stacktrace itself here.
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: How to reproduce
+      description: |
+        Please explain how to reproduce the error as detailed as possible.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: laboratory version
+      description: |
+        Run `laboratory info` the get your version. Please ensure that the issue still occurs on the latest version, there will be no support for outdated versions.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Other
+      description: Attach screenshots or videos if needed
+    validations:
+      required: false

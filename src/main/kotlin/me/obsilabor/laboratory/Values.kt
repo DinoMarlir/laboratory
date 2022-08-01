@@ -21,3 +21,5 @@ val httpClient = HttpClient {
         json(json)
     }
 }
+
+const val VERSION = "0.0.1"
