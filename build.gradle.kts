@@ -27,3 +27,13 @@ dependencies {
     implementation("io.ktor:ktor-client-content-negotiation:2.0.3")
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.0.3")
 }
+
+tasks {
+    compileJava {
+        options.release.set(17)
+        options.encoding = "UTF-8"
+    }
+    compileKotlin {
+        kotlinOptions.jvmTarget = "17"
+    }
+}
