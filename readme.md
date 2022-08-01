@@ -30,7 +30,11 @@ To create a server run `laboratory create <server-name> <server-software>`
 
 To start an existing server run `laboratory start [server-name]` and select the server.
 
-## Notes
+### Demo 
+
+[![asciicast](https://asciinema.org/a/HoTJgxGhpnPsQfF26NNre4ff5.svg)](https://asciinema.org/a/HoTJgxGhpnPsQfF26NNre4ff5)
+
+### Notes
 
 laboratory currently supports the following server softwares:
 
