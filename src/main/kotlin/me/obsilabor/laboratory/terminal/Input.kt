@@ -1,11 +1,13 @@
 package me.obsilabor.laboratory.terminal
 
 import com.github.ajalt.mordant.rendering.TextColors
-import com.github.ajalt.mordant.rendering.TextStyles
 import com.github.ajalt.mordant.terminal.Terminal
 import me.obsilabor.laboratory.arch.Server
 import me.obsilabor.laboratory.db.JsonDatabase
 
+/**
+ * @author jakobkmar (code from <a href="https://github.com/jakobkmar/pacmc">pacmc</a>)
+ */
 fun Terminal.promptYesOrNo(question: String, default: Boolean? = null, yesFlag: Boolean = false): Boolean {
     val keyString = if (default == null) "(y/n)" else (if (default) "(Y/n)" else "(y/N)")
     while (true) {
@@ -48,6 +50,9 @@ fun Terminal.awaitMemoryInput(
     return amount
 }
 
+/**
+ * @author jakobkmar (code from <a href="https://github.com/jakobkmar/pacmc">pacmc</a>)
+ */
 fun <T> Terminal.choose(
     message: String,
     entries: List<Pair<T, String>>,

@@ -6,6 +6,9 @@ import kotlinx.coroutines.*
 import me.obsilabor.laboratory.terminal
 import me.obsilabor.laboratory.utils.OperatingSystem
 
+/**
+ * @author jakobkmar (code from <a href="https://github.com/jakobkmar/pacmc">pacmc</a>)
+ */
 class SpinnerAnimation(val message: String = "resolving") : CoroutineScope {
     override val coroutineContext = Dispatchers.Default
 

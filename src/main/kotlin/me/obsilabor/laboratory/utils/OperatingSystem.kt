@@ -1,5 +1,8 @@
 package me.obsilabor.laboratory.utils
 
+/**
+ * @author jakobkmar (code from <a href="https://github.com/jakobkmar/pacmc">pacmc</a>)
+ */
 enum class OperatingSystem(
     val prefix: String,
     val displayName: String,
