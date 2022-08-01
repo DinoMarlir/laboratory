@@ -10,8 +10,9 @@ laboratory is the next generation [Minecraft](https://minecraft.net) server mana
 2. cd into the folder using `cd laboratory`
 3. Build a distribution using `gradlew distZip` 
 4. Copy the zip file into the packages folder `cp build/distributions/laboratory-jvm.zip packages/laboratory-jvm.zip`
-5. Run the installation script with root privileges: `sudo ./install.sh`
-6. Complete installation by running `laboratory`
+5. cd into the packages directory using `cd packages`
+6. Run the installation script with root privileges: `sudo ./install.sh`
+7. Complete installation by running `laboratory`
 
 **Windows:**
 Don't use this on Windows
@@ -19,6 +20,9 @@ Don't use this on Windows
 **macOS:**
 It may work, idk just why would you run a minecraft server on macOS
 
+### Updating 
+
+To update laboratory, just run the installation script again and confirm the copy action with `A`
 
 ### Usage
 
