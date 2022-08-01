@@ -13,6 +13,7 @@ object WaterfallPlatform : IPlatform {
     override val name = "waterfall"
     override val jarNamePattern = "waterfall-\$mcVersion-\$build.jar"
     override val coloredName = TextColors.brightRed(name)
+    override val isProxy = true
 
     override suspend fun getBuilds(mcVersion: String): List<String> {
         return httpClient.get("https://api.papermc.io/v2/projects/waterfall/versions/$mcVersion").body<ProjectVersionsResponse>().builds.map { it.toString() }

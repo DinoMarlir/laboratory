@@ -13,6 +13,7 @@ object VelocityPlatform : IPlatform {
     override val name = "velocity"
     override val jarNamePattern = "velocity-\$mcVersion-\$build.jar"
     override val coloredName = TextColors.brightRed(name)
+    override val isProxy = true
 
     override suspend fun getBuilds(mcVersion: String): List<String> {
         return httpClient.get("https://api.papermc.io/v2/projects/velocity/versions/$mcVersion").body<ProjectVersionsResponse>().builds.map { it.toString() }
