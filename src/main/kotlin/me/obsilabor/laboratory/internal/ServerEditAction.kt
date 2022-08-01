@@ -61,11 +61,11 @@ enum class ServerEditAction(val actionString: String, val perform: (Server) -> U
         mainScope.launch {
             val newPlatform = terminal.choose("Please provide the new platform", PlatformResolver.platforms.filter { p -> p.key != it.platform && p.value.getMcVersions().contains(it.mcVersion) }.map { p -> p to p.value.coloredName }) ?: return@launch
             val oldPlatform = PlatformResolver.resolvePlatform(it.platform)
-            if ((newPlatform.value != VelocityPlatform && newPlatform.value != WaterfallPlatform) && (oldPlatform == WaterfallPlatform || oldPlatform == VelocityPlatform)) {
+            if (oldPlatform.isProxy && !newPlatform.value.isProxy) {
                 terminal.println(TextColors.brightRed("Cannot migrate from a proxy platform to a non-proxy platform."))
                 return@launch
             }
-            if ((oldPlatform != VelocityPlatform && oldPlatform != WaterfallPlatform) && (newPlatform.value == WaterfallPlatform || newPlatform.value == VelocityPlatform)) {
+            if (!oldPlatform.isProxy && newPlatform.value.isProxy) {
                 terminal.println(TextColors.brightRed("Cannot migrate from a non-proxy platform to a proxy platform."))
                 return@launch
             }
