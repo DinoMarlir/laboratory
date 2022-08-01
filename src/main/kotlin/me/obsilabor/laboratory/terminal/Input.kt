@@ -1,6 +1,7 @@
 package me.obsilabor.laboratory.terminal
 
 import com.github.ajalt.mordant.rendering.TextColors
+import com.github.ajalt.mordant.rendering.TextStyles
 import com.github.ajalt.mordant.terminal.Terminal
 import me.obsilabor.laboratory.arch.Server
 import me.obsilabor.laboratory.db.JsonDatabase
@@ -39,7 +40,7 @@ fun Terminal.awaitMemoryInput(
     message: String,
     default: String = "1024M"
 ): Long {
-    val input = prompt("$message (Default: $default)") ?: default
+    val input = prompt("$message", default) ?: default
     var amount = input.replace("M", "").replace("G", "").toLongOrNull() ?: 1024
     if (input.endsWith("G")) {
         amount *= 1024L
