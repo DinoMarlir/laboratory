@@ -19,12 +19,14 @@ class InfoCommand : CliktCommand(
         terminal.println("Laboratory version: ${TextColors.brightCyan(VERSION)}")
         mainScope.launch {
             runCatching {
-                val latest = httpClient.get("https://raw.githubusercontent.com/mooziii/laboratory/main/.version").bodyAsText()
+                val latest = httpClient.get("https://raw.githubusercontent.com/mooziii/laboratory/main/.meta/version").bodyAsText()
                 terminal.println("Newest version: ${TextColors.brightGreen(latest)}")
                 if (latest != VERSION) {
                     terminal.println(TextColors.brightRed("Your version doesn't match the newest one. Please update laboratory."))
                 }
-            }.onFailure {}
+            }.onFailure {
+                terminal.println(TextColors.red("Fetching failed: ${it.message}"))
+            }
         }
     }
 }
