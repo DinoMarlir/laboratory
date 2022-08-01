@@ -22,7 +22,7 @@ It may work, idk just why would you run a minecraft server on macOS
 
 ### Updating 
 
-To update laboratory, just run the installation steps again (this time do `cd laboratory` first and then do `git pull` instead of clone) and confirm the copy action with `A`. You will get some errors but that iss fine as it tries to create folders that already exist. Verify update by running `laboratory info`
+To update laboratory, just run the installation steps again (this time do `cd laboratory` first and then do `git pull` instead of clone) and confirm the copy action with `A`. You will get some errors but that is fine as it tries to create folders that already exist. Verify update by running `laboratory info`
 
 ### Usage
 
