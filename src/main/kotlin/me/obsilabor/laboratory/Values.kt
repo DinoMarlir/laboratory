@@ -22,4 +22,4 @@ val httpClient = HttpClient {
     }
 }
 
-const val VERSION = "0.0.1"
+const val VERSION = "0.0.2"
