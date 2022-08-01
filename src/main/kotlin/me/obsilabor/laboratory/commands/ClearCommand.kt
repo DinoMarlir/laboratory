@@ -23,6 +23,7 @@ class ClearCommand : CliktCommand(
             return
         }
         Architecture.Platforms.deleteRecursively()
+        Architecture.Meta.deleteRecursively()
         terminal.println(TextColors.brightGreen("Cache has been cleared!"))
     }
 }

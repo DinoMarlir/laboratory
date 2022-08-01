@@ -5,17 +5,16 @@ import com.github.ajalt.mordant.rendering.TextStyles
 import kotlinx.coroutines.*
 import kotlinx.serialization.Serializable
 import me.obsilabor.laboratory.db.JsonDatabase
+import me.obsilabor.laboratory.mainScope
 import me.obsilabor.laboratory.platform.IPlatform
 import me.obsilabor.laboratory.platform.PlatformResolver
 import me.obsilabor.laboratory.terminal
 import me.obsilabor.laboratory.terminal.SpinnerAnimation
-import me.obsilabor.laboratory.utils.OperatingSystem
-import me.obsilabor.laboratory.utils.copyFolder
-import me.obsilabor.laboratory.utils.getDirectory
-import me.obsilabor.laboratory.utils.getFile
+import me.obsilabor.laboratory.utils.*
 import java.awt.Dimension
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
+import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
@@ -38,7 +37,8 @@ data class Server(
     var maxHeapMemory: Long,
     var jvmArguments: MutableSet<String>,
     var processArguments: MutableSet<String>,
-    var port: Int? = 25565
+    var port: Int? = 25565,
+    var initialStart: Boolean? = true
 ) {
     val terminalString: String
         get() = "${TextStyles.bold(PlatformResolver.resolvePlatform(platform).coloredName)}${TextColors.white("/")}${TextStyles.bold("${TextColors.brightWhite("$name-$id ")}${TextColors.green("$mcVersion-$platformBuild")}")}"
@@ -50,6 +50,22 @@ data class Server(
             if (!static) {
                 directory.deleteRecursively()
                 directory.mkdir()
+            }
+            if (initialStart == true || !static) {
+                val serverDashIcon = File(Architecture.Meta, "server-icon.png").toPath()
+                val serverDotProperties = File(Architecture.Meta, "server.properties").toPath()
+                if (!Files.exists(serverDashIcon)) {
+                    downloadFile("https://github.com/mooziii/laboratory/raw/main/.meta/server-icon.png", Path.of(Architecture.Meta.absolutePath, "server-icon.png"))
+                }
+                if (!Files.exists(serverDotProperties)) {
+                    downloadFile("https://github.com/mooziii/laboratory/raw/main/.meta/server.properties", Path.of(Architecture.Meta.absolutePath, "server.properties"))
+                }
+                Files.copy(serverDashIcon, Path.of(directory.absolutePath, "server-icon.png"))
+                Files.copy(serverDotProperties, Path.of(directory.absolutePath, "server.properties"))
+            }
+            if (initialStart == true) {
+                initialStart = false
+                JsonDatabase.editServer(this@Server)
             }
             if (!static || copyTemplates) {
                 templates.forEach {

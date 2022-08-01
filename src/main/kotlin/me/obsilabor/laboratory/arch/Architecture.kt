@@ -1,6 +1,9 @@
 package me.obsilabor.laboratory.arch
 
+import kotlinx.coroutines.launch
+import me.obsilabor.laboratory.mainScope
 import me.obsilabor.laboratory.platform.IPlatform
+import me.obsilabor.laboratory.utils.downloadFile
 import me.obsilabor.laboratory.utils.getDirectory
 import java.io.File
 import java.nio.file.Path
@@ -15,6 +18,7 @@ object Architecture {
         Platforms
         Vanilla
         Templates
+        Meta
     }
 
     val Root by lazy { getDirectory(System.getProperty("user.home") + "/laboratory") }
@@ -25,6 +29,7 @@ object Architecture {
     val Platforms by lazy { getDirectory(Containers, "platforms") }
     val Vanilla by lazy { getDirectory(Platforms, "vanilla") }
     val Templates by lazy { getDirectory(Containers, "templates") }
+    val Meta by lazy { getDirectory(Containers, "meta") }
 
     suspend fun findOrCreateJar(platform: IPlatform, version: String, build: String): Path {
         val platformFolder = getDirectory(Platforms, platform.name)
