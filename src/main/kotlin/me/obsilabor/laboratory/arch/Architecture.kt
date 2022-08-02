@@ -19,6 +19,7 @@ object Architecture {
         Vanilla
         Templates
         Meta
+        Backups
     }
 
     val Root by lazy { getDirectory(System.getProperty("user.home") + "/laboratory") }
@@ -30,6 +31,7 @@ object Architecture {
     val Vanilla by lazy { getDirectory(Platforms, "vanilla") }
     val Templates by lazy { getDirectory(Containers, "templates") }
     val Meta by lazy { getDirectory(Containers, "meta") }
+    val Backups by lazy { getDirectory(Containers, "backups") }
 
     suspend fun findOrCreateJar(platform: IPlatform, version: String, build: String): Path {
         val platformFolder = getDirectory(Platforms, platform.name)

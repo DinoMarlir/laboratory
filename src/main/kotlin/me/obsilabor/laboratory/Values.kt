@@ -6,6 +6,8 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.json.Json
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 val terminal = Terminal()
 
@@ -23,3 +25,6 @@ val httpClient = HttpClient {
 }
 
 const val VERSION = "0.0.2"
+
+val DATE_FORMAT: DateTimeFormatter = DateTimeFormatter.BASIC_ISO_DATE.withZone(ZoneId.systemDefault())
+val TIME_FORMAT: DateTimeFormatter = DateTimeFormatter.ISO_TIME.withZone(ZoneId.systemDefault())

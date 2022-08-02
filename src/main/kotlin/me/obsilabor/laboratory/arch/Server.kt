@@ -4,10 +4,12 @@ import com.github.ajalt.mordant.rendering.TextColors
 import com.github.ajalt.mordant.rendering.TextStyles
 import kotlinx.coroutines.*
 import kotlinx.serialization.Serializable
+import me.obsilabor.laboratory.DATE_FORMAT
+import me.obsilabor.laboratory.TIME_FORMAT
 import me.obsilabor.laboratory.db.JsonDatabase
-import me.obsilabor.laboratory.mainScope
 import me.obsilabor.laboratory.platform.IPlatform
 import me.obsilabor.laboratory.platform.PlatformResolver
+import me.obsilabor.laboratory.platform.impl.PaperPlatform
 import me.obsilabor.laboratory.terminal
 import me.obsilabor.laboratory.terminal.SpinnerAnimation
 import me.obsilabor.laboratory.utils.*
@@ -18,10 +20,10 @@ import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
+import java.time.Instant
 import javax.swing.JFrame
 import javax.swing.JLabel
 import javax.swing.WindowConstants
-import kotlin.io.path.Path
 
 @Serializable
 data class Server(
@@ -38,7 +40,8 @@ data class Server(
     var jvmArguments: MutableSet<String>,
     var processArguments: MutableSet<String>,
     var port: Int? = 25565,
-    var initialStart: Boolean? = true
+    var initialStart: Boolean? = true,
+    var backupOnUpdate: Boolean? = true
 ) {
     val terminalString: String
         get() = "${TextStyles.bold(PlatformResolver.resolvePlatform(platform).coloredName)}${TextColors.white("/")}${TextStyles.bold("${TextColors.brightWhite("$name-$id ")}${TextColors.green("$mcVersion-$platformBuild")}")}"
@@ -122,7 +125,7 @@ data class Server(
                 .redirectInput(ProcessBuilder.Redirect.INHERIT)
                 .start()
             val frame = JFrame("Windows is for development purposes only!")
-            frame.add(JLabel("Windows doesn't support screen and shouldn't be used in production. Closing this window will result in the process being terminated."))
+            frame.add(JLabel("Windows shouldn't be used in production. Closing this window will result in the process being terminated."))
             frame.addWindowListener(object : WindowAdapter() {
                 override fun windowClosing(e: WindowEvent) {
                     process.destroyForcibly()
@@ -135,6 +138,9 @@ data class Server(
     }
 
     suspend fun update(platform: IPlatform) {
+        if (backupOnUpdate == true && static && !platform.isProxy) {
+            backup(Architecture.Backups.toPath(), true, platform) // only backup worlds on update
+        }
         val spinner = SpinnerAnimation("Resolving latest ${platform.name} build")
         spinner.start()
         mcVersion = platform.getMcVersions().last()
@@ -142,5 +148,28 @@ data class Server(
         spinner.update("Updating..")
         JsonDatabase.editServer(this@Server)
         spinner.stop("Updated your server to ${platform.name}-$mcVersion-$platformBuild")
+    }
+
+    suspend fun backup(output: Path, worldsOnly: Boolean, platform: IPlatform) {
+        val spinner = SpinnerAnimation("Creating a backup of $terminalString")
+        spinner.start()
+        var outputFolder = output.resolve("$name-$mcVersion-$platformBuild-${DATE_FORMAT.format(Instant.now()).split("+")[0]}")
+        if (!Files.exists(outputFolder)) {
+            Files.createDirectory(outputFolder)
+        }
+        outputFolder = outputFolder.resolve(TIME_FORMAT.format(Instant.now()).replace(":", "-").split(".")[0])
+        if (!Files.exists(outputFolder)) {
+            Files.createDirectory(outputFolder)
+        }
+        if (worldsOnly) {
+            copyFolder(directory.toPath().resolve("world"), outputFolder.resolve("world"))
+            if (platform == PaperPlatform) {
+                copyFolder(directory.toPath().resolve("world_nether"), outputFolder.resolve("world_nether"))
+                copyFolder(directory.toPath().resolve("world_the_end"), outputFolder.resolve("world_the_end"))
+            }
+        } else {
+            copyFolder(directory.toPath(), outputFolder)
+        }
+        spinner.stop("Backup completed")
     }
 }

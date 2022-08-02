@@ -153,5 +153,10 @@ enum class ServerEditAction(val actionString: String, val perform: (Server) -> U
             JsonDatabase.editServer(it)
             terminal.println(TextColors.brightGreen("Port of server ${it.terminalString} changed to $port"))
         }
+    }),
+    TOGGLE_AUTOMATIC_BACKUPS("Toggle automatic backups", perform = {
+        it.backupOnUpdate = !(it.backupOnUpdate ?: true)
+        JsonDatabase.editServer(it)
+        terminal.println(TextColors.brightGreen("The server ${it.terminalString} is no${if (it.backupOnUpdate ?: true) "w creating backups when updating" else "no longer creating automatic backups"}"))
     })
 }
