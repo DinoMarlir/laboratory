@@ -2,6 +2,7 @@
 echo "unzip is required to run this script, also this script must be executed with root privileges"
 
 unzip laboratory-jvm.zip
+unzip laboratory-jvm.tar
 unzip laboratory-jvm.tar.gz
 
 echo "#!/usr/bin/bash" > /usr/bin/laboratory
