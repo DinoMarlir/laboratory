@@ -13,6 +13,7 @@ object PaperPlatform : IPlatform {
     override val name = "papermc"
     override val jarNamePattern = "paper-\$mcVersion-\$build.jar"
     override val coloredName = TextColors.brightRed(name)
+    override val configurationFile = "config/paper-global.yml"
 
     override suspend fun getBuilds(mcVersion: String): List<String> {
         return httpClient.get("https://api.papermc.io/v2/projects/paper/versions/$mcVersion").body<ProjectVersionsResponse>().builds.map { it.toString() }

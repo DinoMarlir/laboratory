@@ -12,8 +12,9 @@ import java.nio.file.Path
 object VelocityPlatform : IPlatform {
     override val name = "velocity"
     override val jarNamePattern = "velocity-\$mcVersion-\$build.jar"
-    override val coloredName = TextColors.brightRed(name)
+    override val coloredName = TextColors.brightCyan(name)
     override val isProxy = true
+    override val configurationFile = "velocity.toml"
 
     override suspend fun getBuilds(mcVersion: String): List<String> {
         return httpClient.get("https://api.papermc.io/v2/projects/velocity/versions/$mcVersion").body<ProjectVersionsResponse>().builds.map { it.toString() }

@@ -8,6 +8,8 @@ interface IPlatform {
     val coloredName: String
     val isProxy: Boolean
         get() = false
+    val configurationFile: String
+        get() = "server.properties"
 
     suspend fun getMcVersions(): List<String>
     suspend fun getBuilds(mcVersion: String): List<String>

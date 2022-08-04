@@ -13,6 +13,7 @@ object SpongePlatform : IPlatform {
     override val name = "sponge"
     override val jarNamePattern = "spongevanilla-\$mcVersion-\$build.jar"
     override val coloredName = TextColors.brightYellow(name)
+    override val configurationFile = "config/sponge/sponge.conf"
     private val hrefPattern = Pattern.compile("href=\"(.*?)\"", Pattern.DOTALL)
 
     override suspend fun getMcVersions(): List<String> {
