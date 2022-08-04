@@ -12,6 +12,7 @@ import me.obsilabor.laboratory.platform.PlatformResolver
 import me.obsilabor.laboratory.platform.impl.PaperPlatform
 import me.obsilabor.laboratory.terminal
 import me.obsilabor.laboratory.terminal.SpinnerAnimation
+import me.obsilabor.laboratory.terminal.promptYesOrNo
 import me.obsilabor.laboratory.utils.*
 import java.awt.Dimension
 import java.awt.event.WindowAdapter
@@ -24,6 +25,7 @@ import java.time.Instant
 import javax.swing.JFrame
 import javax.swing.JLabel
 import javax.swing.WindowConstants
+import kotlin.system.exitProcess
 
 @Serializable
 data class Server(
@@ -66,6 +68,10 @@ data class Server(
                 Files.copy(serverDashIcon, Path.of(directory.absolutePath, "server-icon.png"))
                 Files.copy(serverDotProperties, Path.of(directory.absolutePath, "server.properties"))
             }
+            val resolvedPlatform = PlatformResolver.resolvePlatform(platform)
+            if (automaticUpdates) {
+                update(resolvedPlatform, true)
+            }
             if (initialStart == true) {
                 initialStart = false
                 JsonDatabase.editServer(this@Server)
@@ -74,10 +80,6 @@ data class Server(
                 templates.forEach {
                     copyFolder(Path.of(Architecture.Templates.absolutePath, it), Path.of(directory.absolutePath))
                 }
-            }
-            val resolvedPlatform = PlatformResolver.resolvePlatform(platform)
-            if (automaticUpdates) {
-                update(resolvedPlatform)
             }
             val jar = Architecture.findOrCreateJar(resolvedPlatform, mcVersion, platformBuild)
             Files.copy(jar, Path.of(directory.absolutePath, "server.jar"), StandardCopyOption.REPLACE_EXISTING)
@@ -137,20 +139,32 @@ data class Server(
         }
     }
 
-    suspend fun update(platform: IPlatform) {
+    suspend fun update(platform: IPlatform, noConfirm: Boolean = false) {
         if (backupOnUpdate == true && static && !platform.isProxy) {
             backup(Architecture.Backups.toPath(), true, platform) // only backup worlds on update
         }
+
         val spinner = SpinnerAnimation("Resolving latest ${platform.name} build")
         spinner.start()
-        mcVersion = platform.getMcVersions().last()
-        platformBuild = platform.getBuilds(mcVersion).last()
+        val newestMcVersion = platform.getMcVersions().last()
+        val newestPlatformBuild = platform.getBuilds(mcVersion).last()
+        spinner.stop("resolved")
+        if (mcVersion != newestMcVersion) {
+            if (terminal.promptYesOrNo("Updating the server will update to a new minecraft version. Is this okay?", true, yesFlag = noConfirm)) {
+                mcVersion = newestMcVersion
+            } else {
+                exitProcess(0)
+            }
+        }
+        platformBuild = newestPlatformBuild
         spinner.update("Updating..")
+        spinner.start()
         JsonDatabase.editServer(this@Server)
         spinner.stop("Updated your server to ${platform.name}-$mcVersion-$platformBuild")
     }
 
     suspend fun backup(output: Path, worldsOnly: Boolean, platform: IPlatform) {
+        if (initialStart == true) return
         val spinner = SpinnerAnimation("Creating a backup of $terminalString")
         spinner.start()
         var outputFolder = output.resolve("$name-$mcVersion-$platformBuild-${DATE_FORMAT.format(Instant.now()).split("+")[0]}")
@@ -161,15 +175,19 @@ data class Server(
         if (!Files.exists(outputFolder)) {
             Files.createDirectory(outputFolder)
         }
-        if (worldsOnly) {
-            copyFolder(directory.toPath().resolve("world"), outputFolder.resolve("world"))
-            if (platform == PaperPlatform) {
-                copyFolder(directory.toPath().resolve("world_nether"), outputFolder.resolve("world_nether"))
-                copyFolder(directory.toPath().resolve("world_the_end"), outputFolder.resolve("world_the_end"))
+        runCatching {
+            if (worldsOnly) {
+                copyFolder(directory.toPath().resolve("world"), outputFolder.resolve("world"))
+                if (platform == PaperPlatform) {
+                    copyFolder(directory.toPath().resolve("world_nether"), outputFolder.resolve("world_nether"))
+                    copyFolder(directory.toPath().resolve("world_the_end"), outputFolder.resolve("world_the_end"))
+                }
+            } else {
+                copyFolder(directory.toPath(), outputFolder)
             }
-        } else {
-            copyFolder(directory.toPath(), outputFolder)
+            spinner.stop("Backup completed")
+        }.onFailure {
+            spinner.stop(TextColors.brightRed("Backup failed"))
         }
-        spinner.stop("Backup completed")
     }
 }
