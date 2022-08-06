@@ -47,6 +47,6 @@ laboratory currently supports the following server softwares:
 - [Waterfall](https://papermc.io/downloads#Waterfall)
 - [Vanilla](https://minecraft.net)
 
-Support for other servers like [Forge](https://minecraftforge.net) is planned.
+~~Support for [Forge](https://minecraftforge.net) is planned.~~ Forge is stupid. See [#10](https://github.com/mooziii/laboratory/issues/10)
 
 This project was inspired by [pacmc](https://github.com/jakobkmar/pacmc) and [CloudNet](https://github.com/CloudNetService/CloudNet-v3)

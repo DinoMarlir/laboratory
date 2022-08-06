@@ -79,11 +79,10 @@ class ServerCommand : CliktCommand(
                 var path = server.directory.absolutePath + "/${platform.configurationFile}"
                 if (!OperatingSystem.notWindows) {
                     path = path.replace("/", "\\")
+                    ProcessBuilder(me.obsilabor.laboratory.config.Config.config.textEditor, path).start()
+                } else {
+                    terminal.println(TextColors.yellow("Config editing currently only works correctly on windows"))
                 }
-                ProcessBuilder(
-                    me.obsilabor.laboratory.config.Config.config.textEditor,
-                    path
-                ).start()
             } else {
                 terminal.println("Aborting.")
             }

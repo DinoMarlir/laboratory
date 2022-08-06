@@ -6,6 +6,7 @@ import kotlinx.coroutines.*
 import kotlinx.serialization.Serializable
 import me.obsilabor.laboratory.DATE_FORMAT
 import me.obsilabor.laboratory.TIME_FORMAT
+import me.obsilabor.laboratory.config.Config
 import me.obsilabor.laboratory.db.JsonDatabase
 import me.obsilabor.laboratory.platform.IPlatform
 import me.obsilabor.laboratory.platform.PlatformResolver
@@ -141,7 +142,7 @@ data class Server(
 
     suspend fun update(platform: IPlatform, noConfirm: Boolean = false) {
         if (backupOnUpdate == true && static && !platform.isProxy) {
-            backup(Architecture.Backups.toPath(), true, platform) // only backup worlds on update
+            backup(Path.of(Config.config.folderForAutomaticBackups), true, platform) // only backup worlds on update
         }
 
         val spinner = SpinnerAnimation("Resolving latest ${platform.name} build")
