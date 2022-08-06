@@ -71,7 +71,7 @@ data class Server(
             }
             val resolvedPlatform = PlatformResolver.resolvePlatform(platform)
             if (automaticUpdates) {
-                update(resolvedPlatform, true)
+                update(resolvedPlatform, Config.config.promptOnMajorUpdates)
             }
             if (initialStart == true) {
                 initialStart = false

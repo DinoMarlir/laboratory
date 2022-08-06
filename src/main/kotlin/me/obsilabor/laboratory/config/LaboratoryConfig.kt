@@ -7,12 +7,14 @@ import me.obsilabor.laboratory.utils.OperatingSystem
 @Serializable
 data class LaboratoryConfig(
     val folderForAutomaticBackups: String,
-    val textEditor: String
+    val textEditor: String,
+    val promptOnMajorUpdates: Boolean
 ) {
     companion object {
         val DEFAULTS = LaboratoryConfig(
             Architecture.Backups.absolutePath,
             if (OperatingSystem.notWindows) "nano" else "notepad.exe",
+            true
         )
     }
 }
