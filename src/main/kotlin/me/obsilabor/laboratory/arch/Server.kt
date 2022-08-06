@@ -44,7 +44,8 @@ data class Server(
     var processArguments: MutableSet<String>,
     var port: Int? = 25565,
     var initialStart: Boolean? = true,
-    var backupOnUpdate: Boolean? = true
+    var backupOnUpdate: Boolean? = true,
+    var javaCommand: String? = "java"
 ) {
     val terminalString: String
         get() = "${TextStyles.bold(PlatformResolver.resolvePlatform(platform).coloredName)}${TextColors.white("/")}${TextStyles.bold("${TextColors.brightWhite("$name-$id ")}${TextColors.green("$mcVersion-$platformBuild")}")}"
@@ -71,7 +72,7 @@ data class Server(
             }
             val resolvedPlatform = PlatformResolver.resolvePlatform(platform)
             if (automaticUpdates) {
-                update(resolvedPlatform, Config.config.promptOnMajorUpdates)
+                update(resolvedPlatform, !Config.config.promptOnMajorUpdates)
             }
             if (initialStart == true) {
                 initialStart = false
@@ -99,7 +100,7 @@ data class Server(
                 "screen",
                 "-dmS",
                 "$name-$id",
-                "java",
+                javaCommand,
                 "-Xmx${maxHeapMemory}M",
             )
             args.addAll(jvmArguments)
@@ -112,7 +113,7 @@ data class Server(
             terminal.println("Server is now running with PID ${process.pid()}. Attach using ${TextStyles.dim(TextColors.brightWhite("screen -dr $name-$id"))}")
         } else {
             val args = arrayListOf(
-                "java",
+                javaCommand,
                 "-Xmx${maxHeapMemory}M",
             )
             args.addAll(jvmArguments)
@@ -148,15 +149,13 @@ data class Server(
         val spinner = SpinnerAnimation("Resolving latest ${platform.name} build")
         spinner.start()
         val newestMcVersion = platform.getMcVersions().last()
-        val newestPlatformBuild = platform.getBuilds(mcVersion).last()
         spinner.stop("resolved")
         if (mcVersion != newestMcVersion) {
             if (terminal.promptYesOrNo("Updating the server will update to a new minecraft version. Is this okay?", true, yesFlag = noConfirm)) {
                 mcVersion = newestMcVersion
-            } else {
-                exitProcess(0)
             }
         }
+        val newestPlatformBuild = platform.getBuilds(mcVersion).last()
         platformBuild = newestPlatformBuild
         spinner.update("Updating..")
         spinner.start()
