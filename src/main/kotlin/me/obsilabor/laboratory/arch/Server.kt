@@ -67,8 +67,14 @@ data class Server(
                 if (!Files.exists(serverDotProperties)) {
                     downloadFile("https://github.com/mooziii/laboratory/raw/main/.meta/server.properties", Path.of(Architecture.Meta.absolutePath, "server.properties"))
                 }
-                Files.copy(serverDashIcon, Path.of(directory.absolutePath, "server-icon.png"))
-                Files.copy(serverDotProperties, Path.of(directory.absolutePath, "server.properties"))
+                val iconPath = Path.of(directory.absolutePath, "server-icon.png")
+                if (!Files.exists(iconPath)) {
+                    Files.copy(serverDashIcon, iconPath)
+                }
+                val propertiesPath = Path.of(directory.absolutePath, "server.properties")
+                if (!Files.exists(propertiesPath)) {
+                    Files.copy(serverDotProperties, propertiesPath)
+                }
             }
             val resolvedPlatform = PlatformResolver.resolvePlatform(platform)
             if (automaticUpdates) {
