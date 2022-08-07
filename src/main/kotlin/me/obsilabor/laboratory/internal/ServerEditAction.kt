@@ -14,7 +14,10 @@ import me.obsilabor.laboratory.mainScope
 import me.obsilabor.laboratory.platform.impl.*
 import me.obsilabor.laboratory.terminal.SpinnerAnimation
 import me.obsilabor.laboratory.terminal.awaitMemoryInput
+import me.obsilabor.laboratory.utils.OperatingSystem
+import me.obsilabor.laboratory.utils.searchForJavaInstallations
 import java.io.File
+import kotlin.io.path.absolutePathString
 
 enum class ServerEditAction(val actionString: String, val perform: (Server) -> Unit) {
     RENAME("Rename the server", perform = {
@@ -148,7 +151,7 @@ enum class ServerEditAction(val actionString: String, val perform: (Server) -> U
     }),
     CHANGE_PORT("Change the servers port", perform = {
         mainScope.launch {
-            val port = terminal.prompt("Please enter the new port to listen on", "25565")?.toIntOrNull() ?: return@launch
+            val port = terminal.prompt("Please eund bnter the new port to listen on", "25565")?.toIntOrNull() ?: return@launch
             it.port = port
             JsonDatabase.editServer(it)
             terminal.println(TextColors.brightGreen("Port of server ${it.terminalString} changed to $port"))
@@ -157,6 +160,11 @@ enum class ServerEditAction(val actionString: String, val perform: (Server) -> U
     TOGGLE_AUTOMATIC_BACKUPS("Toggle automatic backups", perform = {
         it.backupOnUpdate = !(it.backupOnUpdate ?: true)
         JsonDatabase.editServer(it)
-        terminal.println(TextColors.brightGreen("The server ${it.terminalString} is no${if (it.backupOnUpdate ?: true) "w creating backups when updating" else "no longer creating automatic backups"}"))
+        terminal.println(TextColors.brightGreen("The server ${it.terminalString} is no${if (it.backupOnUpdate != false) "w creating backups when updating" else "no longer creating automatic backups"}"))
+    }),
+    CHANGE_JAVA_VERSION("Change java version", perform = {
+        it.javaCommand = "${terminal.choose("Please select a new java version", searchForJavaInstallations().map { jvm -> jvm to jvm.name })?.toPath()?.resolve("bin")?.resolve("java${if (!OperatingSystem.notWindows) ".exe" else ""}")?.absolutePathString()}"
+        JsonDatabase.editServer(it)
+        terminal.println(TextColors.brightGreen("Java version changed."))
     })
 }
