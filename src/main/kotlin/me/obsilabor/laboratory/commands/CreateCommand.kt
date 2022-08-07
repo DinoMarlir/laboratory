@@ -70,7 +70,9 @@ class CreateCommand : CliktCommand(
                 mutableSetOf("-Dlog4j2.formatMsgNoLookups=true"),
                 if (!Desktop.isDesktopSupported()) mutableSetOf("nogui") else mutableSetOf(),
                 25565,
-                true
+                true,
+                true,
+                "java"
             )
             if (terminal.promptYesOrNo("Do you want to configure your new server right now?", true)) {
                 server.static = terminal.promptYesOrNo("Do you want your new server to be static?", true)
