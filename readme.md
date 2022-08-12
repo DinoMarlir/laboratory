@@ -18,7 +18,7 @@ laboratory is the next generation [Minecraft](https://minecraft.net) server mana
 Don't use this on Windows
 
 **macOS:**
-It may work, idk just why would you run a minecraft server on macOS
+It may work, why would you run a minecraft server on macOS
 
 ### Updating 
 
@@ -32,7 +32,7 @@ To start an existing server run `laboratory start [server-name]` and select the 
 
 ### Demo 
 
-[![asciicast](https://asciinema.org/a/HoTJgxGhpnPsQfF26NNre4ff5.svg)](https://asciinema.org/a/HoTJgxGhpnPsQfF26NNre4ff5)
+[![asciicast](https://asciinema.org/a/514193.svg)](https://asciinema.org/a/514193)
 
 ### Notes
 

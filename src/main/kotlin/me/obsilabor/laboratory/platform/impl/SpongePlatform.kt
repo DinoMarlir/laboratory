@@ -67,7 +67,6 @@ object SpongePlatform : IPlatform {
         } else {
             ".jar"
         }
-        println(url)
         runCatching {
             downloadFile(url, path)
         }.onFailure {
