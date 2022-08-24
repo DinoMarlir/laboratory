@@ -5,8 +5,10 @@ import com.github.ajalt.clikt.core.subcommands
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.arguments.optional
 import com.github.ajalt.mordant.rendering.TextColors
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import me.obsilabor.laboratory.config.Config
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import me.obsilabor.laboratory.db.JsonDatabase
 import me.obsilabor.laboratory.internal.ServerEditAction
 import me.obsilabor.laboratory.mainScope
@@ -79,9 +81,16 @@ class ServerCommand : CliktCommand(
                 var path = server.directory.absolutePath + "/${platform.configurationFile}"
                 if (!OperatingSystem.notWindows) {
                     path = path.replace("/", "\\")
-                    ProcessBuilder(me.obsilabor.laboratory.config.Config.config.textEditor, path).start()
-                } else {
-                    terminal.println(TextColors.yellow("Config editing currently only works correctly on windows"))
+                }
+                mainScope.launch {
+                    withContext(Dispatchers.Default) {
+                        val processBuilder = ProcessBuilder(me.obsilabor.laboratory.config.Config.config.textEditor, path)
+                        processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT)
+                        processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT)
+                        processBuilder.redirectInput(ProcessBuilder.Redirect.INHERIT)
+                        val process = processBuilder.start()
+                        process.waitFor()
+                    }
                 }
             } else {
                 terminal.println("Aborting.")

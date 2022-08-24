@@ -113,6 +113,10 @@ fun Terminal.chooseServer(query: String): Server? {
             servers = mutableSetOf(server)
         }
     }
+    if (servers.size == 1) {
+        resolvedServer = servers.first()
+        return resolvedServer
+    }
     resolvedServer = choose("Which one did you mean?", servers.map {
             it to it.terminalString
         }) ?: return null
