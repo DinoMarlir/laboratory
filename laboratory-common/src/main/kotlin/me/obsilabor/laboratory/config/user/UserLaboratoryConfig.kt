@@ -1,17 +1,17 @@
-package me.obsilabor.laboratory.config
+package me.obsilabor.laboratory.config.user
 
 import kotlinx.serialization.Serializable
 import me.obsilabor.laboratory.arch.Architecture
 import me.obsilabor.laboratory.utils.OperatingSystem
 
 @Serializable
-data class LaboratoryConfig(
+data class UserLaboratoryConfig(
     val folderForAutomaticBackups: String,
     val textEditor: String,
     val promptOnMajorUpdates: Boolean
 ) {
     companion object {
-        val DEFAULTS = LaboratoryConfig(
+        val DEFAULTS = UserLaboratoryConfig(
             Architecture.Backups.absolutePath,
             if (OperatingSystem.notWindows) "nano" else "notepad.exe",
             true

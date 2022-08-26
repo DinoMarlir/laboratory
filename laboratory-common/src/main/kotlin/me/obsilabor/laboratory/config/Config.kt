@@ -3,6 +3,7 @@ package me.obsilabor.laboratory.config
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import me.obsilabor.laboratory.arch.Architecture
+import me.obsilabor.laboratory.config.user.UserLaboratoryConfig
 import me.obsilabor.laboratory.json
 
 object Config {
@@ -14,13 +15,13 @@ object Config {
         }
     }
 
-    private fun writeFile(cfg: LaboratoryConfig?) {
+    private fun writeFile(cfg: UserLaboratoryConfig?) {
         if (!file.exists()) {
             file.createNewFile()
         }
-        file.writeText(json.encodeToString(cfg ?: LaboratoryConfig.DEFAULTS))
+        file.writeText(json.encodeToString(cfg ?: UserLaboratoryConfig.DEFAULTS))
     }
 
-    val config: LaboratoryConfig
+    val userConfig: UserLaboratoryConfig
         get() = json.decodeFromString(file.readText())
 }

@@ -26,7 +26,6 @@ import java.time.Instant
 import javax.swing.JFrame
 import javax.swing.JLabel
 import javax.swing.WindowConstants
-import kotlin.system.exitProcess
 
 @Serializable
 data class Server(
@@ -78,7 +77,7 @@ data class Server(
             }
             val resolvedPlatform = PlatformResolver.resolvePlatform(platform)
             if (automaticUpdates) {
-                update(resolvedPlatform, !Config.config.promptOnMajorUpdates)
+                update(resolvedPlatform, !Config.userConfig.promptOnMajorUpdates)
             }
             if (initialStart == true) {
                 initialStart = false
@@ -149,7 +148,7 @@ data class Server(
 
     suspend fun update(platform: IPlatform, noConfirm: Boolean = false) {
         if (backupOnUpdate == true && static && !platform.isProxy) {
-            backup(Path.of(Config.config.folderForAutomaticBackups), true, platform) // only backup worlds on update
+            backup(Path.of(Config.userConfig.folderForAutomaticBackups), true, platform) // only backup worlds on update
         }
 
         val spinner = SpinnerAnimation("Resolving latest ${platform.name} build")

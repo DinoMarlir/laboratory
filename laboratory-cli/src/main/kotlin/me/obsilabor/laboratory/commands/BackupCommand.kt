@@ -8,7 +8,6 @@ import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.mordant.rendering.TextColors
 import kotlinx.coroutines.launch
-import me.obsilabor.laboratory.arch.Architecture
 import me.obsilabor.laboratory.config.Config
 import me.obsilabor.laboratory.mainScope
 import me.obsilabor.laboratory.platform.PlatformResolver
@@ -30,7 +29,7 @@ class BackupCommand : CliktCommand(
     private val outputFlag by option(
         "-o", "--output",
         help = "This option defines the output directory."
-    ).default(Config.config.folderForAutomaticBackups)
+    ).default(Config.userConfig.folderForAutomaticBackups)
 
     override fun run() {
         val server = terminal.chooseServer(query ?: "") ?: return

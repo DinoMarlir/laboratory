@@ -16,7 +16,6 @@ import me.obsilabor.laboratory.utils.getFile
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
-import kotlin.concurrent.thread
 import kotlin.io.path.absolutePathString
 
 object QuiltPlatform : IPlatform {

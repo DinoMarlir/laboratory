@@ -7,7 +7,6 @@ import com.github.ajalt.clikt.parameters.arguments.optional
 import com.github.ajalt.mordant.rendering.TextColors
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import me.obsilabor.laboratory.db.JsonDatabase
 import me.obsilabor.laboratory.internal.ServerEditAction
@@ -84,7 +83,7 @@ class ServerCommand : CliktCommand(
                 }
                 mainScope.launch {
                     withContext(Dispatchers.Default) {
-                        val processBuilder = ProcessBuilder(me.obsilabor.laboratory.config.Config.config.textEditor, path)
+                        val processBuilder = ProcessBuilder(me.obsilabor.laboratory.config.Config.userConfig.textEditor, path)
                         processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT)
                         processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT)
                         processBuilder.redirectInput(ProcessBuilder.Redirect.INHERIT)
