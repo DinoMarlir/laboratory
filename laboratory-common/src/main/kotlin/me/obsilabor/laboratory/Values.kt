@@ -1,5 +1,6 @@
 package me.obsilabor.laboratory
 
+import com.github.ajalt.mordant.terminal.Terminal
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
@@ -7,6 +8,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.json.Json
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+
+val terminal = Terminal()
 
 val json = Json {
     prettyPrint = true

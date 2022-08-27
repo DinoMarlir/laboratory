@@ -12,11 +12,17 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib"))
+    implementation("org.jetbrains.kotlinx:atomicfu-jvm:0.18.3")
+
+    implementation("com.github.ajalt.clikt:clikt:3.5.0")
+    implementation("com.github.ajalt.mordant:mordant:2.0.0-beta7")
 
     implementation("io.ktor:ktor-client-core:2.1.0")
     implementation("io.ktor:ktor-client-cio:2.1.0")
     implementation("io.ktor:ktor-client-content-negotiation:2.1.0")
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.1.0")
+
+    implementation("me.obsilabor:piston-meta-kt:1.0.2")
 }
 
 tasks {
