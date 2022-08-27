@@ -108,6 +108,8 @@ data class Server(
                 javaCommand,
                 "-Xmx${maxHeapMemory}M",
             )
+            args.add("\"-Dme.obsilabor.laboratory.server.name=${name}\"")
+            args.add("\"-Dme.obsilabor.laboratory.server.id=${id}\"")
             args.addAll(jvmArguments)
             args.add("-jar")
             args.add("server.jar")
@@ -121,6 +123,8 @@ data class Server(
                 javaCommand,
                 "-Xmx${maxHeapMemory}M",
             )
+            args.add("\"-Dme.obsilabor.laboratory.server.name=${name}\"")
+            args.add("\"-Dme.obsilabor.laboratory.server.id=${id}\"")
             args.addAll(jvmArguments)
             args.add("-jar")
             args.add("server.jar")
