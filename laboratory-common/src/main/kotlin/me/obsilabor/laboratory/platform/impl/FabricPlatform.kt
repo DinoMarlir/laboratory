@@ -61,20 +61,14 @@ object FabricPlatform : IPlatform {
                 build
             ).directory(workingDirectory.toFile())
             val spinner = SpinnerAnimation("Waiting for fabricmc installer to download libraries")
-            //spinner.start()
-            //spinner.stop("FabricMC hopefully installed")
-
             runBlocking {
-                terminal.println("Waiting for fabric")
-                processBuilder.redirectErrorStream(true).redirectError(ProcessBuilder.Redirect.INHERIT).redirectInput(
-                    ProcessBuilder.Redirect.INHERIT).redirectOutput(ProcessBuilder.Redirect.INHERIT).start().waitFor()
+                spinner.start()
+                processBuilder.start().waitFor()
                 Files.copy(Path.of(workingDirectory.absolutePathString(), "fabric-server-launch.jar"), Path.of(
                     Architecture.Platforms.absolutePath, "fabricmc/fabricmc-$build.jar"), StandardCopyOption.REPLACE_EXISTING)
+                spinner.stop("FabricMC installed")
                 VanillaPlatform.downloadJarFile(Path.of(Architecture.Platforms.absolutePath, "vanilla/vanilla-$mcVersion.jar"), mcVersion, build)
             }
-
-
-
         }
     }
 

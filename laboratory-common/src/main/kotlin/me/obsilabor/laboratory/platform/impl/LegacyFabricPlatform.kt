@@ -5,6 +5,7 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import me.obsilabor.laboratory.arch.Architecture
 import me.obsilabor.laboratory.httpClient
@@ -48,7 +49,7 @@ object LegacyFabricPlatform : IPlatform {
 
     override suspend fun installServer(workingDirectory: Path, installerJarFile: Path, mcVersion: String, build: String) {
         withContext(Dispatchers.IO) {
-            ProcessBuilder(
+            val processBuilder = ProcessBuilder(
                 "java",
                 "-jar",
                 installerJarFile.toFile().name,
@@ -57,14 +58,16 @@ object LegacyFabricPlatform : IPlatform {
                 mcVersion,
                 "-loader",
                 build
-            ).directory(workingDirectory.toFile()).start()
-            val spinner = SpinnerAnimation("Waiting for legacyfabric installer to download libraries")
-            spinner.start()
-            delay(3500)
-            spinner.stop("LegacyFabric hopefully installed")
-            Files.copy(Path.of(workingDirectory.absolutePathString(), "fabric-server-launch.jar"), Path.of(
-                Architecture.Platforms.absolutePath, "legacyfabric/legacyfabric-$build.jar"), StandardCopyOption.REPLACE_EXISTING)
-            VanillaPlatform.downloadJarFile(Path.of(Architecture.Platforms.absolutePath, "vanilla/vanilla-$mcVersion.jar"), mcVersion, build)
+            ).directory(workingDirectory.toFile())
+            val spinner = SpinnerAnimation("Waiting for LegacyFabric installer to download libraries")
+            runBlocking {
+                spinner.start()
+                processBuilder.start().waitFor()
+                Files.copy(Path.of(workingDirectory.absolutePathString(), "fabric-server-launch.jar"), Path.of(
+                    Architecture.Platforms.absolutePath, "legacyfabric/legacyfabric-$build.jar"), StandardCopyOption.REPLACE_EXISTING)
+                spinner.stop("LegacyFabric installed")
+                VanillaPlatform.downloadJarFile(Path.of(Architecture.Platforms.absolutePath, "vanilla/vanilla-$mcVersion.jar"), mcVersion, build)
+            }
         }
     }
 
