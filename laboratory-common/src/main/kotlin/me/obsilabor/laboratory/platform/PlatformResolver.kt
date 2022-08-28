@@ -13,7 +13,8 @@ object PlatformResolver {
         "waterfall" to WaterfallPlatform,
         "customjar" to CustomJarPlatform,
         "sponge" to SpongePlatform,
-        "paper-mojmap" to MojMapPaperPlatform
+        "paper-mojmap" to MojMapPaperPlatform,
+        "purpurmc" to PurpurPlatform
     )
 
     fun resolvePlatform(input: String): IPlatform {
