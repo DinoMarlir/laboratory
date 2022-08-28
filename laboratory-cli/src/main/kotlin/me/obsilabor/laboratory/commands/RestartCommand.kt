@@ -42,7 +42,6 @@ class RestartCommand : CliktCommand(
                     val spinner = SpinnerAnimation("Stopping server")
                     spinner.start()
                     resolvedServer?.stop(forceFlag)
-                    while (resolvedServer?.isAlive == true) {}
                     spinner.stop("Stopped server")
                     resolvedServer?.start(attachFlag)
                 }
