@@ -118,15 +118,18 @@ data class Server(
             val processBuilder = ProcessBuilder(args).directory(directory)
             if (!attach) {
                 val process = processBuilder.start()
-                val pid = process.pid()
+                val pid = process.pid()+2 // don't ask, pid of the process is actually 2 numbers higher
                 terminal.println("Server is now running with PID $pid. Attach using ${TextStyles.dim(TextColors.brightWhite("screen -dr $name-$id"))}")
                 this.pid = pid
                 JsonDatabase.editServer(this)
             } else {
                 withContext(Dispatchers.Default) {
                     runBlocking {
-                        processBuilder.redirectErrorStream(true).redirectError(ProcessBuilder.Redirect.INHERIT).redirectInput(
-                            ProcessBuilder.Redirect.INHERIT).redirectOutput(ProcessBuilder.Redirect.INHERIT).start().waitFor()
+                        val process = processBuilder.redirectErrorStream(true).redirectError(ProcessBuilder.Redirect.INHERIT).redirectInput(
+                            ProcessBuilder.Redirect.INHERIT).redirectOutput(ProcessBuilder.Redirect.INHERIT).start()
+                        this@Server.pid = process.pid()+2
+                        JsonDatabase.editServer(this@Server)
+                        process.waitFor()
                     }
                 }
             }
@@ -209,4 +212,15 @@ data class Server(
             spinner.stop(TextColors.brightRed("Backup failed"))
         }
     }
+
+    suspend fun stop(forcibly: Boolean) {
+        if (isAlive) {
+            killProcess(pid ?: return, forcibly)
+        }
+    }
+
+    val isAlive: Boolean
+        get() {
+            return isProcessAlive(pid ?: return false)
+        }
 }

@@ -16,7 +16,9 @@ class LaboratoryCommand : CliktCommand(
             TemplateCommand(),
             ServerCommand(),
             InfoCommand(),
-            BackupCommand()
+            BackupCommand(),
+            StopCommand(),
+            RestartCommand()
         )
     }
 
