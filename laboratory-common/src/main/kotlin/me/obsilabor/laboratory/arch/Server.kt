@@ -51,7 +51,7 @@ data class Server(
 
     val directory by lazy { getDirectory(Architecture.Servers, "$name-$id") }
 
-    suspend fun start() {
+    suspend fun start(attach: Boolean = false) {
         withContext(Dispatchers.IO) {
             if (!static) {
                 directory.deleteRecursively()
@@ -103,13 +103,11 @@ data class Server(
         if (OperatingSystem.notWindows) {
             val args = arrayListOf(
                 "screen",
-                "-dmS",
+                "${if(!attach) "-dm" else "-"}S",
                 "$name-$id",
                 javaCommand,
                 "-Xmx${maxHeapMemory}M",
             )
-            args.add("\"-Dme.obsilabor.laboratory.server.name=${name}\"")
-            args.add("\"-Dme.obsilabor.laboratory.server.id=${id}\"")
             args.addAll(jvmArguments)
             args.add("-jar")
             args.add("server.jar")
@@ -123,8 +121,6 @@ data class Server(
                 javaCommand,
                 "-Xmx${maxHeapMemory}M",
             )
-            args.add("\"-Dme.obsilabor.laboratory.server.name=${name}\"")
-            args.add("\"-Dme.obsilabor.laboratory.server.id=${id}\"")
             args.addAll(jvmArguments)
             args.add("-jar")
             args.add("server.jar")

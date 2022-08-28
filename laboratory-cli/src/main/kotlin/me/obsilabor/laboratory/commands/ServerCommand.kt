@@ -4,6 +4,8 @@ import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.subcommands
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.arguments.optional
+import com.github.ajalt.clikt.parameters.options.flag
+import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.mordant.rendering.TextColors
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -49,11 +51,15 @@ class ServerCommand : CliktCommand(
         help = "Deletes a server"
     ) {
         private val query by argument("query", help = "Name or id of the server to delete").optional()
+        private val yesFlag by option(
+            "-y", "--yes",
+            help = "When this flag is not, the user will no longer be prompted for any actions"
+        ).flag()
 
         override fun run() {
             val server = terminal.chooseServer(query ?: "") ?: return
             if (server != null) {
-                if (terminal.promptYesOrNo(TextColors.brightRed("The server ${server.terminalString} and all its content will be deleted. Are you sure about that?"), default = false)) {
+                if (terminal.promptYesOrNo(TextColors.brightRed("The server ${server.terminalString} and all its content will be deleted. Are you sure about that?"), default = false, yesFlag = this.yesFlag)) {
                     mainScope.launch {
                         val spinner = SpinnerAnimation("Deleting server ${server.terminalString}")
                         JsonDatabase.deleteServer(server)
