@@ -2,6 +2,7 @@ package me.obsilabor.laboratory
 
 import com.github.ajalt.mordant.terminal.Terminal
 import io.ktor.client.HttpClient
+import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.CoroutineScope
@@ -21,6 +22,9 @@ lateinit var mainScope: CoroutineScope
 val httpClient = HttpClient {
     install(ContentNegotiation) {
         json(json)
+    }
+    install(HttpTimeout) {
+        requestTimeoutMillis = 120*1000
     }
 }
 
