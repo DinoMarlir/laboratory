@@ -7,11 +7,11 @@ laboratory is the next generation [Minecraft](https://minecraft.net) server mana
 **Linux:**
 
 1. Clone this repository using `git clone https://github.com/mooziii/laboratory.git laboratory-installation`
-2. Checkout the development branch using `git checkout dev/chemicae`
-3. cd into the folder using `cd laboratory-installation`
+2. cd into the folder using `cd laboratory-installation`
+3. Checkout the development branch using `git checkout dev/chemicae`
 4. Give permissions to the gradle file using `chmod +x gradlew`
 5. Build a distribution using `./gradlew distZip`
-6. Copy the zip file into the packages folder `cp build/distributions/laboratory-cli-jvm.zip packages/laboratory-cli-jvm.zip`
+6. Copy the zip file into the packages folder `cp laboratory-cli/build/distributions/laboratory-cli-jvm.zip packages/laboratory-cli-jvm.zip`
 7. cd into the packages directory using `cd packages`
 8. Give permissions to the installation script using `chmod +x install.sh`
 9. Run the installation script with root privileges: `sudo ./install.sh`
