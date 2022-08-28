@@ -1,7 +1,5 @@
 package me.obsilabor.laboratory
 
-import com.github.ajalt.clikt.parameters.options.flag
-import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.mordant.terminal.Terminal
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.*
@@ -26,7 +24,7 @@ val httpClient = HttpClient {
     }
 }
 
-const val VERSION = "0.5.1-dev/chemicae"
+const val VERSION = "0.5.2-dev/chemicae"
 
 val DATE_FORMAT: DateTimeFormatter = DateTimeFormatter.BASIC_ISO_DATE.withZone(ZoneId.systemDefault())
 val TIME_FORMAT: DateTimeFormatter = DateTimeFormatter.ISO_TIME.withZone(ZoneId.systemDefault())
