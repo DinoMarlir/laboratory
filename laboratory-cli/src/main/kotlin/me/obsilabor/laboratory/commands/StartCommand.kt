@@ -19,12 +19,16 @@ class StartCommand : CliktCommand(
         "query",
         help = "The id or name of the server to start"
     ).optional()
+    private val attachFlag by option(
+        "attach",
+        help = "If this flag is set, the player will automatically be attached to the screen"
+    ).flag("-a", "--attach")
 
     override fun run() {
         mainScope.launch {
             val resolvedServer = terminal.chooseServer(query ?: "")
             terminal.println(TextStyles.italic("Starting server.."))
-            resolvedServer?.start()
+            resolvedServer?.start(attachFlag)
         }
     }
 }

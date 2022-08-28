@@ -44,7 +44,8 @@ data class Server(
     var port: Int? = 25565,
     var initialStart: Boolean? = true,
     var backupOnUpdate: Boolean? = true,
-    var javaCommand: String? = "java"
+    var javaCommand: String? = "java",
+    var pid: Long? = null
 ) {
     val terminalString: String
         get() = "${TextStyles.bold(PlatformResolver.resolvePlatform(platform).coloredName)}${TextColors.white("/")}${TextStyles.bold("${TextColors.brightWhite("$name-$id ")}${TextColors.green("$mcVersion-$platformBuild")}")}"
@@ -117,12 +118,15 @@ data class Server(
             val processBuilder = ProcessBuilder(args).directory(directory)
             if (!attach) {
                 val process = processBuilder.start()
-                terminal.println("Server is now running with PID ${process.pid()}. Attach using ${TextStyles.dim(TextColors.brightWhite("screen -dr $name-$id"))}")
+                val pid = process.pid()
+                terminal.println("Server is now running with PID $pid. Attach using ${TextStyles.dim(TextColors.brightWhite("screen -dr $name-$id"))}")
+                this.pid = pid
+                JsonDatabase.editServer(this)
             } else {
                 withContext(Dispatchers.Default) {
                     runBlocking {
                         processBuilder.redirectErrorStream(true).redirectError(ProcessBuilder.Redirect.INHERIT).redirectInput(
-                            ProcessBuilder.Redirect.INHERIT).redirectOutput(ProcessBuilder.Redirect.INHERIT).start()
+                            ProcessBuilder.Redirect.INHERIT).redirectOutput(ProcessBuilder.Redirect.INHERIT).start().waitFor()
                     }
                 }
             }
