@@ -12,7 +12,7 @@ import java.nio.file.Path
 object PurpurPlatform : IPlatform {
     override val name = "purpurmc"
     override val jarNamePattern = "purpur-\$mcVersion-\$build.jar"
-    override val coloredName = TextColors.magenta(MojMapPaperPlatform.name)
+    override val coloredName = TextColors.magenta(name)
 
     override suspend fun getMcVersions(): List<String> {
         return httpClient.get("https://api.purpurmc.org/v2/purpur/").body<PurpurVersionsResponse>().versions
