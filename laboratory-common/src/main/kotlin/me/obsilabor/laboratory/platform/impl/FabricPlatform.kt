@@ -10,6 +10,7 @@ import kotlinx.coroutines.withContext
 import me.obsilabor.laboratory.arch.Architecture
 import me.obsilabor.laboratory.httpClient
 import me.obsilabor.laboratory.platform.IPlatform
+import me.obsilabor.laboratory.terminal
 import me.obsilabor.laboratory.terminal.SpinnerAnimation
 import me.obsilabor.laboratory.utils.copyFolder
 import me.obsilabor.laboratory.utils.downloadFile
@@ -64,8 +65,9 @@ object FabricPlatform : IPlatform {
             //spinner.stop("FabricMC hopefully installed")
 
             runBlocking {
+                terminal.println("Waiting for fabric")
                 processBuilder.redirectErrorStream(true).redirectError(ProcessBuilder.Redirect.INHERIT).redirectInput(
-                    ProcessBuilder.Redirect.INHERIT).redirectOutput(ProcessBuilder.Redirect.INHERIT).start()
+                    ProcessBuilder.Redirect.INHERIT).redirectOutput(ProcessBuilder.Redirect.INHERIT).start().waitFor()
                 Files.copy(Path.of(workingDirectory.absolutePathString(), "fabric-server-launch.jar"), Path.of(
                     Architecture.Platforms.absolutePath, "fabricmc/fabricmc-$build.jar"), StandardCopyOption.REPLACE_EXISTING)
                 VanillaPlatform.downloadJarFile(Path.of(Architecture.Platforms.absolutePath, "vanilla/vanilla-$mcVersion.jar"), mcVersion, build)
