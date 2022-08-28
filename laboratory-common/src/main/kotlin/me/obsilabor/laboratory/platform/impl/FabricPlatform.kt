@@ -5,6 +5,7 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import me.obsilabor.laboratory.arch.Architecture
 import me.obsilabor.laboratory.httpClient
@@ -47,8 +48,8 @@ object FabricPlatform : IPlatform {
     }
 
     override suspend fun installServer(workingDirectory: Path, installerJarFile: Path, mcVersion: String, build: String) {
-        withContext(Dispatchers.IO) {
-            ProcessBuilder(
+        withContext(Dispatchers.Default) {
+            val processBuilder = ProcessBuilder(
                 "java",
                 "-jar",
                 installerJarFile.toFile().name,
@@ -57,11 +58,17 @@ object FabricPlatform : IPlatform {
                 mcVersion,
                 "-loader",
                 build
-            ).directory(workingDirectory.toFile()).start()
+            ).directory(workingDirectory.toFile())
             val spinner = SpinnerAnimation("Waiting for fabricmc installer to download libraries")
-            spinner.start()
-            delay(3500)
-            spinner.stop("FabricMC hopefully installed")
+            //spinner.start()
+            //spinner.stop("FabricMC hopefully installed")
+
+            runBlocking {
+                processBuilder.redirectErrorStream(true).redirectError(ProcessBuilder.Redirect.INHERIT).redirectInput(
+                    ProcessBuilder.Redirect.INHERIT).redirectOutput(ProcessBuilder.Redirect.INHERIT).start()
+            }
+
+
             Files.copy(Path.of(workingDirectory.absolutePathString(), "fabric-server-launch.jar"), Path.of(
                 Architecture.Platforms.absolutePath, "fabricmc/fabricmc-$build.jar"), StandardCopyOption.REPLACE_EXISTING)
             VanillaPlatform.downloadJarFile(Path.of(Architecture.Platforms.absolutePath, "vanilla/vanilla-$mcVersion.jar"), mcVersion, build)

@@ -114,8 +114,18 @@ data class Server(
             args.add("--port")
             args.add("$port")
             args.addAll(processArguments)
-            val process = ProcessBuilder(args).directory(directory).start()
-            terminal.println("Server is now running with PID ${process.pid()}. Attach using ${TextStyles.dim(TextColors.brightWhite("screen -dr $name-$id"))}")
+            val processBuilder = ProcessBuilder(args).directory(directory)
+            if (!attach) {
+                val process = processBuilder.start()
+                terminal.println("Server is now running with PID ${process.pid()}. Attach using ${TextStyles.dim(TextColors.brightWhite("screen -dr $name-$id"))}")
+            } else {
+                withContext(Dispatchers.Default) {
+                    runBlocking {
+                        processBuilder.redirectErrorStream(true).redirectError(ProcessBuilder.Redirect.INHERIT).redirectInput(
+                            ProcessBuilder.Redirect.INHERIT).redirectOutput(ProcessBuilder.Redirect.INHERIT).start()
+                    }
+                }
+            }
         } else {
             val args = arrayListOf(
                 javaCommand,
@@ -127,7 +137,7 @@ data class Server(
             args.add("--port")
             args.add("$port")
             args.addAll(processArguments)
-            val process = ProcessBuilder(args,)
+            val process = ProcessBuilder(args)
                 .directory(directory)
                 .redirectErrorStream(true)
                 .redirectOutput(ProcessBuilder.Redirect.INHERIT)
