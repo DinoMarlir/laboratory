@@ -6,6 +6,7 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import kotlinx.coroutines.launch
 import me.obsilabor.laboratory.VERSION
+import me.obsilabor.laboratory.config.Config
 import me.obsilabor.laboratory.httpClient
 import me.obsilabor.laboratory.mainScope
 import me.obsilabor.laboratory.terminal
@@ -19,7 +20,7 @@ class InfoCommand : CliktCommand(
         terminal.println("Laboratory version: ${TextColors.brightCyan(VERSION)}")
         mainScope.launch {
             runCatching {
-                val latest = httpClient.get("https://raw.githubusercontent.com/mooziii/laboratory/main/.meta/version").bodyAsText()
+                val latest = httpClient.get("https://raw.githubusercontent.com/mooziii/laboratory/${Config.userConfig.updateBranch}/.meta/version").bodyAsText()
                 terminal.println("Newest version: ${TextColors.brightGreen(latest)}")
                 if (latest != VERSION) {
                     terminal.println(TextColors.brightRed("Your version doesn't match the newest one. Please update laboratory."))
