@@ -59,7 +59,7 @@ object LegacyFabricPlatform : IPlatform {
                 "-loader",
                 build
             ).directory(workingDirectory.toFile())
-            val spinner = SpinnerAnimation("Waiting for LegacyFabric installer to download libraries")
+            val spinner = SpinnerAnimation("Installing LegacyFabric")
             runBlocking {
                 spinner.start()
                 processBuilder.start().waitFor()

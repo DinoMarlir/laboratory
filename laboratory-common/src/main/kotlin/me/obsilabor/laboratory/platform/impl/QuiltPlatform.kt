@@ -5,6 +5,7 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import me.obsilabor.laboratory.arch.Architecture
 import me.obsilabor.laboratory.httpClient
@@ -43,7 +44,7 @@ object QuiltPlatform : IPlatform {
 
     override suspend fun installServer(workingDirectory: Path, installerJarFile: Path, mcVersion: String, build: String) {
         withContext(Dispatchers.IO) {
-            ProcessBuilder(
+            val processBuilder = ProcessBuilder(
                 "java",
                 "-jar",
                 installerJarFile.toFile().name,
@@ -51,13 +52,15 @@ object QuiltPlatform : IPlatform {
                 "server",
                 mcVersion,
                 build
-            ).directory(workingDirectory.toFile()).start()
-            val spinner = SpinnerAnimation("Waiting for quiltmc installer to download libraries")
-            spinner.start()
-            delay(3500)
-            spinner.stop("QuiltMC hopefully installed")
-            Files.copy(Path.of(workingDirectory.absolutePathString(), "server","quilt-server-launch.jar"), Path.of(Architecture.Platforms.absolutePath, "quiltmc/quiltmc-$build.jar"), StandardCopyOption.REPLACE_EXISTING)
-            VanillaPlatform.downloadJarFile(Path.of(Architecture.Platforms.absolutePath, "vanilla/vanilla-$mcVersion.jar"), mcVersion, build)
+            ).directory(workingDirectory.toFile())
+            val spinner = SpinnerAnimation("Installing QuiltMC")
+            runBlocking {
+                spinner.start()
+                processBuilder.start().waitFor()
+                Files.copy(Path.of(workingDirectory.absolutePathString(), "server","quilt-server-launch.jar"), Path.of(Architecture.Platforms.absolutePath, "quiltmc/quiltmc-$build.jar"), StandardCopyOption.REPLACE_EXISTING)
+                spinner.stop("QuiltMC installed")
+                VanillaPlatform.downloadJarFile(Path.of(Architecture.Platforms.absolutePath, "vanilla/vanilla-$mcVersion.jar"), mcVersion, build)
+            }
         }
     }
 

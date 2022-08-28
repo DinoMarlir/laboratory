@@ -60,7 +60,7 @@ object FabricPlatform : IPlatform {
                 "-loader",
                 build
             ).directory(workingDirectory.toFile())
-            val spinner = SpinnerAnimation("Waiting for fabricmc installer to download libraries")
+            val spinner = SpinnerAnimation("Installing FabricMC")
             runBlocking {
                 spinner.start()
                 processBuilder.start().waitFor()
