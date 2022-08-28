@@ -48,7 +48,7 @@ object FabricPlatform : IPlatform {
     }
 
     override suspend fun installServer(workingDirectory: Path, installerJarFile: Path, mcVersion: String, build: String) {
-        withContext(Dispatchers.Default) {
+        withContext(Dispatchers.IO) {
             val processBuilder = ProcessBuilder(
                 "java",
                 "-jar",
