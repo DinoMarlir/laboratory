@@ -66,12 +66,13 @@ object FabricPlatform : IPlatform {
             runBlocking {
                 processBuilder.redirectErrorStream(true).redirectError(ProcessBuilder.Redirect.INHERIT).redirectInput(
                     ProcessBuilder.Redirect.INHERIT).redirectOutput(ProcessBuilder.Redirect.INHERIT).start()
+                Files.copy(Path.of(workingDirectory.absolutePathString(), "fabric-server-launch.jar"), Path.of(
+                    Architecture.Platforms.absolutePath, "fabricmc/fabricmc-$build.jar"), StandardCopyOption.REPLACE_EXISTING)
+                VanillaPlatform.downloadJarFile(Path.of(Architecture.Platforms.absolutePath, "vanilla/vanilla-$mcVersion.jar"), mcVersion, build)
             }
 
 
-            Files.copy(Path.of(workingDirectory.absolutePathString(), "fabric-server-launch.jar"), Path.of(
-                Architecture.Platforms.absolutePath, "fabricmc/fabricmc-$build.jar"), StandardCopyOption.REPLACE_EXISTING)
-            VanillaPlatform.downloadJarFile(Path.of(Architecture.Platforms.absolutePath, "vanilla/vanilla-$mcVersion.jar"), mcVersion, build)
+
         }
     }
 
