@@ -42,6 +42,7 @@ To start an existing server run `laboratory start [server-name]` and select the 
 laboratory currently supports the following server softwares:
 
 - [PaperMC](https://papermc.io)
+- [PurpurMC](https://purpurmc.org)
 - [QuiltMC](https://quiltmc.org)
 - [FabricMC](https://fabricmc.net)
 - [LegacyFabric](https://legacyfabric.net)
@@ -49,7 +50,9 @@ laboratory currently supports the following server softwares:
 - [Velocity](https://papermc.io/downloads#Velocity)
 - [Waterfall](https://papermc.io/downloads#Waterfall)
 - [Vanilla](https://minecraft.net)
+- custom jar files
+- Mojang Mapped Paper Servers (not on paper downloads site as of now)
 
-~~Support for [Forge](https://minecraftforge.net) is planned.~~ Forge is stupid. See [#10](https://github.com/mooziii/laboratory/issues/10)
+Support for [Forge](https://minecraftforge.net) is under development.
 
 This project was inspired by [pacmc](https://github.com/jakobkmar/pacmc) and [CloudNet](https://github.com/CloudNetService/CloudNet-v3)
