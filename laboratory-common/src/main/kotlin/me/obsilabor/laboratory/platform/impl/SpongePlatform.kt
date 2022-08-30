@@ -14,7 +14,7 @@ object SpongePlatform : IPlatform {
     override val jarNamePattern = "spongevanilla-\$mcVersion-\$build.jar"
     override val coloredName = TextColors.brightYellow(name)
     override val configurationFile = "config/sponge/sponge.conf"
-    private val hrefPattern = Pattern.compile("href=\"(.*?)\"", Pattern.DOTALL)
+    val hrefPattern = Pattern.compile("href=\"(.*?)\"", Pattern.DOTALL)
 
     override suspend fun getMcVersions(): List<String> {
         val html = httpClient.get("https://repo.spongepowered.org/service/rest/repository/browse/maven-releases/org/spongepowered/spongevanilla/") {
