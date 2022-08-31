@@ -13,6 +13,13 @@ object PurpurPlatform : IPlatform {
     override val name = "purpurmc"
     override val jarNamePattern = "purpur-\$mcVersion-\$build.jar"
     override val coloredName = TextColors.magenta(name)
+    override val configurationFiles = mapOf(
+        "config/paper-global.yml" to "Paper config for versions above 1.19",
+        "paper.yml" to "Paper config for versions below 1.19",
+        "purpur.yml" to "Purpur config",
+        "pufferfish.yml" to "Pufferfish config",
+        "server.properties" to "Vanilla config"
+    )
 
     override suspend fun getMcVersions(): List<String> {
         return httpClient.get("https://api.purpurmc.org/v2/purpur/").body<PurpurVersionsResponse>().versions

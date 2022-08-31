@@ -13,7 +13,10 @@ object WaterfallPlatform : IPlatform {
     override val name = "waterfall"
     override val jarNamePattern = "waterfall-\$mcVersion-\$build.jar"
     override val coloredName = TextColors.brightRed(name)
-    override val configurationFile = "config.yml"
+    override val configurationFiles = mapOf(
+        "waterfall.yml" to "Waterfall config",
+        "config.yml" to "BungeeCord config"
+    )
     override val isProxy = true
 
     override suspend fun getBuilds(mcVersion: String): List<String> {

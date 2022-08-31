@@ -9,8 +9,8 @@ interface IPlatform {
     val coloredName: String
     val isProxy: Boolean
         get() = false
-    val configurationFile: String
-        get() = "server.properties"
+    val configurationFiles: Map<String, String>
+        get() = mapOf("server.properties" to "Vanilla config")
 
     suspend fun getMcVersions(): List<String>
     suspend fun getBuilds(mcVersion: String): List<String>

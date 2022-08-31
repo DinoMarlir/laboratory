@@ -81,24 +81,26 @@ class ServerCommand : CliktCommand(
 
         override fun run() {
             val server = terminal.chooseServer(query ?: "") ?: return
-            if (server != null) {
-                val platform = PlatformResolver.resolvePlatform(server.platform)
-                var path = server.directory.absolutePath + "/${platform.configurationFile}"
-                if (!OperatingSystem.notWindows) {
-                    path = path.replace("/", "\\")
-                }
-                mainScope.launch {
-                    withContext(Dispatchers.Default) {
-                        val processBuilder = ProcessBuilder(me.obsilabor.laboratory.config.Config.userConfig.textEditor, path)
-                        processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT)
-                        processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT)
-                        processBuilder.redirectInput(ProcessBuilder.Redirect.INHERIT)
-                        val process = processBuilder.start()
-                        process.waitFor()
-                    }
-                }
+            val platform = PlatformResolver.resolvePlatform(server.platform)
+            val files = platform.configurationFiles
+            val file = if (files.size == 1){
+                files.keys.first()
             } else {
-                terminal.println("Aborting.")
+                terminal.choose("Which configuration do you want to edit?", files.map { it.key to it.key + " (${it.value})" }) ?: return
+            }
+            var path = server.directory.absolutePath + "/$file"
+            if (!OperatingSystem.notWindows) {
+                path = path.replace("/", "\\")
+            }
+            mainScope.launch {
+                withContext(Dispatchers.Default) {
+                    val processBuilder = ProcessBuilder(me.obsilabor.laboratory.config.Config.userConfig.textEditor, path)
+                    processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT)
+                    processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT)
+                    processBuilder.redirectInput(ProcessBuilder.Redirect.INHERIT)
+                    val process = processBuilder.start()
+                    process.waitFor()
+                }
             }
         }
     }
