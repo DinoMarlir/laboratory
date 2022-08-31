@@ -74,11 +74,15 @@ object ForgePlatform : IPlatform {
     }
 
     override suspend fun downloadJarFile(path: Path, mcVersion: String, build: String): Boolean {
-        downloadFile("https://maven.minecraftforge.net/net/minecraftforge/forge/$mcVersion-$build/forge-$mcVersion-$build-installer.jar", Path.of(path.toFile().parentFile.absolutePath, "forge-installer-$mcVersion-$build.jar"))
-        downloadFile("https://github.com/mooziii/forgelauncher/releases/download/1.0.1/forgelauncher-1.0.1-all.jar", Path.of(path.toFile().parentFile.absolutePath, "forgelauncher.jar"))
+        val dir = File(path.toFile().parentFile.absolutePath + "/$mcVersion-$build")
+        if (!dir.exists()) {
+            dir.mkdir()
+        }
+        downloadFile("https://maven.minecraftforge.net/net/minecraftforge/forge/$mcVersion-$build/forge-$mcVersion-$build-installer.jar", Path.of(path.toFile().parentFile.absolutePath + "/$mcVersion-$build", "forge-installer-$mcVersion-$build.jar"))
+        downloadFile("https://github.com/mooziii/forgelauncher/releases/download/1.0.1/forgelauncher-1.0.1-all.jar", Path.of(path.toFile().parentFile.absolutePath + "/$mcVersion-$build", "forgelauncher-$mcVersion-$build.jar"))
         installServer(
             Path.of(path.toFile().parentFile.absolutePath),
-            Path.of(path.toFile().parentFile.absolutePath, "forge-installer-$mcVersion-$build.jar"),
+            Path.of(path.toFile().parentFile.absolutePath + "/$mcVersion-$build", "forge-installer-$mcVersion-$build.jar"),
             mcVersion,
             build
         )
@@ -92,25 +96,20 @@ object ForgePlatform : IPlatform {
                 "-jar",
                 installerJarFile.toFile().name,
                 "--installServer"
-            ).directory(workingDirectory.toFile())
+            ).directory(workingDirectory.resolve(Path.of("$mcVersion-$build")).toFile())
             val spinner = SpinnerAnimation("Installing Forge")
             runBlocking {
                 spinner.start()
                 processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT).redirectInput(ProcessBuilder.Redirect.INHERIT).start().waitFor()
-                val launcherMetaVersion = PistonMetaClient.getLauncherMeta().versions.first { it.id == mcVersion }
-                if (launcherMetaVersion < MinecraftVersions.RELEASE_1_17) {
-                    Files.copy(Path.of(workingDirectory.absolutePathString(), "forge-$mcVersion-$build.jar"), Path.of(Architecture.Platforms.absolutePath, "forge/forge-$mcVersion-$build.jar"), StandardCopyOption.REPLACE_EXISTING)
-                    Files.copy(Path.of(workingDirectory.absolutePathString(), "forge-$mcVersion-$build-$mcVersion.jar"), Path.of(Architecture.Platforms.absolutePath, "forge/forge-$mcVersion-$build-$mcVersion.jar"), StandardCopyOption.REPLACE_EXISTING)
-                    Files.copy(Path.of(workingDirectory.absolutePathString(), "forge-$mcVersion-$build-$mcVersion-universal.jar"), Path.of(Architecture.Platforms.absolutePath, "forge/forge-$mcVersion-$build-$mcVersion-universal.jar"), StandardCopyOption.REPLACE_EXISTING)
-                }
+                Files.copy(Path.of(workingDirectory.absolutePathString() + "/$mcVersion-$build", "/forgelauncher-$mcVersion-$build.jar"), Path.of(Architecture.Platforms.absolutePath, "forge/forgelauncher-$mcVersion-$build.jar"), StandardCopyOption.REPLACE_EXISTING)
                 spinner.stop("Forge installed")
             }
         }
     }
 
     override suspend fun copyOtherFiles(destinationFolder: Path, mcVersion: String, build: String, server: Server) {
-        Files.copy(Path.of(Architecture.Platforms.absolutePath, "forge/forgelauncher.jar"), Path.of(destinationFolder.absolutePathString(), "forgelauncher-$mcVersion-$build.jar"), StandardCopyOption.REPLACE_EXISTING)
-        copyFolder(Path.of(Architecture.Platforms.absolutePath, "forge/libraries"), Path.of(destinationFolder.absolutePathString(), "libraries"))
+        Files.copy(Path.of(Architecture.Platforms.absolutePath, "forge/$mcVersion-$build/forgelauncher-$mcVersion-$build.jar"), Path.of(destinationFolder.absolutePathString(), "forgelauncher-$mcVersion-$build.jar"), StandardCopyOption.REPLACE_EXISTING)
+        copyFolder(Path.of(Architecture.Platforms.absolutePath, "forge/$mcVersion-$build/libraries"), Path.of(destinationFolder.absolutePathString(), "libraries"))
         val file = File(Path.of(destinationFolder.absolutePathString(), "forgelauncher.txt").absolutePathString())
         if (!file.exists()) {
             file.createNewFile()
@@ -127,6 +126,21 @@ object ForgePlatform : IPlatform {
             ${server.javaCommand ?: "java"}
             ${list.joinToString(" ")}
         """.trimIndent())
+        val launcherMetaVersion = PistonMetaClient.getLauncherMeta().versions.first { it.id == mcVersion }
+        if (launcherMetaVersion < MinecraftVersions.RELEASE_1_17) {
+            runCatching {
+                Files.copy(Path.of(Architecture.Platforms.resolve("forge").absolutePath, "/$mcVersion-$build/forge-$mcVersion-$build.jar"), Path.of(destinationFolder.absolutePathString(), "forge-$mcVersion-$build.jar"), StandardCopyOption.REPLACE_EXISTING)
+            }
+            runCatching {
+                Files.copy(Path.of(Architecture.Platforms.resolve("forge").absolutePath, "/$mcVersion-$build/forge-$mcVersion-$build-$mcVersion.jar"), Path.of(destinationFolder.absolutePathString(), "forge-$mcVersion-$build.jar"), StandardCopyOption.REPLACE_EXISTING)
+            }
+            runCatching {
+                Files.copy(Path.of(Architecture.Platforms.resolve("forge").absolutePath, "/$mcVersion-$build/forge-$mcVersion-$build-$mcVersion-universal.jar"), Path.of(destinationFolder.absolutePathString(), "forge-$mcVersion-$build.jar"), StandardCopyOption.REPLACE_EXISTING)
+            }
+            runCatching {
+                Files.copy(Path.of(Architecture.Platforms.resolve("forge").absolutePath, "/$mcVersion-$build/forge-$mcVersion-$build-universal.jar"), Path.of(destinationFolder.absolutePathString(), "forge-$mcVersion-$build.jar"), StandardCopyOption.REPLACE_EXISTING)
+            }
+        }
     }
 }
 
