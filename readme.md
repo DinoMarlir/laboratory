@@ -9,13 +9,10 @@ laboratory is the next generation [Minecraft](https://minecraft.net) server mana
 1. Clone this repository using `git clone https://github.com/mooziii/laboratory.git laboratory-installation`
 2. cd into the folder using `cd laboratory-installation`
 3. Checkout the development branch using `git checkout dev/chemicae`
-4. Give permissions to the gradle file using `chmod +x gradlew`
-5. Build a distribution using `./gradlew distZip`
-6. Copy the zip file into the packages folder `cp laboratory-cli/build/distributions/laboratory-cli-jvm.zip packages/laboratory-cli-jvm.zip`
-7. cd into the packages directory using `cd packages`
-8. Give permissions to the installation script using `chmod +x install.sh`
-9. Run the installation script with root privileges: `sudo ./install.sh`
-10. Complete installation by running `laboratory`
+4. cd into the packages directory using `cd packages`
+5. Give permissions to the compile script file using `chmod +x compile.sh`
+6. Run the compile-script using `./compile.sh` (you'll be prompted for the sudo password)
+7. Complete the installation process by running `laboratory`
 
 **Windows:**
 Don't use this on Windows
@@ -47,12 +44,11 @@ laboratory currently supports the following server softwares:
 - [FabricMC](https://fabricmc.net)
 - [LegacyFabric](https://legacyfabric.net)
 - [SpongeVanilla](https://spongepowered.org/downloads/spongevanilla)
+- [Forge](https://minecraftforge.net)
 - [Velocity](https://papermc.io/downloads#Velocity)
 - [Waterfall](https://papermc.io/downloads#Waterfall)
 - [Vanilla](https://minecraft.net)
 - custom jar files
 - Mojang Mapped Paper Servers (not on paper downloads site as of now)
-
-Support for [Forge](https://minecraftforge.net) is under development.
 
 This project was inspired by [pacmc](https://github.com/jakobkmar/pacmc) and [CloudNet](https://github.com/CloudNetService/CloudNet-v3)
