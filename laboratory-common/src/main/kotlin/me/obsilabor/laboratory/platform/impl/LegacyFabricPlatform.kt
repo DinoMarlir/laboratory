@@ -8,6 +8,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import me.obsilabor.laboratory.arch.Architecture
+import me.obsilabor.laboratory.arch.Server
 import me.obsilabor.laboratory.httpClient
 import me.obsilabor.laboratory.platform.IPlatform
 import me.obsilabor.laboratory.terminal.SpinnerAnimation
@@ -71,7 +72,7 @@ object LegacyFabricPlatform : IPlatform {
         }
     }
 
-    override suspend fun copyOtherFiles(destinationFolder: Path, mcVersion: String, build: String) {
+    override suspend fun copyOtherFiles(destinationFolder: Path, mcVersion: String, build: String, server: Server) {
         val fabricServerLauncherProperties = getFile(destinationFolder.toFile(), "fabric-server-launcher.properties")
         fabricServerLauncherProperties.writeText("serverJar=vanilla-$mcVersion.jar")
         Files.copy(Path.of(Architecture.Platforms.absolutePath, "vanilla/vanilla-$mcVersion.jar"), Path.of(destinationFolder.absolutePathString(), "vanilla-$mcVersion.jar"), StandardCopyOption.REPLACE_EXISTING)

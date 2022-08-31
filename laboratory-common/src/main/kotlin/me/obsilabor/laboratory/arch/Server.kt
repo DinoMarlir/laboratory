@@ -91,7 +91,7 @@ data class Server(
             }
             val jar = Architecture.findOrCreateJar(resolvedPlatform, mcVersion, platformBuild)
             Files.copy(jar, Path.of(directory.absolutePath, "server.jar"), StandardCopyOption.REPLACE_EXISTING)
-            resolvedPlatform.copyOtherFiles(Path.of(directory.absolutePath), mcVersion, platformBuild)
+            resolvedPlatform.copyOtherFiles(Path.of(directory.absolutePath), mcVersion, platformBuild, this@Server)
             val spinner = SpinnerAnimation("Accepting mojang EULA")
             spinner.start()
             val eula = getFile(directory, "eula.txt")
@@ -109,7 +109,9 @@ data class Server(
                 javaCommand,
                 "-Xmx${maxHeapMemory}M",
             )
-            args.addAll(jvmArguments)
+            for (jvmArgument in jvmArguments) {
+                args.addAll(jvmArgument.split(" "))
+            }
             args.add("-jar")
             args.add("server.jar")
             args.add("--port")
