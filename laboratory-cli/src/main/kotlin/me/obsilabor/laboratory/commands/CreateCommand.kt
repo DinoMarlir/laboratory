@@ -46,14 +46,19 @@ class CreateCommand : CliktCommand(
             val platform = PlatformResolver.resolvePlatform(software)
             var spinner = SpinnerAnimation("Resolving minecraft versions for ${platform.name}")
             spinner.start()
+            var updates = true
             var chosenVersion = version
             if (chosenVersion == "latest") {
                 chosenVersion = platform.getMcVersions().last()
+            } else {
+                updates = false
             }
             var chosenBuild = build
             if (chosenBuild == "latest") {
                 spinner.update("Resolving ${platform.name} builds")
                 chosenBuild = platform.getBuilds(chosenVersion).last()
+            } else {
+                updates = false
             }
             spinner.stop("Resolved versions")
             val server = Server(
@@ -65,7 +70,7 @@ class CreateCommand : CliktCommand(
                 software,
                 chosenBuild,
                 chosenVersion,
-                true,
+                updates,
                 1024,
                 mutableSetOf("-Dlog4j2.formatMsgNoLookups=true"),
                 if (!Desktop.isDesktopSupported()) mutableSetOf("nogui") else mutableSetOf(),
