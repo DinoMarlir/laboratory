@@ -11,7 +11,11 @@ import me.obsilabor.laboratory.arch.Server
 import me.obsilabor.laboratory.httpClient
 import me.obsilabor.laboratory.platform.IPlatform
 import me.obsilabor.laboratory.terminal.SpinnerAnimation
+import me.obsilabor.laboratory.utils.copyFolder
 import me.obsilabor.laboratory.utils.downloadFile
+import me.obsilabor.pistonmetakt.MinecraftVersions
+import me.obsilabor.pistonmetakt.PistonMetaClient
+import me.obsilabor.pistonmetakt.utils.compareTo
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
@@ -21,8 +25,8 @@ import kotlin.io.path.absolutePathString
 
 object ForgePlatform : IPlatform {
     override val name = "forge"
-    override val jarNamePattern = "forgelauncher-"
-    override val coloredName = TextColors.white(LegacyFabricPlatform.name)
+    override val jarNamePattern = "forgelauncher-\$mcVersion-\$build.jar"
+    override val coloredName = TextColors.white(name)
 
     override suspend fun getMcVersions(): List<String> {
         val newestVersionPattern = Pattern.compile("<li class=\"elem-active\">(.*?)</li>", Pattern.DOTALL)
@@ -46,7 +50,7 @@ object ForgePlatform : IPlatform {
                 set.add(possibleVersion.removePrefix("index_").removeSuffix(".html"))
             }
         }
-        return set.toList()
+        return set.toList().reversed()
     }
 
     override suspend fun getBuilds(mcVersion: String): List<String> {
@@ -66,16 +70,15 @@ object ForgePlatform : IPlatform {
                 set.add(versionName)
             }
         }
-        return set.toList()
+        return set.toList().reversed()
     }
 
-    // https://adfoc.us/serve/sitelinks/?id=271228&url= <--- remove this prefix
     override suspend fun downloadJarFile(path: Path, mcVersion: String, build: String): Boolean {
-        downloadFile("https://maven.minecraftforge.net/net/minecraftforge/forge/$mcVersion-$build/forge-$mcVersion-$build-installer.jar", Path.of(path.toFile().parentFile.absolutePath, "forge-installer.jar"))
+        downloadFile("https://maven.minecraftforge.net/net/minecraftforge/forge/$mcVersion-$build/forge-$mcVersion-$build-installer.jar", Path.of(path.toFile().parentFile.absolutePath, "forge-installer-$mcVersion-$build.jar"))
         downloadFile("https://github.com/mooziii/forgelauncher/releases/download/1.0.1/forgelauncher-1.0.1-all.jar", Path.of(path.toFile().parentFile.absolutePath, "forgelauncher.jar"))
         installServer(
             Path.of(path.toFile().parentFile.absolutePath),
-            Path.of(path.toFile().parentFile.absolutePath, "forge-$mcVersion-$build-installer.jar"),
+            Path.of(path.toFile().parentFile.absolutePath, "forge-installer-$mcVersion-$build.jar"),
             mcVersion,
             build
         )
@@ -93,17 +96,21 @@ object ForgePlatform : IPlatform {
             val spinner = SpinnerAnimation("Installing Forge")
             runBlocking {
                 spinner.start()
-                processBuilder.start().waitFor()
-                Files.copy(Path.of(workingDirectory.absolutePathString(), "forge-$mcVersion-$build.jar"), Path.of(
-                    Architecture.Platforms.absolutePath, "forge/forge-$mcVersion-$build.jar"), StandardCopyOption.REPLACE_EXISTING)
+                processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT).redirectInput(ProcessBuilder.Redirect.INHERIT).start().waitFor()
+                val launcherMetaVersion = PistonMetaClient.getLauncherMeta().versions.first { it.id == mcVersion }
+                if (launcherMetaVersion < MinecraftVersions.RELEASE_1_17) {
+                    Files.copy(Path.of(workingDirectory.absolutePathString(), "forge-$mcVersion-$build.jar"), Path.of(Architecture.Platforms.absolutePath, "forge/forge-$mcVersion-$build.jar"), StandardCopyOption.REPLACE_EXISTING)
+                    Files.copy(Path.of(workingDirectory.absolutePathString(), "forge-$mcVersion-$build-$mcVersion.jar"), Path.of(Architecture.Platforms.absolutePath, "forge/forge-$mcVersion-$build-$mcVersion.jar"), StandardCopyOption.REPLACE_EXISTING)
+                    Files.copy(Path.of(workingDirectory.absolutePathString(), "forge-$mcVersion-$build-$mcVersion-universal.jar"), Path.of(Architecture.Platforms.absolutePath, "forge/forge-$mcVersion-$build-$mcVersion-universal.jar"), StandardCopyOption.REPLACE_EXISTING)
+                }
                 spinner.stop("Forge installed")
-                //VanillaPlatform.downloadJarFile(Path.of(Architecture.Platforms.absolutePath, "vanilla/vanilla-$mcVersion.jar"), mcVersion, build)
             }
         }
     }
 
     override suspend fun copyOtherFiles(destinationFolder: Path, mcVersion: String, build: String, server: Server) {
-        Files.copy(Path.of(Architecture.Platforms.absolutePath, "forge/forgelauncher.jar"), Path.of(destinationFolder.absolutePathString(), "forgelauncher.jar"), StandardCopyOption.REPLACE_EXISTING)
+        Files.copy(Path.of(Architecture.Platforms.absolutePath, "forge/forgelauncher.jar"), Path.of(destinationFolder.absolutePathString(), "forgelauncher-$mcVersion-$build.jar"), StandardCopyOption.REPLACE_EXISTING)
+        copyFolder(Path.of(Architecture.Platforms.absolutePath, "forge/libraries"), Path.of(destinationFolder.absolutePathString(), "libraries"))
         val file = File(Path.of(destinationFolder.absolutePathString(), "forgelauncher.txt").absolutePathString())
         if (!file.exists()) {
             file.createNewFile()
