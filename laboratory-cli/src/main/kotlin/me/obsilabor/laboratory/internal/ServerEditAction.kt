@@ -37,7 +37,7 @@ enum class ServerEditAction(val actionString: String, val perform: (Server) -> U
     COPY_TEMPLATES("Enable/disable templates", perform = {
         it.copyTemplates = !it.copyTemplates
         JsonDatabase.editServer(it)
-        terminal.println(TextColors.brightGreen("The server ${it.terminalString} is no${if (it.copyTemplates) "w copying templates" else "no longer using templates"}"))
+        terminal.println(TextColors.brightGreen("The server ${it.terminalString} is no${if (it.copyTemplates) "w copying templates" else "longer using templates"}"))
     }),
     STATIC("Make the server static/dynamic", perform = {
         it.static = !it.static
