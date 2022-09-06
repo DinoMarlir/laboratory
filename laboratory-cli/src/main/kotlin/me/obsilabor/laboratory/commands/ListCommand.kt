@@ -16,6 +16,7 @@ class ListCommand : CliktCommand(
             terminal.println("All registered servers:")
             JsonDatabase.servers.forEach {
                 terminal.println("  ${it.terminalString}")
+                terminal.println("      ${it.state.terminalString}")
             }
         }
     }

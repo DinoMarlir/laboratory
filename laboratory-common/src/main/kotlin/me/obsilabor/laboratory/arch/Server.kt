@@ -45,15 +45,19 @@ data class Server(
     var initialStart: Boolean? = true,
     var backupOnUpdate: Boolean? = true,
     var javaCommand: String? = "java",
-    var pid: Long? = null
+    var pid: Long? = null,
+    var automaticRestarts: Boolean? = true,
+    var state: ServerState = ServerState.STOPPED
 ) {
     val terminalString: String
         get() = "${TextStyles.bold(PlatformResolver.resolvePlatform(platform).coloredName)}${TextColors.white("/")}${TextStyles.bold("${TextColors.brightWhite("$name-$id ")}${TextColors.green("$mcVersion-$platformBuild")}")}"
 
     val directory by lazy { getDirectory(Architecture.Servers, "$name-$id") }
 
-    suspend fun start(attach: Boolean = false) {
+    suspend fun start(attach: Boolean = false, experimentalWindowsSupport: Boolean = true) {
         withContext(Dispatchers.IO) {
+            state = ServerState.STARTING
+            JsonDatabase.editServer(this@Server)
             if (!static) {
                 directory.deleteRecursively()
                 directory.mkdir()
@@ -101,6 +105,8 @@ data class Server(
             """.trimIndent())
             spinner.stop()
         }
+        state = ServerState.RUNNING
+        JsonDatabase.editServer(this)
         if (OperatingSystem.notWindows) {
             val args = arrayListOf(
                 "screen",
@@ -136,32 +142,61 @@ data class Server(
                 }
             }
         } else {
-            val args = arrayListOf(
-                javaCommand,
-                "-Xmx${maxHeapMemory}M",
-            )
-            args.addAll(jvmArguments)
-            args.add("-jar")
-            args.add("server.jar")
-            args.add("--port")
-            args.add("$port")
-            args.addAll(processArguments)
-            val process = ProcessBuilder(args)
-                .directory(directory)
-                .redirectErrorStream(true)
-                .redirectOutput(ProcessBuilder.Redirect.INHERIT)
-                .redirectInput(ProcessBuilder.Redirect.INHERIT)
-                .start()
-            val frame = JFrame("Windows is for development purposes only!")
-            frame.add(JLabel("Windows shouldn't be used in production. Closing this window will result in the process being terminated."))
-            frame.addWindowListener(object : WindowAdapter() {
-                override fun windowClosing(e: WindowEvent) {
-                    process.destroyForcibly()
+            if (experimentalWindowsSupport) {
+                withContext(Dispatchers.Default) {
+                    runBlocking {
+                        val args = arrayListOf(
+                            javaCommand,
+                            "-Xmx${maxHeapMemory}M",
+                        )
+                        args.addAll(jvmArguments)
+                        args.add("-jar")
+                        args.add("server.jar")
+                        args.add("--port")
+                        args.add("$port")
+                        args.addAll(processArguments)
+                        val process = ProcessBuilder(args)
+                            .directory(directory)
+                            .redirectErrorStream(true)
+                            .redirectOutput(ProcessBuilder.Redirect.INHERIT)
+                            .redirectInput(ProcessBuilder.Redirect.INHERIT)
+                            .start()
+                        this@Server.pid = process.pid()+2
+                        JsonDatabase.editServer(this@Server)
+                        process.waitFor()
+                    }
                 }
-            })
-            frame.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-            frame.isVisible = true
-            frame.size = Dimension(780, 80)
+            } else {
+                val args = arrayListOf(
+                    javaCommand,
+                    "-Xmx${maxHeapMemory}M",
+                )
+                args.addAll(jvmArguments)
+                args.add("-jar")
+                args.add("server.jar")
+                args.add("--port")
+                args.add("$port")
+                args.addAll(processArguments)
+                val process = ProcessBuilder(args)
+                    .directory(directory)
+                    .redirectErrorStream(true)
+                    .redirectOutput(ProcessBuilder.Redirect.INHERIT)
+                    .redirectInput(ProcessBuilder.Redirect.INHERIT)
+                    .start()
+                pid = process.pid()+2
+                terminal.println("Pid: $pid")
+                JsonDatabase.editServer(this)
+                val frame = JFrame("Windows is for development purposes only!")
+                frame.add(JLabel("Windows shouldn't be used in production. Closing this window will result in the process being terminated."))
+                frame.addWindowListener(object : WindowAdapter() {
+                    override fun windowClosing(e: WindowEvent) {
+                        process.destroyForcibly()
+                    }
+                })
+                frame.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
+                frame.isVisible = true
+                frame.size = Dimension(780, 80)
+            }
         }
     }
 
@@ -217,9 +252,12 @@ data class Server(
 
     suspend fun stop(forcibly: Boolean) {
         if (isAlive) {
+            state = ServerState.RUNNING
+            JsonDatabase.editServer(this)
             killProcess(pid ?: return, forcibly)
         }
     }
+
 
     val isAlive: Boolean
         get() {

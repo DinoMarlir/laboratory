@@ -19,7 +19,8 @@ dependencies {
     implementation(kotlin("stdlib"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     implementation(project(":laboratory-common"))
-
+    implementation("com.github.ajalt.clikt:clikt:3.5.0")
+    implementation("com.github.ajalt.mordant:mordant:2.0.0-beta7")
     implementation("io.ktor:ktor-server-core:2.1.0")
     implementation("io.ktor:ktor-server-netty:2.1.0")
 
