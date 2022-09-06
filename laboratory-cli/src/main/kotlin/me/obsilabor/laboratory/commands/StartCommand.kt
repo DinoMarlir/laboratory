@@ -26,11 +26,16 @@ class StartCommand : CliktCommand(
         help = "If this flag is set, the player will automatically be attached to the screen"
     ).flag()
 
+    private val experimentalFlag by option(
+        "--enableExperimentalWindowsSupport", "-XW",
+        help = "If this flag is set, experimental support for windows will be enabled"
+    ).flag()
+
     override fun run() {
         mainScope.launch {
             val resolvedServer = terminal.chooseServer(query ?: "")
             terminal.println(TextStyles.italic("Starting server.."))
-            resolvedServer?.start(attachFlag)
+            resolvedServer?.start(attach = attachFlag, experimentalWindowsSupport = experimentalFlag)
         }
     }
 }

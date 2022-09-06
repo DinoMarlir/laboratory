@@ -54,7 +54,7 @@ data class Server(
 
     val directory by lazy { getDirectory(Architecture.Servers, "$name-$id") }
 
-    suspend fun start(attach: Boolean = false, experimentalWindowsSupport: Boolean = true) {
+    suspend fun start(attach: Boolean = false, experimentalWindowsSupport: Boolean = false, disableIO: Boolean = false) {
         withContext(Dispatchers.IO) {
             state = ServerState.STARTING
             JsonDatabase.editServer(this@Server)
@@ -155,12 +155,12 @@ data class Server(
                         args.add("--port")
                         args.add("$port")
                         args.addAll(processArguments)
-                        val process = ProcessBuilder(args)
+                        val processBuilder = ProcessBuilder(args)
                             .directory(directory)
-                            .redirectErrorStream(true)
-                            .redirectOutput(ProcessBuilder.Redirect.INHERIT)
-                            .redirectInput(ProcessBuilder.Redirect.INHERIT)
-                            .start()
+                        if (!disableIO) {
+                            processBuilder.redirectErrorStream(true).redirectOutput(ProcessBuilder.Redirect.INHERIT).redirectInput(ProcessBuilder.Redirect.INHERIT)
+                        }
+                        val process = processBuilder.start()
                         this@Server.pid = process.pid()+2
                         JsonDatabase.editServer(this@Server)
                         process.waitFor()
@@ -177,14 +177,12 @@ data class Server(
                 args.add("--port")
                 args.add("$port")
                 args.addAll(processArguments)
-                val process = ProcessBuilder(args)
-                    .directory(directory)
-                    .redirectErrorStream(true)
-                    .redirectOutput(ProcessBuilder.Redirect.INHERIT)
-                    .redirectInput(ProcessBuilder.Redirect.INHERIT)
-                    .start()
+                val processBuilder = ProcessBuilder(args).directory(directory)
+                if (!disableIO) {
+                    processBuilder.redirectErrorStream(true).redirectOutput(ProcessBuilder.Redirect.INHERIT).redirectInput(ProcessBuilder.Redirect.INHERIT)
+                }
+                val process = processBuilder.start()
                 pid = process.pid()+2
-                terminal.println("Pid: $pid")
                 JsonDatabase.editServer(this)
                 val frame = JFrame("Windows is for development purposes only!")
                 frame.add(JLabel("Windows shouldn't be used in production. Closing this window will result in the process being terminated."))

@@ -23,7 +23,8 @@ class ServerLifecycleJob : IJob {
                         JsonDatabase.editServer(server)
                         terminal.println(server.terminalString + " stopped")
                         if (server.automaticRestarts == true) {
-                            server.start()
+                            terminal.println(server.terminalString + " is starting")
+                            server.start(disableIO = true, experimentalWindowsSupport = true)
                         }
                     }
                     preValues[server] = now
