@@ -2,13 +2,14 @@ plugins {
     kotlin("jvm") version "1.7.10"
     kotlin("plugin.serialization") version "1.7.10"
     id("application")
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 group = "me.obsilabor"
 version = "jvm"
 
 application {
-    mainClass.set("me.obsilabor.chemicae.ServerAppKt")
+    mainClass.set("me.obsilabor.chemicae.ChemicaeServerAppKt")
 }
 
 repositories {
@@ -17,6 +18,7 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib"))
+    implementation("org.slf4j:slf4j-simple:2.0.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     implementation(project(":laboratory-common"))
     implementation("com.github.ajalt.clikt:clikt:3.5.0")
@@ -33,6 +35,13 @@ dependencies {
 }
 
 tasks {
+    shadowJar {
+        manifest {
+            attributes(
+                "Main-Class" to "me.obsilabor.chemicae.ChemicaeServerAppKt"
+            )
+        }
+    }
     compileJava {
         options.release.set(17)
         options.encoding = "UTF-8"
