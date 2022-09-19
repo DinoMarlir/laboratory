@@ -47,7 +47,8 @@ data class Server(
     var javaCommand: String? = "java",
     var pid: Long? = null,
     var automaticRestarts: Boolean? = true,
-    var state: ServerState = ServerState.STOPPED
+    var state: ServerState = ServerState.STOPPED,
+    var scheduledTasks: List<ScheduledTask>
 ) {
     val terminalString: String
         get() = "${TextStyles.bold(PlatformResolver.resolvePlatform(platform).coloredName)}${TextColors.white("/")}${TextStyles.bold("${TextColors.brightWhite("$name-$id ")}${TextColors.green("$mcVersion-$platformBuild")}")}"
