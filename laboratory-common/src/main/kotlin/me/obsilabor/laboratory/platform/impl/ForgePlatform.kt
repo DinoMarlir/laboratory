@@ -103,11 +103,13 @@ object ForgePlatform : IPlatform {
                 processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT).redirectInput(ProcessBuilder.Redirect.INHERIT).start().waitFor()
                 Files.copy(Path.of(workingDirectory.absolutePathString() + "/$mcVersion-$build", "/forgelauncher-$mcVersion-$build.jar"), Path.of(Architecture.Platforms.absolutePath, "forge/forgelauncher-$mcVersion-$build.jar"), StandardCopyOption.REPLACE_EXISTING)
                 spinner.stop("Forge installed")
+                VanillaPlatform.downloadJarFile(Path.of(Architecture.Platforms.absolutePath, "vanilla/vanilla-$mcVersion.jar"), mcVersion, build)
             }
         }
     }
 
     override suspend fun copyOtherFiles(destinationFolder: Path, mcVersion: String, build: String, server: Server) {
+        Files.copy(Path.of(Architecture.Platforms.absolutePath, "vanilla/vanilla-$mcVersion.jar"), Path.of(destinationFolder.absolutePathString(), "minecraft_server.$mcVersion.jar"), StandardCopyOption.REPLACE_EXISTING)
         Files.copy(Path.of(Architecture.Platforms.absolutePath, "forge/$mcVersion-$build/forgelauncher-$mcVersion-$build.jar"), Path.of(destinationFolder.absolutePathString(), "forgelauncher-$mcVersion-$build.jar"), StandardCopyOption.REPLACE_EXISTING)
         copyFolder(Path.of(Architecture.Platforms.absolutePath, "forge/$mcVersion-$build/libraries"), Path.of(destinationFolder.absolutePathString(), "libraries"))
         val file = File(Path.of(destinationFolder.absolutePathString(), "forgelauncher.txt").absolutePathString())
