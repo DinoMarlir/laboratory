@@ -15,10 +15,10 @@ class SpinnerAnimation(val message: String = "resolving") : CoroutineScope {
     private val currentMessage = atomic(message)
 
     private val spinJob = launch(start = CoroutineStart.LAZY) {
-        val symbols = listOf('|', '/', '-', '\\')
+        val symbols = if (OperatingSystem.notWindows) listOf('⠁', '⠉', '⠙', '⠸', '⠴', '⠦', '⠇', '⠋', '⠙', '⠸', '⠴', '⠦', '⠇' /* */, '⠋', '⠙', '⠸', '⠴', '⠦', '⠇', '⠋', '⠙', '⠸', '⠴', '⠦', '⠇', '⠋', '⠙', '⠸', '⠴', '⠦', '⠇', '⠃') else listOf('|', '/', '-', '\\')
         var index = 0
         while (isActive) {
-            terminal.print("[${symbols[index]}] ")
+            terminal.print("${if(!OperatingSystem.notWindows) "[" else " "}${symbols[index]}${if(!OperatingSystem.notWindows) "]" else ""} ")
             terminal.cursor.move { clearLineAfterCursor() }
             terminal.print(currentMessage.value)
             terminal.cursor.move { startOfLine() }
@@ -34,7 +34,7 @@ class SpinnerAnimation(val message: String = "resolving") : CoroutineScope {
     suspend fun stop(message: String = "done") {
         spinJob.cancelAndJoin()
         terminal.cursor.move { startOfLine() }
-        terminal.print("[${if (OperatingSystem.notWindows) '✓' else '+'}] ")
+        terminal.print("${if (OperatingSystem.notWindows) " ⠿" else "[+]"} ")
         terminal.cursor.move { clearLineAfterCursor() }
         terminal.println(message)
     }

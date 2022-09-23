@@ -5,6 +5,7 @@ import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.arguments.default
 import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.mordant.rendering.TextColors
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.obsilabor.laboratory.arch.Server
 import me.obsilabor.laboratory.db.JsonDatabase
@@ -77,7 +78,8 @@ class CreateCommand : CliktCommand(
                 25565,
                 true,
                 true,
-                "java"
+                "java",
+
             )
             if (terminal.promptYesOrNo("Do you want to configure your new server right now?", true)) {
                 server.static = terminal.promptYesOrNo("Do you want your new server to be static?", true)

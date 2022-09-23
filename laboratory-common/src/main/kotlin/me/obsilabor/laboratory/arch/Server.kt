@@ -48,14 +48,14 @@ data class Server(
     var pid: Long? = null,
     var automaticRestarts: Boolean? = true,
     var state: ServerState = ServerState.STOPPED,
-    var scheduledTasks: List<ScheduledTask>
+    var scheduledTasks: List<ScheduledTask> = emptyList()
 ) {
     val terminalString: String
         get() = "${TextStyles.bold(PlatformResolver.resolvePlatform(platform).coloredName)}${TextColors.white("/")}${TextStyles.bold("${TextColors.brightWhite("$name-$id ")}${TextColors.green("$mcVersion-$platformBuild")}")}"
 
     val directory by lazy { getDirectory(Architecture.Servers, "$name-$id") }
 
-    suspend fun start(attach: Boolean = false, experimentalWindowsSupport: Boolean = false, disableIO: Boolean = false) {
+    suspend fun start(attach: Boolean = false, disableIO: Boolean = false) {
         withContext(Dispatchers.IO) {
             state = ServerState.STARTING
             JsonDatabase.editServer(this@Server)
@@ -143,82 +143,60 @@ data class Server(
                 }
             }
         } else {
-            if (experimentalWindowsSupport) {
-                withContext(Dispatchers.Default) {
-                    runBlocking {
-                        val args = arrayListOf(
-                            javaCommand,
-                            "-Xmx${maxHeapMemory}M",
-                        )
-                        args.addAll(jvmArguments)
-                        args.add("-jar")
-                        args.add("server.jar")
-                        args.add("--port")
-                        args.add("$port")
-                        args.addAll(processArguments)
-                        val processBuilder = ProcessBuilder(args)
-                            .directory(directory)
-                        if (!disableIO) {
-                            processBuilder.redirectErrorStream(true).redirectOutput(ProcessBuilder.Redirect.INHERIT).redirectInput(ProcessBuilder.Redirect.INHERIT)
-                        }
-                        val process = processBuilder.start()
-                        this@Server.pid = process.pid()+2
-                        JsonDatabase.editServer(this@Server)
-                        process.waitFor()
+            withContext(Dispatchers.Default) {
+                runBlocking {
+                    val args = arrayListOf(
+                        javaCommand,
+                        "-Xmx${maxHeapMemory}M",
+                    )
+                    args.addAll(jvmArguments)
+                    args.add("-jar")
+                    args.add("server.jar")
+                    args.add("--port")
+                    args.add("$port")
+                    args.addAll(processArguments)
+                    val processBuilder = ProcessBuilder(args)
+                        .directory(directory)
+                    if (!disableIO) {
+                        processBuilder.redirectErrorStream(true).redirectOutput(ProcessBuilder.Redirect.INHERIT).redirectInput(ProcessBuilder.Redirect.INHERIT)
                     }
+                    val process = processBuilder.start()
+                    this@Server.pid = process.pid()+2
+                    JsonDatabase.editServer(this@Server)
+                    process.waitFor()
                 }
-            } else {
-                val args = arrayListOf(
-                    javaCommand,
-                    "-Xmx${maxHeapMemory}M",
-                )
-                args.addAll(jvmArguments)
-                args.add("-jar")
-                args.add("server.jar")
-                args.add("--port")
-                args.add("$port")
-                args.addAll(processArguments)
-                val processBuilder = ProcessBuilder(args).directory(directory)
-                if (!disableIO) {
-                    processBuilder.redirectErrorStream(true).redirectOutput(ProcessBuilder.Redirect.INHERIT).redirectInput(ProcessBuilder.Redirect.INHERIT)
-                }
-                val process = processBuilder.start()
-                pid = process.pid()+2
-                JsonDatabase.editServer(this)
-                val frame = JFrame("Windows is for development purposes only!")
-                frame.add(JLabel("Windows shouldn't be used in production. Closing this window will result in the process being terminated."))
-                frame.addWindowListener(object : WindowAdapter() {
-                    override fun windowClosing(e: WindowEvent) {
-                        process.destroyForcibly()
-                    }
-                })
-                frame.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-                frame.isVisible = true
-                frame.size = Dimension(780, 80)
             }
         }
     }
 
     suspend fun update(platform: IPlatform, noConfirm: Boolean = false) {
-        if (backupOnUpdate == true && static && !platform.isProxy) {
-            backup(Path.of(Config.userConfig.folderForAutomaticBackups), true, platform) // only backup worlds on update
-        }
-
         val spinner = SpinnerAnimation("Resolving latest ${platform.name} build")
         spinner.start()
         val newestMcVersion = platform.getMcVersions().last()
         spinner.stop("resolved")
+        var updated = false
         if (mcVersion != newestMcVersion) {
             if (terminal.promptYesOrNo("Updating the server will update to a new minecraft version. Is this okay?", true, yesFlag = noConfirm)) {
                 mcVersion = newestMcVersion
+                updated = true
             }
         }
         val newestPlatformBuild = platform.getBuilds(mcVersion).last()
-        platformBuild = newestPlatformBuild
-        spinner.update("Updating..")
-        spinner.start()
-        JsonDatabase.editServer(this@Server)
-        spinner.stop("Updated your server to ${platform.name}-$mcVersion-$platformBuild")
+        if (newestPlatformBuild != platformBuild) {
+            updated = true
+            platformBuild = newestPlatformBuild
+        }
+        if (updated && backupOnUpdate == true && static) {
+            backup(Path.of(Config.userConfig.folderForAutomaticBackups), !platform.isProxy, platform)
+        }
+        if (updated) {
+            spinner.update("Updating..")
+            spinner.start()
+            JsonDatabase.editServer(this@Server)
+            spinner.stop("Updated your server to ${platform.name}-$mcVersion-$platformBuild")
+        } else {
+            terminal.println("Server is up to date!")
+        }
     }
 
     suspend fun backup(output: Path, worldsOnly: Boolean, platform: IPlatform) {
@@ -249,7 +227,7 @@ data class Server(
         }
     }
 
-    suspend fun stop(forcibly: Boolean) {
+    fun stop(forcibly: Boolean) {
         if (isAlive) {
             state = ServerState.RUNNING
             JsonDatabase.editServer(this)
