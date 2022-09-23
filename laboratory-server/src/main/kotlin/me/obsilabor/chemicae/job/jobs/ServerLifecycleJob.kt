@@ -24,7 +24,7 @@ class ServerLifecycleJob : IJob {
                         terminal.println(server.terminalString + " stopped")
                         if (server.automaticRestarts == true) {
                             terminal.println(server.terminalString + " is starting")
-                            server.start(disableIO = true, experimentalWindowsSupport = true)
+                            server.start(disableIO = true)
                         }
                     }
                     preValues[server] = now
