@@ -1,5 +1,7 @@
 package me.obsilabor.laboratory.terminal
 
+import com.github.ajalt.mordant.rendering.TextColors
+import com.github.ajalt.mordant.rendering.TextStyles
 import kotlinx.atomicfu.atomic
 import kotlinx.atomicfu.update
 import kotlinx.coroutines.*
@@ -37,6 +39,14 @@ class SpinnerAnimation(val message: String = "resolving") : CoroutineScope {
         terminal.print("${if (OperatingSystem.notWindows) " ⠿" else "[+]"} ")
         terminal.cursor.move { clearLineAfterCursor() }
         terminal.println(message)
+    }
+
+    suspend fun fail(message: String = "failed") {
+        spinJob.cancelAndJoin()
+        terminal.cursor.move { startOfLine() }
+        terminal.print("${TextStyles.bold(" ${TextColors.red("!")} ")}")
+        terminal.cursor.move { clearLineAfterCursor() }
+        terminal.println(TextColors.brightWhite(message))
     }
 
     fun update(message: String) {

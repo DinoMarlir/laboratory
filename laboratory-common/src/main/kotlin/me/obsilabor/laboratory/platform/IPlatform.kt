@@ -11,6 +11,8 @@ interface IPlatform {
         get() = false
     val configurationFiles: Map<String, String>
         get() = mapOf("server.properties" to "Vanilla config")
+    val modsFolder: String?
+        get() = null
 
     suspend fun getMcVersions(): List<String>
     suspend fun getBuilds(mcVersion: String): List<String>

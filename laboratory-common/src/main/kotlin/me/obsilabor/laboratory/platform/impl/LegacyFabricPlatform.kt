@@ -24,6 +24,7 @@ object LegacyFabricPlatform : IPlatform {
     override val name = "legacyfabric"
     override val jarNamePattern = "legacyfabric-\$build.jar"
     override val coloredName = TextColors.cyan(name)
+    override val modsFolder = "mods"
 
     override suspend fun getMcVersions(): List<String> {
         return httpClient.get("https://meta.legacyfabric.net/v2/versions/game").body<List<FabricGameVersion>>().map { it.version }.reversed()

@@ -8,6 +8,7 @@ import com.github.ajalt.mordant.rendering.TextColors
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.obsilabor.laboratory.arch.Server
+import me.obsilabor.laboratory.arch.ServerState
 import me.obsilabor.laboratory.db.JsonDatabase
 import me.obsilabor.laboratory.mainScope
 import me.obsilabor.laboratory.platform.PlatformResolver
@@ -79,7 +80,6 @@ class CreateCommand : CliktCommand(
                 true,
                 true,
                 "java",
-
             )
             if (terminal.promptYesOrNo("Do you want to configure your new server right now?", true)) {
                 server.static = terminal.promptYesOrNo("Do you want your new server to be static?", true)
@@ -91,10 +91,12 @@ class CreateCommand : CliktCommand(
             spinner.start()
             JsonDatabase.registerServer(server)
             spinner.stop("Saved server configuration to database")
-            if (!terminal.promptYesOrNo("Should the server be automatically started now?", true)) {
-                terminal.println(TextColors.brightGreen("Server setup complete"))
-            } else {
-                server.start()
+            if (server.state != ServerState.RUNNING) {
+                if (!terminal.promptYesOrNo("Should the server be automatically started now?", true)) {
+                    terminal.println(TextColors.brightGreen("Server setup complete"))
+                } else {
+                    server.start()
+                }
             }
         }
     }

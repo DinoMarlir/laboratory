@@ -25,6 +25,7 @@ object FabricPlatform : IPlatform {
     override val name = "fabricmc"
     override val jarNamePattern = "fabricmc-\$build.jar"
     override val coloredName = TextColors.brightGreen(name)
+    override val modsFolder = "mods"
 
     override suspend fun getMcVersions(): List<String> {
         return httpClient.get("https://meta.fabricmc.net/v2/versions/game").body<List<FabricGameVersion>>().map { it.version }.reversed()

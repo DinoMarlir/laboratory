@@ -20,6 +20,7 @@ object PurpurPlatform : IPlatform {
         "pufferfish.yml" to "Pufferfish config",
         "server.properties" to "Vanilla config"
     )
+    override val modsFolder = "plugins"
 
     override suspend fun getMcVersions(): List<String> {
         return httpClient.get("https://api.purpurmc.org/v2/purpur/").body<PurpurVersionsResponse>().versions

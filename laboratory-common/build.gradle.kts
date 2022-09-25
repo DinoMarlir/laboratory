@@ -23,6 +23,7 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.1.1")
 
     implementation("me.obsilabor:piston-meta-kt:1.0.2")
+    implementation("net.lingala.zip4j:zip4j:2.11.2")
 }
 
 tasks {

@@ -27,6 +27,7 @@ object ForgePlatform : IPlatform {
     override val name = "forge"
     override val jarNamePattern = "forgelauncher-\$mcVersion-\$build.jar"
     override val coloredName = TextColors.white(name)
+    override val modsFolder = "mods"
 
     override suspend fun getMcVersions(): List<String> {
         val newestVersionPattern = Pattern.compile("<li class=\"elem-active\">(.*?)</li>", Pattern.DOTALL)

@@ -18,6 +18,7 @@ object PaperPlatform : IPlatform {
         "paper.yml" to "Paper config for versions below 1.19",
         "server.properties" to "Vanilla config"
     )
+    override val modsFolder = "plugins"
 
     override suspend fun getBuilds(mcVersion: String): List<String> {
         return httpClient.get("https://api.papermc.io/v2/projects/paper/versions/$mcVersion").body<ProjectVersionsResponse>().builds.map { it.toString() }

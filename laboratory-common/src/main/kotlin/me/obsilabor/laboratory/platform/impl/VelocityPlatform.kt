@@ -15,6 +15,7 @@ object VelocityPlatform : IPlatform {
     override val coloredName = TextColors.brightCyan(name)
     override val isProxy = true
     override val configurationFiles = mapOf("velocity.toml" to "Velocity config")
+    override val modsFolder = "plugins"
 
     override suspend fun getBuilds(mcVersion: String): List<String> {
         return httpClient.get("https://api.papermc.io/v2/projects/velocity/versions/$mcVersion").body<ProjectVersionsResponse>().builds.map { it.toString() }

@@ -13,34 +13,39 @@ import me.obsilabor.laboratory.terminal
 import java.nio.file.Path
 import kotlin.math.roundToInt
 
-suspend fun downloadFile(url: String, destination: Path) {
-    downloadFile(url, destination, 1, 1)
+suspend fun downloadFile(url: String, destination: Path, silent: Boolean = false, callback: () -> Unit = {}) {
+    downloadFile(url, destination, 1, 1, silent, callback)
 }
 
-suspend fun downloadFile(url: String, destination: Path, current: Int, total: Int) {
+suspend fun downloadFile(url: String, destination: Path, current: Int, total: Int, silent: Boolean = false, callback: () -> Unit) {
     val downloadContent = httpClient.get(url) {
-        onDownload { bytesSentTotal, contentLength ->
-            val progress = bytesSentTotal.toDouble() / contentLength.toDouble()
-            val hashtags = (progress * 30).roundToInt()
-            val percentage = (progress * 100).roundToInt()
-            mainScope.launch(Dispatchers.IO) {
-                val string = buildString {
-                    append("Downloading ${destination.toFile().name} [")
-                    repeat(hashtags) {
-                        append(TextColors.brightGreen("#"))
+        if (!silent) {
+            onDownload { bytesSentTotal, contentLength ->
+                val progress = bytesSentTotal.toDouble() / contentLength.toDouble()
+                val hashtags = (progress * 30).roundToInt()
+                val percentage = (progress * 100).roundToInt()
+                mainScope.launch(Dispatchers.IO) {
+                    val string = buildString {
+                        append("Downloading ${destination.toFile().name} [")
+                        repeat(hashtags) {
+                            append(TextColors.brightGreen("#"))
+                        }
+                        repeat(30 - hashtags) {
+                            append(' ')
+                        }
+                        append("] ${percentage}%")
+                        if (total > 1) {
+                            append(" ($current/$total)")
+                        }
                     }
-                    repeat(30 - hashtags) {
-                        append(' ')
-                    }
-                    append("] ${percentage}%")
-                    if (total > 1) {
-                        append(" ($current/$total)")
-                    }
-                }
-                terminal.print("\r  $string")
-            }.join()
+                    terminal.print("\r  $string")
+                }.join()
+            }
         }
     }.body<HttpResponse>().readBytes()
-    terminal.println()
+    if (!silent) {
+        terminal.println()
+    }
     destination.toFile().writeBytes(downloadContent)
+    callback.invoke()
 }

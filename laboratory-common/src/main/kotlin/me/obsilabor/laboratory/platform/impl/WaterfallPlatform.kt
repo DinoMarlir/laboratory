@@ -18,6 +18,7 @@ object WaterfallPlatform : IPlatform {
         "config.yml" to "BungeeCord config"
     )
     override val isProxy = true
+    override val modsFolder = "plugins"
 
     override suspend fun getBuilds(mcVersion: String): List<String> {
         return httpClient.get("https://api.papermc.io/v2/projects/waterfall/versions/$mcVersion").body<ProjectVersionsResponse>().builds.map { it.toString() }

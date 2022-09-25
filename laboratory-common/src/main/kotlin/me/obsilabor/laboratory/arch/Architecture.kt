@@ -28,6 +28,7 @@ object Architecture {
     val Containers by lazy { getDirectory(Root, "containers") }
     val Platforms by lazy { getDirectory(Containers, "platforms") }
     val Vanilla by lazy { getDirectory(Platforms, "vanilla") }
+    val Modrinth by lazy { getDirectory(Platforms, "modrinth") }
     val Templates by lazy { getDirectory(Containers, "templates") }
     val Meta by lazy { getDirectory(Containers, "meta") }
     val Backups by lazy { getDirectory(Containers, "backups") }

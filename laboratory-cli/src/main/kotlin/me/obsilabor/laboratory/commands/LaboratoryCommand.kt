@@ -18,7 +18,8 @@ class LaboratoryCommand : CliktCommand(
             InfoCommand(),
             BackupCommand(),
             StopCommand(),
-            RestartCommand()
+            RestartCommand(),
+            ImportCommand()
         )
     }
 

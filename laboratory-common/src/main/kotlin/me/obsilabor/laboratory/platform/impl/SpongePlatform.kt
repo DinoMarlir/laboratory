@@ -18,6 +18,7 @@ object SpongePlatform : IPlatform {
         "server.properties" to "Vanilla config"
     )
     val hrefPattern = Pattern.compile("href=\"(.*?)\"", Pattern.DOTALL)
+    override val modsFolder = "mods"
 
     override suspend fun getMcVersions(): List<String> {
         val html = httpClient.get("https://repo.spongepowered.org/service/rest/repository/browse/maven-releases/org/spongepowered/spongevanilla/") {
