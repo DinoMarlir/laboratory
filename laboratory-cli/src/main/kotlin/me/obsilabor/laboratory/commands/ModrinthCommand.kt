@@ -21,11 +21,10 @@ import java.io.File
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
-import java.nio.file.Path
 import java.util.*
 
-class ImportCommand : CliktCommand(
-    name = "import",
+class ModrinthCommand : CliktCommand(
+    name = "modrinth",
     help = "Import modpacks directly from modrinth"
 ) {
     private val file by argument(
@@ -35,7 +34,9 @@ class ImportCommand : CliktCommand(
 
     override fun run() {
         mainScope.launch {
-            if (!file.endsWith(".mrpack")) return@launch
+            if (!file.endsWith(".mrpack")) {
+                return@launch
+            }
             val dotMrpack: File
             val container: File
             if (file.startsWith("http://") || file.startsWith("https://")) {

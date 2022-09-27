@@ -19,7 +19,7 @@ class LaboratoryCommand : CliktCommand(
             BackupCommand(),
             StopCommand(),
             RestartCommand(),
-            ImportCommand()
+            ModrinthCommand()
         )
     }
 

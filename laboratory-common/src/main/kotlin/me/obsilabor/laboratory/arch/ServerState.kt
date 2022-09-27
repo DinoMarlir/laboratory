@@ -9,7 +9,8 @@ import me.obsilabor.laboratory.utils.OperatingSystem
 enum class ServerState(val color: RGBInt, val capitalized: String) {
     STARTING(RGBInt((16710583).toUInt()), "Starting"),
     RUNNING(RGBInt((3079042).toUInt()), "Running"),
-    STOPPED(RGBInt((13247306).toUInt()), "Stopped");
+    STOPPED(RGBInt((13247306).toUInt()), "Stopped"),
+    OFFLINE(RGBInt((7416618).toUInt()), "Offline");
 
     val terminalString: String
         get() {

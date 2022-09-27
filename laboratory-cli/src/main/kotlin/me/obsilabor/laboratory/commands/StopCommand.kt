@@ -7,6 +7,8 @@ import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.mordant.rendering.TextStyles
 import kotlinx.coroutines.launch
+import me.obsilabor.laboratory.arch.ServerState
+import me.obsilabor.laboratory.db.JsonDatabase
 import me.obsilabor.laboratory.mainScope
 import me.obsilabor.laboratory.terminal
 import me.obsilabor.laboratory.terminal.chooseServer
@@ -27,9 +29,11 @@ class StopCommand : CliktCommand(
 
     override fun run() {
         mainScope.launch {
-            val resolvedServer = terminal.chooseServer(query ?: "")
+            val resolvedServer = terminal.chooseServer(query ?: "") ?: return@launch
             terminal.println(TextStyles.italic("Stopping server.."))
-            resolvedServer?.stop(forceFlag)
+            resolvedServer.stop(forceFlag)
+            resolvedServer.state = ServerState.OFFLINE
+            JsonDatabase.editServer(resolvedServer)
         }
     }
 }
