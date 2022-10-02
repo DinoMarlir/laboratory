@@ -1,6 +1,6 @@
 plugins {
-    kotlin("jvm") version "1.7.10"
-    kotlin("plugin.serialization") version "1.7.10"
+    kotlin("jvm") version "1.7.20"
+    kotlin("plugin.serialization") version "1.7.20"
     id("application")
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
@@ -23,13 +23,13 @@ dependencies {
     implementation(project(":laboratory-common"))
     implementation("com.github.ajalt.clikt:clikt:3.5.0")
     implementation("com.github.ajalt.mordant:mordant:2.0.0-beta7")
-    implementation("io.ktor:ktor-server-core:2.1.1")
-    implementation("io.ktor:ktor-server-netty:2.1.1")
+    implementation("io.ktor:ktor-server-core:2.1.2")
+    implementation("io.ktor:ktor-server-netty:2.1.2")
 
-    implementation("io.ktor:ktor-client-core:2.1.1")
-    implementation("io.ktor:ktor-client-cio:2.1.1")
-    implementation("io.ktor:ktor-client-content-negotiation:2.1.1")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:2.1.1")
+    implementation("io.ktor:ktor-client-core:2.1.2")
+    implementation("io.ktor:ktor-client-cio:2.1.2")
+    implementation("io.ktor:ktor-client-content-negotiation:2.1.2")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.1.2")
 
     implementation("me.obsilabor:piston-meta-kt:1.0.2")
 }

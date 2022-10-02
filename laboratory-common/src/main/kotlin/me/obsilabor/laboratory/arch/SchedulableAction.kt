@@ -6,7 +6,7 @@ import me.obsilabor.laboratory.platform.PlatformResolver
 import java.nio.file.Path
 import me.obsilabor.laboratory.config.Config
 
-enum class SchedulableAction(val displayName: String, run: (Server) -> Unit) {
+enum class SchedulableAction(val displayName: String, val executor: (Server) -> Unit) {
     BACKUP("Backup", {
         mainScope.launch {
             it.backup(Path.of(Config.userConfig.folderForAutomaticBackups), false, PlatformResolver.resolvePlatform(it.platform))
