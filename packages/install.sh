@@ -11,6 +11,7 @@ echo "# You'll be prompted for your password in order to install laboratory. #"
 echo "########################################################################"
 sudo ./copyfiles.sh
 clear
+laboratory info
 if [[ $SHELL == *"bash"* ]]
 then
     _LABORATORY_COMPLETE=bash laboratory > ~/laboratory/bash-completion.sh
