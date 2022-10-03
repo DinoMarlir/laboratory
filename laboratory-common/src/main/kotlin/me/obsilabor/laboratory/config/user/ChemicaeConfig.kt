@@ -6,7 +6,7 @@ import me.obsilabor.laboratory.utils.getRandomID
 @Serializable
 data class ChemicaeConfig(
     val port: Int,
-    val accessToken: String,
+    val accessToken: String
 ) {
     companion object {
         val DEFAULTS = ChemicaeConfig(

@@ -122,3 +122,32 @@ fun Terminal.chooseServer(query: String): Server? {
         }) ?: return null
     return resolvedServer
 }
+fun Terminal.chooseServerHeadless(query: String): Server? {
+    val resolvedServer: Server
+    var servers = JsonDatabase.findServer(query).toMutableSet()
+    if (servers.isEmpty()) {
+        val id = query.toIntOrNull()
+        if (id == null) {
+            if (JsonDatabase.servers.isEmpty()) {
+                return null
+            }
+            servers.addAll(JsonDatabase.servers)
+        }
+        val server = JsonDatabase.findServer(id ?: 0)
+        if (server == null) {
+            if (JsonDatabase.servers.isEmpty()) {
+                return null
+            }
+            if (query.isEmpty() || query.isBlank()) {
+                servers.addAll(JsonDatabase.servers)
+            }
+        } else {
+            servers = mutableSetOf(server)
+        }
+    }
+    if (servers.size == 1) {
+        resolvedServer = servers.first()
+        return resolvedServer
+    }
+    return null
+}

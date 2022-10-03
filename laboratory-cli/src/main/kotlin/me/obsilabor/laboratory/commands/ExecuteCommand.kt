@@ -16,24 +16,19 @@ import me.obsilabor.laboratory.terminal
 import me.obsilabor.laboratory.terminal.SpinnerAnimation
 import me.obsilabor.laboratory.terminal.chooseServer
 
-class RestartCommand : CliktCommand(
-    name = "restart",
-    help = "Restarts the given server"
+class ExecuteCommand : CliktCommand(
+    name = "execute",
+    help = "Executes a command on the given server [unix-only]"
 ) {
     private val query by argument(
         "query",
         help = "The id or name of the server to restart"
     ).optional()
 
-    private val forceFlag by option(
-        "-f", "--force",
-        help = "If this flag is set, the process will be forcibly destroyed"
-    ).flag()
-
-    private val attachFlag by option(
-        "-a", "--attach",
-        help = "If this flag is set, the player will automatically be attached to the screen"
-    ).flag()
+    private val command by argument(
+        "command",
+        help = "The command to execute"
+    )
 
     override fun run() {
         mainScope.launch {
@@ -41,18 +36,12 @@ class RestartCommand : CliktCommand(
                 runBlocking {
                     if (query == "*") {
                         for (server in JsonDatabase.servers) {
-                            terminal.println(TextStyles.italic("Stopping server ${server.terminalString}.."))
-                            server.stop(forceFlag)
-                            server.start(attachFlag)
+                            server.sendCommand(command)
                         }
                         return@runBlocking
                     }
                     val resolvedServer = terminal.chooseServer(query ?: "") ?: return@runBlocking
-                    val spinner = SpinnerAnimation("Stopping server ${resolvedServer.terminalString}..")
-                    spinner.start()
-                    resolvedServer.stop(forceFlag)
-                    spinner.stop("Stopped server ${resolvedServer.terminalString}..")
-                    resolvedServer.start(attachFlag)
+                    resolvedServer.sendCommand(command)
                 }
             }
         }

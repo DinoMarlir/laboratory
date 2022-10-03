@@ -8,6 +8,7 @@ import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.mordant.rendering.TextStyles
 import kotlinx.coroutines.launch
+import me.obsilabor.laboratory.db.JsonDatabase
 import me.obsilabor.laboratory.mainScope
 import me.obsilabor.laboratory.terminal
 import me.obsilabor.laboratory.terminal.chooseServer
@@ -28,9 +29,16 @@ class StartCommand : CliktCommand(
 
     override fun run() {
         mainScope.launch {
-            val resolvedServer = terminal.chooseServer(query ?: "")
-            terminal.println(TextStyles.italic("Starting server.."))
-            resolvedServer?.start(attach = attachFlag)
+            if (query == "*") {
+                for (server in JsonDatabase.servers) {
+                    terminal.println(TextStyles.italic("Starting server ${server.terminalString}.."))
+                    server.start(attach = attachFlag)
+                }
+                return@launch
+            }
+            val resolvedServer = terminal.chooseServer(query ?: "") ?: return@launch
+            terminal.println(TextStyles.italic("Starting server ${resolvedServer.terminalString}.."))
+            resolvedServer.start(attach = attachFlag)
         }
     }
 }

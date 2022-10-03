@@ -29,11 +29,16 @@ class StopCommand : CliktCommand(
 
     override fun run() {
         mainScope.launch {
+            if (query == "*") {
+                for (server in JsonDatabase.servers) {
+                    terminal.println(TextStyles.italic("Stopping server ${server.terminalString}.."))
+                    server.stop(forceFlag)
+                }
+                return@launch
+            }
             val resolvedServer = terminal.chooseServer(query ?: "") ?: return@launch
-            terminal.println(TextStyles.italic("Stopping server.."))
+            terminal.println(TextStyles.italic("Stopping server ${resolvedServer.terminalString}.."))
             resolvedServer.stop(forceFlag)
-            resolvedServer.state = ServerState.OFFLINE
-            JsonDatabase.editServer(resolvedServer)
         }
     }
 }

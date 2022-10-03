@@ -25,6 +25,7 @@ dependencies {
     implementation("com.github.ajalt.mordant:mordant:2.0.0-beta7")
     implementation("io.ktor:ktor-server-core:2.1.2")
     implementation("io.ktor:ktor-server-netty:2.1.2")
+    implementation("io.ktor:ktor-server-websockets:2.1.2")
 
     implementation("io.ktor:ktor-client-core:2.1.2")
     implementation("io.ktor:ktor-client-cio:2.1.2")

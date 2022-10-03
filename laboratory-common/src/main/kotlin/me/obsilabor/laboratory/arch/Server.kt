@@ -15,17 +15,12 @@ import me.obsilabor.laboratory.terminal
 import me.obsilabor.laboratory.terminal.SpinnerAnimation
 import me.obsilabor.laboratory.terminal.promptYesOrNo
 import me.obsilabor.laboratory.utils.*
-import java.awt.Dimension
-import java.awt.event.WindowAdapter
-import java.awt.event.WindowEvent
 import java.io.File
+import java.io.FileOutputStream
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
 import java.time.Instant
-import javax.swing.JFrame
-import javax.swing.JLabel
-import javax.swing.WindowConstants
 
 @Serializable
 data class Server(
@@ -229,7 +224,7 @@ data class Server(
 
     fun stop(forcibly: Boolean) {
         if (isAlive) {
-            state = ServerState.RUNNING
+            state = ServerState.STOPPED
             JsonDatabase.editServer(this)
             killProcess(pid ?: return, forcibly)
         }
@@ -240,4 +235,17 @@ data class Server(
         get() {
             return isProcessAlive(pid ?: return false)
         }
+
+    fun sendCommand(command: String) {
+        if (OperatingSystem.notWindows) {
+            if (isAlive) {
+                ProcessBuilder("screen", "-S", "$name-$id", "-p", "0", "-X", "stuff", "$command\n").start()
+                terminal.println("Sent command ${(TextColors.brightWhite on TextColors.gray)(TextStyles.italic("$command"))} to server $terminalString")
+            } else {
+                terminal.println(TextColors.red("The server $terminalString must be running"))
+            }
+        } else {
+            terminal.println(TextColors.red("This feature is lacking windows support. Sorry :/"))
+        }
+    }
 }
