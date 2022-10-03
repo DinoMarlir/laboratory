@@ -62,10 +62,10 @@ data class Server(
                 val serverDashIcon = File(Architecture.Meta, "server-icon.png").toPath()
                 val serverDotProperties = File(Architecture.Meta, "server.properties").toPath()
                 if (!Files.exists(serverDashIcon)) {
-                    downloadFile("https://github.com/mooziii/laboratory/raw/main/.meta/server-icon.png", Path.of(Architecture.Meta.absolutePath, "server-icon.png"))
+                    downloadFile("https://github.com/mooziii/laboratory/raw/${Config.userConfig.updateBranch}/.meta/server-icon.png", Path.of(Architecture.Meta.absolutePath, "server-icon.png"))
                 }
                 if (!Files.exists(serverDotProperties)) {
-                    downloadFile("https://github.com/mooziii/laboratory/raw/main/.meta/server.properties", Path.of(Architecture.Meta.absolutePath, "server.properties"))
+                    downloadFile("https://github.com/mooziii/laboratory/raw/${Config.userConfig.updateBranch}/.meta/server.properties", Path.of(Architecture.Meta.absolutePath, "server.properties"))
                 }
                 val iconPath = Path.of(directory.absolutePath, "server-icon.png")
                 if (!Files.exists(iconPath)) {
