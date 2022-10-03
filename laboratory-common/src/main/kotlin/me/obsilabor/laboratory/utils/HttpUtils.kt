@@ -1,11 +1,13 @@
 package me.obsilabor.laboratory.utils
 
+import com.github.ajalt.mordant.animation.progressAnimation
 import com.github.ajalt.mordant.rendering.TextColors
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.obsilabor.laboratory.mainScope
 import me.obsilabor.laboratory.httpClient
@@ -14,7 +16,11 @@ import java.nio.file.Path
 import kotlin.math.roundToInt
 
 suspend fun downloadFile(url: String, destination: Path, silent: Boolean = false, callback: () -> Unit = {}) {
-    downloadFile(url, destination, 1, 1, silent, callback)
+    if (silent) {
+        downloadFile(url, destination, 1, 1, silent, callback)
+    } else {
+        downloadFileV2(url, destination, callback)
+    }
 }
 
 suspend fun downloadFile(url: String, destination: Path, current: Int, total: Int, silent: Boolean = false, callback: () -> Unit) {
@@ -48,4 +54,30 @@ suspend fun downloadFile(url: String, destination: Path, current: Int, total: In
     }
     destination.toFile().writeBytes(downloadContent)
     callback.invoke()
+}
+
+suspend fun downloadFileV2(url: String, destination: Path, callback: () -> Unit = {}) {
+    val downloadedContent = httpClient.get(url) {
+        onDownload { bytesSentTotal, contentLength ->
+            val progress = bytesSentTotal.toDouble() / contentLength.toDouble()
+            val dashes = (progress * 50).roundToInt()
+            val percentage = (progress * 100).roundToInt()
+            val string = buildString {
+                append("Downloading ${destination.toFile().name}  ")
+                repeat(dashes) {
+                    append(TextColors.brightGreen("━"))
+                }
+                //append(" ")
+                repeat(50 - dashes) {
+                    append(TextColors.black("━"))
+                }
+                append("  $percentage%")
+                append(" ${(bytesSentTotal / 1e+6).toInt()}/${(contentLength / 1e+6).toInt()}MB")
+            }
+            terminal.print("\r$string")
+        }
+    }.body<HttpResponse>().readBytes()
+    destination.toFile().writeBytes(downloadedContent)
+    callback.invoke()
+    println()
 }

@@ -123,7 +123,7 @@ data class Server(
             if (!attach) {
                 val process = processBuilder.start()
                 val pid = process.pid()+2 // don't ask, pid of the process is actually 2 numbers higher
-                terminal.println("Server is now running with PID $pid. Attach using ${TextStyles.dim(TextColors.brightWhite("screen -dr $name-$id"))}")
+                terminal.println("Server is now running with PID $pid. Attach using ${(TextColors.brightWhite on TextColors.gray)(TextStyles.italic("screen -dr $name-$id"))}")
                 this.pid = pid
                 JsonDatabase.editServer(this)
             } else {

@@ -36,7 +36,7 @@ class SpinnerAnimation(val message: String = "resolving") : CoroutineScope {
     suspend fun stop(message: String = "done") {
         spinJob.cancelAndJoin()
         terminal.cursor.move { startOfLine() }
-        terminal.print("${if (OperatingSystem.notWindows) " ⠿" else "[+]"} ")
+        terminal.print("${if (OperatingSystem.notWindows) "⠿" else "[+]"} ")
         terminal.cursor.move { clearLineAfterCursor() }
         terminal.println(message)
     }
@@ -44,7 +44,7 @@ class SpinnerAnimation(val message: String = "resolving") : CoroutineScope {
     suspend fun fail(message: String = "failed") {
         spinJob.cancelAndJoin()
         terminal.cursor.move { startOfLine() }
-        terminal.print("${TextStyles.bold(" ${TextColors.red("!")} ")}")
+        terminal.print("${TextStyles.bold("${TextColors.red("!")} ")}")
         terminal.cursor.move { clearLineAfterCursor() }
         terminal.println(TextColors.brightWhite(message))
     }

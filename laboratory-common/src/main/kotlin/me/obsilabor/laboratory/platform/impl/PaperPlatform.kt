@@ -7,6 +7,7 @@ import kotlinx.serialization.SerialName
 import me.obsilabor.laboratory.httpClient
 import me.obsilabor.laboratory.platform.IPlatform
 import me.obsilabor.laboratory.utils.downloadFile
+import me.obsilabor.laboratory.utils.downloadFileV2
 import java.nio.file.Path
 
 object PaperPlatform : IPlatform {
@@ -31,7 +32,7 @@ object PaperPlatform : IPlatform {
     override suspend fun downloadJarFile(path: Path, mcVersion: String, build: String): Boolean {
         val url = "https://api.papermc.io/v2/projects/paper/versions/$mcVersion/builds/$build/downloads/paper-$mcVersion-$build.jar"
         runCatching {
-            downloadFile(url, path)
+            downloadFileV2(url, path)
         }.onFailure {
             it.printStackTrace()
             return false
