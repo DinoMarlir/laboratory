@@ -5,7 +5,12 @@ chmod +x gradlew
 cp laboratory-cli/build/distributions/laboratory-cli-jvm.zip packages/laboratory-cli-jvm.zip
 cd packages
 chmod +x copyfiles.sh
+clear
+echo "########################################################################"
+echo "# You'll be prompted for your password in order to install laboratory. #"
+echo "########################################################################"
 sudo ./copyfiles.sh
+clear
 if [[ $SHELL == *"bash"* ]]
 then
     _LABORATORY_COMPLETE=bash laboratory > ~/laboratory/bash-completion.sh
@@ -20,3 +25,4 @@ then
     echo "source ~/laboratory/zsh-completion.sh" >> ~/.zshrc
     source ~/laboratory/zsh-completion.sh
 fi
+echo "laboratory was installed successfully"

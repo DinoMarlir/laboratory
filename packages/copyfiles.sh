@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 echo "unzip is required to run this script, also this script must be executed with root privileges"
 
-unzip laboratory-cli-jvm.zip
+unzip -q laboratory-cli-jvm.zip
 
 echo "#!/usr/bin/bash" > /usr/bin/laboratory
 echo "/usr/share/laboratory/laboratory-cli-jvm/bin/laboratory-cli \"\$@\"" >> /usr/bin/laboratory
