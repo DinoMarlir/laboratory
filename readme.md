@@ -11,7 +11,7 @@ laboratory is the next generation [Minecraft](https://minecraft.net) server mana
 3. Checkout the development branch using `git checkout dev/chemicae`
 4. cd into the packages directory using `cd packages`
 5. Give permissions to the compile script file using `chmod +x compile.sh`
-6. Run the compile-script using `./compile.sh` (you'll be prompted for the sudo password)
+6. Run the compile-script using `./install.sh` (you'll be prompted for the sudo password)
 7. Complete the installation process by running `laboratory`
 
 **Windows:**

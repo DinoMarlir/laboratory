@@ -1,13 +1,18 @@
 #!/usr/bin/bash
-echo "unzip is required to run this script, also this script must be executed with root privileges"
-
-unzip laboratory-cli-jvm.zip
-unzip laboratory-cli-jvm.tar
-
-echo "#!/usr/bin/bash" > /usr/bin/laboratory
-echo "/usr/share/laboratory/laboratory-cli-jvm/bin/laboratory-cli \"\$@\"" >> /usr/bin/laboratory
-chmod +x /usr/bin/laboratory
-mkdir /usr/share/laboratory/
-cp -r laboratory-cli-jvm /usr/share/laboratory/
-chmod +x /usr/share/laboratory/laboratory-cli-jvm/bin/laboratory-cli
-rm -rf laboratory-cli-jvm
+cd ..
+chmod +x gradlew
+./gradlew distZip
+cp laboratory-cli/build/distributions/laboratory-cli-jvm.zip packages/laboratory-cli-jvm.zip
+cd packages
+chmod +x copyfiles.sh
+sudo ./copyfiles.sh
+if [[ $SHELL == *"bash"*]]; then
+    _LABORATORY_COMPLETE=bash laboratory > ~/laboratory/bash-completion.sh
+    echo "#Tab completion for laboratory. Do not remove this" >> ~/.bashrc
+    echo "source ~/laboratory/bash-completion.sh" >> ~/.bashrc
+fi
+if [[ $SHELL == *"zsh"*]]; then
+    _LABORATORY_COMPLETE=bash laboratory > ~/laboratory/zsh-completion.sh
+    echo "#Tab completion for laboratory. Do not remove this" >> ~/.zshrc
+    echo "source ~/laboratory/zsh-completion.sh" >> ~/.zshrc
+fi
