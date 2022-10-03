@@ -6,19 +6,14 @@ laboratory is the next generation [Minecraft](https://minecraft.net) server mana
 
 **Linux:**
 
-1. Clone this repository using `git clone https://github.com/mooziii/laboratory.git laboratory-installation`
-2. cd into the folder using `cd laboratory-installation`
-3. Checkout the development branch using `git checkout dev/chemicae`
-4. cd into the packages directory using `cd packages`
-5. Give permissions to the installation script file using `chmod +x install.sh`
-6. Run the installation-script using `./install.sh` (you'll be prompted for the sudo password)
-7. Complete the installation process by running `laboratory`
+Run this command `curl -sS https://raw.githubusercontent.com/mooziii/laboratory/dev/chemicae/packages/autoinstall.sh | bash`
+You will be prompted for your sudo password (user specific installation methods that don't require root access will come soon).
 
 **Windows:**
-Don't use this on Windows
+soon
 
 **macOS:**
-It may work, why would you run a minecraft server on macOS
+Same as linux but didn't test it
 
 ### Updating 
 
