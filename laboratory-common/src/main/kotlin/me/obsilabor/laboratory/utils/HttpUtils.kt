@@ -65,11 +65,11 @@ suspend fun downloadFileV2(url: String, destination: Path, callback: () -> Unit 
             val string = buildString {
                 append("Downloading ${destination.toFile().name}  ")
                 repeat(dashes) {
-                    append(TextColors.brightGreen("━"))
+                    append(TextColors.brightGreen(if (OperatingSystem.notWindows) "━" else "#"))
                 }
                 //append(" ")
                 repeat(50 - dashes) {
-                    append(TextColors.black("━"))
+                    append(TextColors.black(if (OperatingSystem.notWindows) "━" else "#"))
                 }
                 append("  $percentage%")
                 append(" ${(bytesSentTotal / 1e+6).toInt()}/${(contentLength / 1e+6).toInt()}MB")

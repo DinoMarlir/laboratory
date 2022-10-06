@@ -58,13 +58,14 @@ data class Server(
                 directory.deleteRecursively()
                 directory.mkdir()
             }
+            val resolvedPlatform = PlatformResolver.resolvePlatform(platform)
             if (initialStart == true || !static) {
                 val serverDashIcon = File(Architecture.Meta, "server-icon.png").toPath()
                 val serverDotProperties = File(Architecture.Meta, "server.properties").toPath()
                 if (!Files.exists(serverDashIcon)) {
                     downloadFile("https://github.com/mooziii/laboratory/raw/${Config.userConfig.updateBranch}/.meta/server-icon.png", Path.of(Architecture.Meta.absolutePath, "server-icon.png"))
                 }
-                if (!Files.exists(serverDotProperties)) {
+                if (!Files.exists(serverDotProperties) && !resolvedPlatform.isProxy) {
                     downloadFile("https://github.com/mooziii/laboratory/raw/${Config.userConfig.updateBranch}/.meta/server.properties", Path.of(Architecture.Meta.absolutePath, "server.properties"))
                 }
                 val iconPath = Path.of(directory.absolutePath, "server-icon.png")
@@ -72,11 +73,10 @@ data class Server(
                     Files.copy(serverDashIcon, iconPath)
                 }
                 val propertiesPath = Path.of(directory.absolutePath, "server.properties")
-                if (!Files.exists(propertiesPath)) {
+                if (!Files.exists(propertiesPath) && !resolvedPlatform.isProxy) {
                     Files.copy(serverDotProperties, propertiesPath)
                 }
             }
-            val resolvedPlatform = PlatformResolver.resolvePlatform(platform)
             if (automaticUpdates) {
                 update(resolvedPlatform, !Config.userConfig.promptOnMajorUpdates)
             }
@@ -92,14 +92,23 @@ data class Server(
             val jar = Architecture.findOrCreateJar(resolvedPlatform, mcVersion, platformBuild)
             Files.copy(jar, Path.of(directory.absolutePath, "server.jar"), StandardCopyOption.REPLACE_EXISTING)
             resolvedPlatform.copyOtherFiles(Path.of(directory.absolutePath), mcVersion, platformBuild, this@Server)
-            val spinner = SpinnerAnimation("Accepting mojang EULA")
-            spinner.start()
-            val eula = getFile(directory, "eula.txt")
-            eula.writeText("""
-                # By using laboratory you automatically agree to the Mojang and Laboratory Terms of Service
-                eula=true
-            """.trimIndent())
-            spinner.stop()
+            if (!Config.userConfig.acceptedEULA) {
+                if (!terminal.promptYesOrNo("Do you agree the Minecraft EULA? https://www.minecraft.net/en-us/eula")) {
+                    return@withContext
+                } else {
+                    Config.userConfig.acceptedEULA = true
+                    Config.writeUserFile(Config.userConfig)
+                    if (!resolvedPlatform.isProxy) {
+                        val eula = getFile(directory, "eula.txt")
+                        eula.writeText("eula=true")
+                    }
+                }
+            } else {
+                if (!resolvedPlatform.isProxy) {
+                    val eula = getFile(directory, "eula.txt")
+                    eula.writeText("eula=true")
+                }
+            }
         }
         state = ServerState.RUNNING
         JsonDatabase.editServer(this)

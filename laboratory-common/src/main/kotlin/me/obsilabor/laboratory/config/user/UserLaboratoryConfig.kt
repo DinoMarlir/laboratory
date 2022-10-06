@@ -9,14 +9,16 @@ data class UserLaboratoryConfig(
     val folderForAutomaticBackups: String,
     val textEditor: String,
     val promptOnMajorUpdates: Boolean,
-    val updateBranch: String = "dev/chemicae"
+    val updateBranch: String = "dev/chemicae",
+    var acceptedEULA: Boolean = false
 ) {
     companion object {
         val DEFAULTS = UserLaboratoryConfig(
             Architecture.Backups.absolutePath,
             if (OperatingSystem.notWindows) "nano" else "notepad.exe",
             true,
-            "dev/chemicae"
+            "dev/chemicae",
+            false
         )
     }
 }

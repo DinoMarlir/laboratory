@@ -20,7 +20,7 @@ object Config {
         }
     }
 
-    private fun writeUserFile(cfg: UserLaboratoryConfig?) {
+    fun writeUserFile(cfg: UserLaboratoryConfig?) {
         if (!userConfigFile.exists()) {
             userConfigFile.createNewFile()
         }
