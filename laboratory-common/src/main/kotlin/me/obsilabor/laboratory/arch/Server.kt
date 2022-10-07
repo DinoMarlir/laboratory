@@ -152,13 +152,17 @@ data class Server(
             args.addAll(processArguments)
             val processBuilder = ProcessBuilder(args).directory(directory)
             if (!attach) {
-                val process = processBuilder.start()
-                val pid = process.pid()+2 // don't ask, pid of the process is actually 2 numbers higher
-                this.pid = pid
-                JsonDatabase.editServer(this)
                 if (!noScreen) {
+                    val process = processBuilder.start()
+                    val pid = process.pid()+2 // don't ask, pid of the process is actually 2 numbers higher
+                    this.pid = pid
+                    JsonDatabase.editServer(this)
                     terminal.println("Server is now running with PID $pid. Attach using ${(TextColors.brightWhite on TextColors.gray)(TextStyles.italic("screen -dr $name-$id"))}")
                 } else {
+                    val process = processBuilder.inheritIO().start()
+                    val pid = process.pid()+2 // don't ask, pid of the process is actually 2 numbers higher
+                    this.pid = pid
+                    JsonDatabase.editServer(this)
                     process.waitFor()
                 }
             } else {
