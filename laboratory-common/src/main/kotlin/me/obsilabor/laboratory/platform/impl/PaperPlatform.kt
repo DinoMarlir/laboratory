@@ -17,9 +17,12 @@ object PaperPlatform : IPlatform {
     override val configurationFiles = mapOf(
         "config/paper-global.yml" to "Paper config for versions above 1.19",
         "paper.yml" to "Paper config for versions below 1.19",
+        "spigot.yml" to "Spigot config",
+        "bukkit.yml" to "Bukkit config",
         "server.properties" to "Vanilla config"
     )
     override val modsFolder = "plugins"
+    override val spigotBased = true
 
     override suspend fun getBuilds(mcVersion: String): List<String> {
         return httpClient.get("https://api.papermc.io/v2/projects/paper/versions/$mcVersion").body<ProjectVersionsResponse>().builds.map { it.toString() }

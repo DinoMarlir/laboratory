@@ -77,9 +77,25 @@ data class Server(
                 if (!Files.exists(propertiesPath) && !resolvedPlatform.isProxy) {
                     Files.copy(serverDotProperties, propertiesPath)
                 }
+                val spigotYml = Path.of(directory.absolutePath, "spigot.yml").toFile()
+                if (!spigotYml.exists()) {
+                    spigotYml.createNewFile()
+                }
+                spigotYml.writeText("""
+                    settings:
+                      restart-script: ./restart.sh
+                """.trimIndent())
+                val restartSh = Path.of(directory.absolutePath,"restart.sh").toFile()
+                if (!restartSh.exists()) {
+                    restartSh.createNewFile()
+                }
+                restartSh.writeText("""
+                    laboratory start $name-$id -s
+                """.trimIndent())
+                restartSh.setExecutable(true)
             }
             if (automaticUpdates) {
-                update(resolvedPlatform, !Config.userConfig.promptOnMajorUpdates)
+                update(resolvedPlatform, if(disableIO) true else !Config.userConfig.promptOnMajorUpdates)
             }
             if (initialStart == true) {
                 initialStart = false
@@ -94,7 +110,7 @@ data class Server(
             Files.copy(jar, Path.of(directory.absolutePath, "server.jar"), StandardCopyOption.REPLACE_EXISTING)
             resolvedPlatform.copyOtherFiles(Path.of(directory.absolutePath), mcVersion, platformBuild, this@Server)
             if (!Config.userConfig.acceptedEULA) {
-                if (!terminal.promptYesOrNo("Do you agree the Minecraft EULA? https://www.minecraft.net/en-us/eula")) {
+                if (!terminal.promptYesOrNo("Do you agree the Minecraft EULA? https://www.minecraft.net/en-us/eula") || disableIO) {
                     terminal.println(TextColors.red("You need to agree to the Minecraft EULA in order to start a server!"))
                     exitProcess(0)
                 } else {

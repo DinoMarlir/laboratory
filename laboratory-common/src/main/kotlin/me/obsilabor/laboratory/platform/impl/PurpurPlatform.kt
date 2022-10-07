@@ -18,9 +18,12 @@ object PurpurPlatform : IPlatform {
         "paper.yml" to "Paper config for versions below 1.19",
         "purpur.yml" to "Purpur config",
         "pufferfish.yml" to "Pufferfish config",
+        "spigot.yml" to "Spigot config",
+        "bukkit.yml" to "Bukkit config",
         "server.properties" to "Vanilla config"
     )
     override val modsFolder = "plugins"
+    override val spigotBased = true
 
     override suspend fun getMcVersions(): List<String> {
         return httpClient.get("https://api.purpurmc.org/v2/purpur/").body<PurpurVersionsResponse>().versions

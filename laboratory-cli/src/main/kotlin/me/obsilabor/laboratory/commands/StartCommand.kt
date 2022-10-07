@@ -12,6 +12,7 @@ import me.obsilabor.laboratory.db.JsonDatabase
 import me.obsilabor.laboratory.mainScope
 import me.obsilabor.laboratory.terminal
 import me.obsilabor.laboratory.terminal.chooseServer
+import me.obsilabor.laboratory.terminal.chooseServerHeadless
 
 class StartCommand : CliktCommand(
     name = "start",
@@ -24,7 +25,12 @@ class StartCommand : CliktCommand(
 
     private val attachFlag by option(
         "-a", "--attach",
-        help = "If this flag is set, the player will automatically be attached to the screen"
+        help = "If this flag is set, the user will automatically be attached to the screen"
+    ).flag()
+
+    private val shellFlag by option(
+        "-s", "--shell",
+        help = "If this flag is set, the command will be launched in a non-interactive mode"
     ).flag()
 
     override fun run() {
@@ -32,13 +38,19 @@ class StartCommand : CliktCommand(
             if (query == "*") {
                 for (server in JsonDatabase.servers) {
                     terminal.println(TextStyles.italic("Starting server ${server.terminalString}.."))
-                    server.start(attach = attachFlag)
+                    server.start(attach = attachFlag, disableIO = shellFlag)
                 }
                 return@launch
             }
-            val resolvedServer = terminal.chooseServer(query ?: "") ?: return@launch
-            terminal.println(TextStyles.italic("Starting server ${resolvedServer.terminalString}.."))
-            resolvedServer.start(attach = attachFlag)
+            val resolvedServer = if (!shellFlag) {
+                terminal.chooseServer(query ?: "") ?: return@launch
+            } else {
+                terminal.chooseServerHeadless(query ?: "") ?: return@launch
+            }
+            if (!shellFlag) {
+                terminal.println(TextStyles.italic("Starting server ${resolvedServer.terminalString}.."))
+            }
+            resolvedServer.start(attach = attachFlag, disableIO = shellFlag)
         }
     }
 }
