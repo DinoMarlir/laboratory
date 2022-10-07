@@ -51,7 +51,7 @@ data class Server(
 
     val directory by lazy { getDirectory(Architecture.Servers, "$name-$id") }
 
-    suspend fun start(attach: Boolean = false, disableIO: Boolean = false) {
+    suspend fun start(attach: Boolean = false, disableIO: Boolean = false, noScreen: Boolean = false) {
         withContext(Dispatchers.IO) {
             state = ServerState.STARTING
             JsonDatabase.editServer(this@Server)
@@ -95,7 +95,7 @@ data class Server(
                 restartSh.setExecutable(true)
             }
             if (automaticUpdates) {
-                update(resolvedPlatform, if(disableIO) true else !Config.userConfig.promptOnMajorUpdates)
+                update(resolvedPlatform, if(disableIO || noScreen) true else !Config.userConfig.promptOnMajorUpdates)
             }
             if (initialStart == true) {
                 initialStart = false
@@ -110,7 +110,7 @@ data class Server(
             Files.copy(jar, Path.of(directory.absolutePath, "server.jar"), StandardCopyOption.REPLACE_EXISTING)
             resolvedPlatform.copyOtherFiles(Path.of(directory.absolutePath), mcVersion, platformBuild, this@Server)
             if (!Config.userConfig.acceptedEULA) {
-                if (!terminal.promptYesOrNo("Do you agree the Minecraft EULA? https://www.minecraft.net/en-us/eula") || disableIO) {
+                if (!terminal.promptYesOrNo("Do you agree the Minecraft EULA? https://www.minecraft.net/en-us/eula") || disableIO || noScreen) {
                     terminal.println(TextColors.red("You need to agree to the Minecraft EULA in order to start a server!"))
                     exitProcess(0)
                 } else {
@@ -133,7 +133,7 @@ data class Server(
         JsonDatabase.editServer(this)
         if (OperatingSystem.notWindows) {
             val args = buildList {
-                if (!disableIO) {
+                if (!noScreen) {
                     add("screen")
                     add("${if(!attach) "-dm" else "-"}S")
                     add("$name-$id")
@@ -156,7 +156,7 @@ data class Server(
                 val pid = process.pid()+2 // don't ask, pid of the process is actually 2 numbers higher
                 this.pid = pid
                 JsonDatabase.editServer(this)
-                if (!disableIO) {
+                if (!noScreen) {
                     terminal.println("Server is now running with PID $pid. Attach using ${(TextColors.brightWhite on TextColors.gray)(TextStyles.italic("screen -dr $name-$id"))}")
                 } else {
                     process.waitFor()

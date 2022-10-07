@@ -38,7 +38,7 @@ class StartCommand : CliktCommand(
             if (query == "*") {
                 for (server in JsonDatabase.servers) {
                     terminal.println(TextStyles.italic("Starting server ${server.terminalString}.."))
-                    server.start(attach = attachFlag, disableIO = shellFlag)
+                    server.start(attach = attachFlag, noScreen = shellFlag)
                 }
                 return@launch
             }
