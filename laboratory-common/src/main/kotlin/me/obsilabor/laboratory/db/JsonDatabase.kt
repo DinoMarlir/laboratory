@@ -15,7 +15,7 @@ object JsonDatabase {
         }
     }
 
-    private fun writeFile(db: Database?) {
+    fun writeFile(db: Database?) {
         if (!file.exists()) {
             file.createNewFile()
         }

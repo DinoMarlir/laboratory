@@ -21,6 +21,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
 import java.time.Instant
+import kotlin.system.exitProcess
 
 @Serializable
 data class Server(
@@ -94,10 +95,12 @@ data class Server(
             resolvedPlatform.copyOtherFiles(Path.of(directory.absolutePath), mcVersion, platformBuild, this@Server)
             if (!Config.userConfig.acceptedEULA) {
                 if (!terminal.promptYesOrNo("Do you agree the Minecraft EULA? https://www.minecraft.net/en-us/eula")) {
-                    return@withContext
+                    terminal.println(TextColors.red("You need to agree to the Minecraft EULA in order to start a server!"))
+                    exitProcess(0)
                 } else {
-                    Config.userConfig.acceptedEULA = true
-                    Config.writeUserFile(Config.userConfig)
+                    val cfg = Config.userConfig
+                    cfg.acceptedEULA = true
+                    Config.writeUserFile(cfg)
                     if (!resolvedPlatform.isProxy) {
                         val eula = getFile(directory, "eula.txt")
                         eula.writeText("eula=true")
@@ -119,6 +122,7 @@ data class Server(
                 "$name-$id",
                 javaCommand,
                 "-Xmx${maxHeapMemory}M",
+                "-Dlaboratory.server=$name-$id"
             )
             for (jvmArgument in jvmArguments) {
                 args.addAll(jvmArgument.split(" "))
@@ -152,6 +156,7 @@ data class Server(
                     val args = arrayListOf(
                         javaCommand,
                         "-Xmx${maxHeapMemory}M",
+                        "-Dlaboratory.server=$name-$id"
                     )
                     args.addAll(jvmArguments)
                     args.add("-jar")

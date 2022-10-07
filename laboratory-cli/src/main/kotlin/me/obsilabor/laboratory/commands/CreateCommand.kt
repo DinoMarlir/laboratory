@@ -63,8 +63,9 @@ class CreateCommand : CliktCommand(
                 updates = false
             }
             spinner.stop("Resolved versions")
+            val db = JsonDatabase.db
             val server = Server(
-                Random().nextInt(700000), // TODO: lookup database to avoid duplicates
+                db.internalCounter,
                 name,
                 true,
                 true,
@@ -81,6 +82,8 @@ class CreateCommand : CliktCommand(
                 true,
                 "java",
             )
+            db.internalCounter++
+            JsonDatabase.writeFile(db)
             if (terminal.promptYesOrNo("Do you want to configure your new server right now?", true)) {
                 server.static = terminal.promptYesOrNo("Do you want your new server to be static?", true)
                 server.automaticUpdates = terminal.promptYesOrNo("Do you want laboratory to keep your server up-to-date?", true)

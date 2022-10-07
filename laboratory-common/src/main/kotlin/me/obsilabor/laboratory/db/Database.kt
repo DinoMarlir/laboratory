@@ -5,5 +5,6 @@ import me.obsilabor.laboratory.arch.Server
 
 @Serializable
 data class Database(
-    var servers: ArrayList<Server>
+    var servers: ArrayList<Server>,
+    var internalCounter: Int = 1
 )

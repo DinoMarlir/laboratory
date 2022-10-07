@@ -80,8 +80,9 @@ class ModrinthCommand : CliktCommand(
                 loader = "forge"
                 loaderVersion = modrinthPack.dependencies.forge
             }
+            val db = JsonDatabase.db
             val server = Server(
-                Random().nextInt(700000), // TODO: lookup database to avoid duplicates
+                db.internalCounter,
                 modrinthPack.name.replace("%20", "-"),
                 true,
                 true,
@@ -98,6 +99,8 @@ class ModrinthCommand : CliktCommand(
                 true,
                 "java",
             )
+            db.internalCounter++
+            JsonDatabase.writeFile(db)
             spinner.update("Saving server configuration to database")
             val platform = PlatformResolver.resolvePlatform(loader)
             platform.modsFolder?.let {
