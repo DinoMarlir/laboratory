@@ -50,7 +50,7 @@ class StartCommand : CliktCommand(
             if (!shellFlag) {
                 terminal.println(TextStyles.italic("Starting server ${resolvedServer.terminalString}.."))
             }
-            resolvedServer.start(attach = attachFlag, disableIO = shellFlag)
+            resolvedServer.start(attach = attachFlag, noScreen = shellFlag)
         }
     }
 }
