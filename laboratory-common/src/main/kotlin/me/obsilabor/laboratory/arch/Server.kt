@@ -132,14 +132,16 @@ data class Server(
         state = ServerState.RUNNING
         JsonDatabase.editServer(this)
         if (OperatingSystem.notWindows) {
-            val args = arrayListOf(
-                "screen",
-                "${if(!attach) "-dm" else "-"}S",
-                "$name-$id",
-                javaCommand,
-                "-Xmx${maxHeapMemory}M",
-                "-Dlaboratory.server=$name-$id"
-            )
+            val args = buildList {
+                if (!disableIO) {
+                    add("screen")
+                    add("${if(!attach) "-dm" else "-"}S")
+                    add("$name-$id")
+                }
+                add(javaCommand ?: "java")
+                add("-Xmx${maxHeapMemory}M")
+                add("-Dlaboratory.server=$name-$id")
+            }.toMutableList()
             for (jvmArgument in jvmArguments) {
                 args.addAll(jvmArgument.split(" "))
             }
