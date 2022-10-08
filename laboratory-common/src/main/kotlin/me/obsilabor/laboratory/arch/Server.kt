@@ -106,8 +106,8 @@ data class Server(
                     copyFolder(Path.of(Architecture.Templates.absolutePath, it), Path.of(directory.absolutePath))
                 }
                 if (resolvedPlatform.isProxy) {
-                    val pluginsFolder = directory.resolve("plugins")
-                    val file = pluginsFolder.resolve("laboratory-proxy-sync.jar")
+                    val pluginsFolder = File(directory, "plugins")
+                    val file = File(pluginsFolder, "laboratory-proxy-sync.jar")
                     if (!file.exists()) {
                         file.createNewFile()
                     }
