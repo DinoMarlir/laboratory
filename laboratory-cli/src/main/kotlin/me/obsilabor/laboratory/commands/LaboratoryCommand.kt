@@ -20,7 +20,16 @@ class LaboratoryCommand : CliktCommand(
             StopCommand(),
             RestartCommand(),
             ModrinthCommand(),
-            ExecuteCommand()
+            ExecuteCommand(),
+            AttachCommand()
+        )
+    }
+
+    override fun aliases(): Map<String, List<String>> {
+        return mapOf(
+            "rm" to listOf("server", "delete"),
+            "del" to listOf("server", "delete"),
+            "modify" to listOf("server", "modify")
         )
     }
 

@@ -6,6 +6,7 @@ import com.github.ajalt.clikt.parameters.options.option
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.server.routing.*
+import me.obsilabor.chemicae.job.jobs.ConsoleJob
 import me.obsilabor.chemicae.job.jobs.SchedulerJob
 import me.obsilabor.chemicae.job.jobs.ServerLifecycleJob
 import me.obsilabor.chemicae.routes.ServerRoutes
@@ -23,6 +24,7 @@ class ChemicaeCommand : CliktCommand(
             ServerLifecycleJob().start()
         }
         SchedulerJob().start()
+        ConsoleJob().start()
         if (!noHttpFlag) {
             embeddedServer(Netty, port = Config.chemicaeConfig.port) {
                 routing {
