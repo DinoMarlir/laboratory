@@ -107,6 +107,9 @@ data class Server(
                 }
                 if (resolvedPlatform.isProxy) {
                     val pluginsFolder = File(directory, "plugins")
+                    if (!pluginsFolder.exists()) {
+                        pluginsFolder.mkdir()
+                    }
                     val file = File(pluginsFolder, "laboratory-proxy-sync.jar")
                     if (!file.exists()) {
                         file.createNewFile()
