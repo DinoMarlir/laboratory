@@ -34,6 +34,7 @@ object Architecture {
     val Backups by lazy { getDirectory(Containers, "backups") }
     val UserConfig by lazy { File(Root, "config.json") }
     val ChemicaeConfig by lazy { File(Root, "chemicae-config.json") }
+    val ProxySyncPsFile by lazy { File(Live, "proxysync.ps") }
 
     suspend fun findOrCreateJar(platform: IPlatform, version: String, build: String): Path {
         val platformFolder = getDirectory(Platforms, platform.name)

@@ -1,0 +1,5 @@
+name: laboratory-proxy
+author: mooziii
+version: 1.0.0
+description: Plugin to automatically register laboratory servers.
+main: me.obsilabor.laboratory.proxy.WaterfallSync

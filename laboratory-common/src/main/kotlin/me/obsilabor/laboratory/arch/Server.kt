@@ -105,6 +105,10 @@ data class Server(
                 templates.forEach {
                     copyFolder(Path.of(Architecture.Templates.absolutePath, it), Path.of(directory.absolutePath))
                 }
+                if (resolvedPlatform.isProxy) {
+                    val pluginsFolder = directory.resolve("plugins")
+                    downloadFileV2("https://github.com/mooziii/laboratory/raw/${Config.userConfig.updateBranch}/.meta/plugins/laboratory-proxy-sync.jar", pluginsFolder.resolve("laboratory-proxy-sync.jar").toPath())
+                }
             }
             val jar = Architecture.findOrCreateJar(resolvedPlatform, mcVersion, platformBuild)
             Files.copy(jar, Path.of(directory.absolutePath, "server.jar"), StandardCopyOption.REPLACE_EXISTING)
@@ -131,6 +135,9 @@ data class Server(
         }
         state = ServerState.RUNNING
         JsonDatabase.editServer(this)
+        if (!PlatformResolver.resolvePlatform(platform).isProxy) {
+            Architecture.ProxySyncPsFile.writeText("REGISTER $name-$id $port")
+        }
         if (OperatingSystem.notWindows) {
             val args = buildList {
                 if (!noScreen) {
@@ -266,6 +273,7 @@ data class Server(
         if (isAlive) {
             state = ServerState.STOPPED
             JsonDatabase.editServer(this)
+            Architecture.ProxySyncPsFile.writeText("UNREGISTER $name-$id")
             killProcess(pid ?: return, forcibly)
         }
     }

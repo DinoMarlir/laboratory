@@ -2,6 +2,7 @@ package me.obsilabor.chemicae.job.jobs
 
 import kotlinx.coroutines.*
 import me.obsilabor.chemicae.job.IJob
+import me.obsilabor.laboratory.arch.Architecture
 import me.obsilabor.laboratory.arch.Server
 import me.obsilabor.laboratory.arch.ServerState
 import me.obsilabor.laboratory.db.JsonDatabase
@@ -21,6 +22,7 @@ class ServerLifecycleJob : IJob {
                     if (!now && server.state == ServerState.RUNNING) {
                         server.state = ServerState.STOPPED
                         JsonDatabase.editServer(server)
+                        Architecture.ProxySyncPsFile.writeText("UNREGISTER ${server.name}-${server.id}")
                         terminal.println(server.terminalString + " stopped")
                         if (server.automaticRestarts == true) {
                             terminal.println(server.terminalString + " is starting")
