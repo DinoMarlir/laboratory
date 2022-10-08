@@ -107,7 +107,11 @@ data class Server(
                 }
                 if (resolvedPlatform.isProxy) {
                     val pluginsFolder = directory.resolve("plugins")
-                    downloadFileV2("https://github.com/mooziii/laboratory/raw/${Config.userConfig.updateBranch}/.meta/plugins/laboratory-proxy-sync.jar", pluginsFolder.resolve("laboratory-proxy-sync.jar").toPath())
+                    val file = pluginsFolder.resolve("laboratory-proxy-sync.jar")
+                    if (!file.exists()) {
+                        file.createNewFile()
+                    }
+                    downloadFileV2("https://github.com/mooziii/laboratory/raw/${Config.userConfig.updateBranch}/.meta/plugins/laboratory-proxy-sync.jar", file.toPath())
                 }
             }
             val jar = Architecture.findOrCreateJar(resolvedPlatform, mcVersion, platformBuild)

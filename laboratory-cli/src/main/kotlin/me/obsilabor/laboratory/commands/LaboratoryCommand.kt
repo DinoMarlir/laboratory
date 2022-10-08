@@ -29,7 +29,8 @@ class LaboratoryCommand : CliktCommand(
         return mapOf(
             "rm" to listOf("server", "delete"),
             "del" to listOf("server", "delete"),
-            "modify" to listOf("server", "modify")
+            "modify" to listOf("server", "modify"),
+            "ls" to listOf("list"),
         )
     }
 
