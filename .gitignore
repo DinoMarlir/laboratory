@@ -1,8 +1,7 @@
 .gradle
 .idea
+.fleet
 build
 run
 node-modules
 package-lock.json
-# I will publish docs as soon as they're some sort of ready.
-docs

@@ -43,7 +43,7 @@ class RestartCommand : CliktCommand(
                         for (server in JsonDatabase.servers) {
                             terminal.println(TextStyles.italic("Stopping server ${server.terminalString}.."))
                             server.stop(forceFlag)
-                            server.start(attachFlag)
+                            server.start()
                         }
                         return@runBlocking
                     }
