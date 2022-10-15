@@ -10,5 +10,5 @@ The delete-command has the following options available:
 - `-y` or `--yes` will delete the server without any confirmation needed. **Use with caution!**
 
 :::tip
-In case you have a typo in your servers name, you can [rename the server](/docs/configuring-servers/edit-laboratory-server) 
+In case you have a typo in your servers name, you can [rename the server](/docs/laboratory-config/edit-laboratory-server) 
 :::
