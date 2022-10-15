@@ -15,7 +15,7 @@ data class UserLaboratoryConfig(
     companion object {
         val DEFAULTS = UserLaboratoryConfig(
             Architecture.Backups.absolutePath,
-            if (OperatingSystem.notWindows) "nano" else "notepad.exe",
+            if (OperatingSystem.notWindows) "vi" else "notepad.exe",
             true,
             "dev/chemicae",
             false

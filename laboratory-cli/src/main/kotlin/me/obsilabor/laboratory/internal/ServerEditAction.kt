@@ -22,6 +22,7 @@ import kotlin.io.path.absolutePathString
 enum class ServerEditAction(val actionString: String, val perform: (Server) -> Unit) {
     RENAME("Rename the server", perform = {
         terminal.println(TextColors.yellow("Please make sure that the server isn't running."))
+        it.stop(false)
         val newName = terminal.prompt("Enter a new name for the Server")
         val oldName = it.name
         if (newName != null) {
@@ -31,7 +32,7 @@ enum class ServerEditAction(val actionString: String, val perform: (Server) -> U
             it.directory.deleteRecursively()
             it.name = newName
             JsonDatabase.editServer(it)
-            terminal.println(TextColors.brightGreen("The server $oldName has been renamed to $newName"))
+            terminal.println(TextColors.brightGreen("The server $oldName has been renamed to $newName. In case the server was running, you have to start it again."))
         }
     }),
     COPY_TEMPLATES("Enable/disable templates", perform = {

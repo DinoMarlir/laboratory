@@ -29,7 +29,7 @@ class TemplateCommand : CliktCommand(
         name = "create",
         help = "Creates a new template"
     ) {
-        val templateName by argument("name", help = "Name of the new template")
+        private val templateName by argument("name", help = "Name of the new template")
 
         override fun run() {
             val file = File(Architecture.Templates, templateName)
@@ -46,7 +46,7 @@ class TemplateCommand : CliktCommand(
         name = "delete",
         help = "Deletes a template"
     ) {
-        val templateName by argument("name", help = "Name of the template to delete")
+        private val templateName by argument("name", help = "Name of the template to delete")
 
         private val yesFlag by option(
             "-y", "--yes",
