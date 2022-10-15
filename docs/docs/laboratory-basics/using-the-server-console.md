@@ -1,8 +1,8 @@
 ---
-sidebar_position: 3
+sidebar_position: 4
 ---
 
-# Using The Server Console
+# Using the server console
 
 :::caution
 This only works on unix systems (Linux and macOS). Windows is not supported

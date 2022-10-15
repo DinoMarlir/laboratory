@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Creating a Server
+# Creating a server
 
 To create a server run `laboratory create <server-name> <server-software>`
 
