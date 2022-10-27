@@ -15,6 +15,8 @@ import java.io.File
 object UpdateManager {
 
     suspend fun updateOnWindows() {
+        ProcessBuilder("irm", "https://raw.githubusercontent.com/mooziii/laboratory/dev/chemicae/packages/install-windows.ps1", "|", "iex")
+        /*
         val laboratoryDir = File(System.getenv("LOCALAPPDATA"), "laboratory")
         val tempDir = File(laboratoryDir, "Temp")
         if (!tempDir.exists()) tempDir.mkdir()
@@ -45,6 +47,7 @@ object UpdateManager {
         spinner.update("Removing temporary files")
         tempDir.deleteRecursively()
         spinner.stop("done")
+         */
     }
 
     suspend fun updateOnLinux(sudoPassword: String) { // Only for manual installations, installation via package manager is preferred.
