@@ -31,7 +31,7 @@ object UpdateManager {
         if (linuxExecutable.exists()) {
             linuxExecutable.delete()
         }
-        File(tempDir, "laboratory-cli-jvm\\bin\\laboratory-cli.bat").renameTo(File(tempDir, "bin\\laboratory.bat"))
+        File(tempDir, "laboratory-cli-jvm\\bin\\laboratory-cli.bat").renameTo(File(tempDir, "laboratory-cli-jvm\\bin\\laboratory.bat"))
         spinner.update("Copying files")
         copyFolder(tempDir.resolve("laboratory-cli-jvm\\bin").toPath(), laboratoryDir.resolve("bin").toPath())
         copyFolder(tempDir.resolve("laboratory-cli-jvm\\lib").toPath(), laboratoryDir.resolve("lib").toPath())
