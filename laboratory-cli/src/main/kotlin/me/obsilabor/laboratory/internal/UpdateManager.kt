@@ -1,5 +1,8 @@
 package me.obsilabor.laboratory.internal
 
+import com.github.ajalt.mordant.rendering.TextColors
+import com.github.ajalt.mordant.rendering.TextStyle
+import com.github.ajalt.mordant.rendering.TextStyles
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import kotlinx.coroutines.Dispatchers
@@ -13,6 +16,7 @@ import me.obsilabor.laboratory.utils.copyFolder
 import me.obsilabor.laboratory.utils.downloadFileV2
 import net.lingala.zip4j.ZipFile
 import java.io.File
+import kotlin.system.exitProcess
 
 object UpdateManager {
 
@@ -34,13 +38,12 @@ object UpdateManager {
             linuxExecutable.delete()
         }
         File(tempDir, "laboratory-cli-jvm\\bin\\laboratory-cli.bat").renameTo(File(tempDir, "laboratory-cli-jvm\\bin\\laboratory.bat"))
-        spinner.update("Copying files")
-        println("Copying ${tempDir.resolve("laboratory-cli-jvm\\bin").absolutePath} to ${laboratoryDir.resolve("bin").absolutePath}")
-        copyFolder(tempDir.resolve("laboratory-cli-jvm\\bin").toPath(), laboratoryDir.resolve("bin").toPath()) // Issue: Can only be copied if not used so we have to write an external program just for updating purposes.
-        copyFolder(tempDir.resolve("laboratory-cli-jvm\\lib").toPath(), laboratoryDir.resolve("lib").toPath())
-        spinner.update("Removing temporary files")
-        tempDir.deleteRecursively()
-        spinner.stop("done")
+        spinner.stop("Prepared for winupdater")
+        downloadFileV2("https://raw.githubusercontent.com/mooziii/laboratory/dev/chemicae/.meta/winupdater.jar", laboratoryDir.resolve("winupdater.jar").toPath())
+        Runtime.getRuntime().addShutdownHook(Thread {
+            ProcessBuilder("java", "-jar", "winupdater.jar").directory(laboratoryDir).inheritIO().start()
+        })
+        exitProcess(0)
     }
 
     suspend fun updateOnLinux(sudoPassword: String) { // Only for manual installations, installation via package manager is preferred.
@@ -58,12 +61,17 @@ object UpdateManager {
         terminal.println("Launching bash session...")
         withContext(Dispatchers.IO) {
             val bash = ProcessBuilder("bash").start()
+            terminal.println("> ${TextStyles.dim((TextColors.white on TextColors.black)("cd ${destination.absolutePath}"))}")
             bash.outputStream.write("cd ${destination.absolutePath}\n".toByteArray())
+            terminal.println("> ${TextStyles.dim((TextColors.white on TextColors.black)("sudo -S cp -r laboratory-cli-jvm /usr/share/laboratory/"))}")
             bash.outputStream.write("echo $sudoPassword\\ | sudo -S cp -r laboratory-cli-jvm /usr/share/laboratory/\n".toByteArray())
+            terminal.println("> ${TextStyles.dim((TextColors.white on TextColors.black)("sudo -S chmod +x /usr/share/laboratory/laboratory-cli-jvm/bin/laboratory-cli"))}")
             bash.outputStream.write("echo $sudoPassword\\ | sudo -S chmod +x /usr/share/laboratory/laboratory-cli-jvm/bin/laboratory-cli\n".toByteArray())
+            terminal.println("> ${TextStyles.dim((TextColors.white on TextColors.black)("exit"))}")
             bash.outputStream.write("exit\n".toByteArray())
             bash.outputStream.flush()
             bash.waitFor()
+            terminal.println(TextColors.brightGreen("Update completed!"))
         }
         tempDir.deleteRecursively()
     }

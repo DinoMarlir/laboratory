@@ -8,8 +8,10 @@ Let's install **laboratory** in **less than 3 minutes**.
 
 ## Linux & macOS
 
-Run this command `curl -sS https://raw.githubusercontent.com/mooziii/laboratory/dev/chemicae/packages/autoinstall.sh | bash`
-
+Run this command:
+```bash
+curl -sS https://raw.githubusercontent.com/mooziii/laboratory/dev/chemicae/packages/autoinstall.sh | bash
+```
 You will be prompted for your sudo password (installation methods that don't require root access will come soon).
 
 #### Distribution specific installation methods:
@@ -44,3 +46,7 @@ Open a PowerShell terminal and run:
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser # Required to run remote scripts
 irm https://raw.githubusercontent.com/mooziii/laboratory/dev/chemicae/packages/install-windows.ps1 | iex
 ```
+
+# Updating
+
+To update laboratory, just run `laboratory update`. Verify using `laboratory info`.

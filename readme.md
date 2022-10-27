@@ -6,7 +6,10 @@ laboratory is the next generation [Minecraft](https://minecraft.net) server mana
 
 **Linux:**
 
-Run this command `curl -sS https://raw.githubusercontent.com/mooziii/laboratory/dev/chemicae/packages/autoinstall.sh | bash`
+Run this command:
+```bash
+curl -sS https://raw.githubusercontent.com/mooziii/laboratory/dev/chemicae/packages/autoinstall.sh | bash
+```
 You will be prompted for your sudo password (user specific installation methods that don't require root access will come soon).
 
 **Windows:**
@@ -22,7 +25,7 @@ Same as linux but didn't test it
 
 ### Updating 
 
-To update laboratory, just cd into the installation directory and run `cd packages && chmod +x recompile.sh && ./recompile.sh`. You will get some errors but that is fine as it tries to create folders that already exist. Verify update by running `laboratory info`
+To update laboratory, just run `laboratory update`. Verify using `laboratory info`.
 
 ### Usage
 
