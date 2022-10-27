@@ -40,6 +40,7 @@ object UpdateManager {
         File(tempDir, "laboratory-cli-jvm\\bin\\laboratory-cli.bat").renameTo(File(tempDir, "laboratory-cli-jvm\\bin\\laboratory.bat"))
         spinner.stop("Prepared for winupdater")
         downloadFileV2("https://raw.githubusercontent.com/mooziii/laboratory/dev/chemicae/.meta/winupdater.jar", laboratoryDir.resolve("winupdater.jar").toPath())
+        terminal.println(TextColors.brightYellow("Do NOT run laboratory within the next 5 seconds to avoid update-issues."))
         ProcessBuilder("java", "-jar", "winupdater.jar").directory(laboratoryDir).inheritIO().start()
         exitProcess(0)
     }
