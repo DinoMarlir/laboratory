@@ -2,6 +2,8 @@ package me.obsilabor.laboratory.internal
 
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import me.obsilabor.laboratory.VERSION
 import me.obsilabor.laboratory.config.Config
 import me.obsilabor.laboratory.httpClient
@@ -54,12 +56,14 @@ object UpdateManager {
         zipArchive.close()
         archiveFile.delete()
         terminal.println("Launching bash session...")
-        val bash = ProcessBuilder("bash").inheritIO().start()
-        bash.outputStream.write("echo $sudoPassword\\ | sudo -S cp -r laboratory-cli-jvm /usr/share/laboratory/\n".toByteArray())
-        bash.outputStream.write("echo $sudoPassword\\ | sudo -S chmod +x /usr/share/laboratory/laboratory-cli-jvm/bin/laboratory-cli\n".toByteArray())
-        bash.outputStream.write("exit\n".toByteArray())
-        bash.outputStream.flush()
-        bash.waitFor()
+        withContext(Dispatchers.IO) {
+            val bash = ProcessBuilder("bash").inheritIO().start()
+            bash.outputStream.write("echo $sudoPassword\\ | sudo -S cp -r laboratory-cli-jvm /usr/share/laboratory/\n".toByteArray())
+            bash.outputStream.write("echo $sudoPassword\\ | sudo -S chmod +x /usr/share/laboratory/laboratory-cli-jvm/bin/laboratory-cli\n".toByteArray())
+            bash.outputStream.write("exit\n".toByteArray())
+            bash.outputStream.flush()
+            bash.waitFor()
+        }
         tempDir.deleteRecursively()
     }
 
