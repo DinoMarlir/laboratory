@@ -33,10 +33,10 @@ object UpdateManager {
         }
         File(tempDir, "bin\\laboratory-cli.bat").renameTo(File(tempDir, "bin\\laboratory.bat"))
         spinner.update("Copying files")
-        copyFolder(tempDir.resolve("bin").toPath(), laboratoryDir.resolve("bin").toPath())
-        copyFolder(tempDir.resolve("lib").toPath(), laboratoryDir.resolve("lib").toPath())
+        copyFolder(tempDir.resolve("laboratory-cli-jvm/bin").toPath(), laboratoryDir.resolve("bin").toPath())
+        copyFolder(tempDir.resolve("laboratory-cli-jvm/lib").toPath(), laboratoryDir.resolve("lib").toPath())
         spinner.update("Removing temporary files")
-        //tempDir.deleteRecursively()
+        tempDir.deleteRecursively()
         spinner.stop("done")
     }
 
