@@ -1,0 +1,1 @@
+https://repo.obsilabor.me/snapshots/me/obsilabor/laboratory-cli/${version}/laboratory-cli-${version}.zip
