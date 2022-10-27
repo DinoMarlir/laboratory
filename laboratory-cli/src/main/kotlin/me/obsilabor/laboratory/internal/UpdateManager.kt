@@ -36,7 +36,7 @@ object UpdateManager {
         copyFolder(tempDir.resolve("bin").toPath(), laboratoryDir.resolve("bin").toPath())
         copyFolder(tempDir.resolve("lib").toPath(), laboratoryDir.resolve("lib").toPath())
         spinner.update("Removing temporary files")
-        tempDir.deleteRecursively()
+        //tempDir.deleteRecursively()
         spinner.stop("done")
     }
 
