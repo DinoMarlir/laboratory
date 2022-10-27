@@ -57,7 +57,6 @@ object UpdateManager {
         val bash = ProcessBuilder("bash").inheritIO().start()
         bash.outputStream.write("echo $sudoPassword\\ | sudo -S cp -r laboratory-cli-jvm /usr/share/laboratory/\n".toByteArray())
         bash.outputStream.write("echo $sudoPassword\\ | sudo -S chmod +x /usr/share/laboratory/laboratory-cli-jvm/bin/laboratory-cli\n".toByteArray())
-        bash.outputStream.flush()
         bash.outputStream.write("exit\n".toByteArray())
         bash.outputStream.flush()
         bash.waitFor()
