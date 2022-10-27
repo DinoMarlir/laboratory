@@ -48,6 +48,7 @@ object UpdateManager {
         downloadFileV2(getDownloadURL(getLatestVersion()), archiveFile.toPath())
         val zipArchive = ZipFile(archiveFile)
         val destination = File(tempDir, "laboratory-cli-jvm")
+        println(destination.absolutePath)
         if (!destination.exists()) destination.mkdir()
         zipArchive.extractAll(destination.absolutePath)
         zipArchive.close()
