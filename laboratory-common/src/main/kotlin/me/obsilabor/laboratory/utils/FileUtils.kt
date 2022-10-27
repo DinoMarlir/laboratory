@@ -63,6 +63,8 @@ fun copyFolder(source: Path, destination: Path) {
                 return@runCatching
             }
             Files.copy(it, dest, StandardCopyOption.REPLACE_EXISTING)
+        }.onFailure {
+            it.printStackTrace()
         }
     }
 }
