@@ -1,12 +1,13 @@
 package me.obsilabor.laboratory
 
+import kotlinx.coroutines.delay
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
 
-fun main() {
-    Thread.sleep(2000)
+suspend fun main() {
+    delay(5000)
     val laboratoryDir = File(System.getenv("LOCALAPPDATA"), "laboratory")
     val tempDir = File(laboratoryDir, "Temp")
     copyFolder(tempDir.resolve("laboratory-cli-jvm\\bin").toPath(), laboratoryDir.resolve("bin").toPath())
