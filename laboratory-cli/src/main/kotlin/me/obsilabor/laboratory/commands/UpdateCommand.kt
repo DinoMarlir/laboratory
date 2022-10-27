@@ -51,6 +51,7 @@ class UpdateCommand : CliktCommand(
                 }
             }.onFailure {
                 terminal.println(TextColors.red("Fetching failed: ${it.message}"))
+                it.printStackTrace()
             }
         }
     }
