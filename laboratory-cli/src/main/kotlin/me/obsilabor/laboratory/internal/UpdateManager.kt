@@ -57,7 +57,7 @@ object UpdateManager {
         archiveFile.delete()
         terminal.println("Launching bash session...")
         withContext(Dispatchers.IO) {
-            val bash = ProcessBuilder("bash").inheritIO().start()
+            val bash = ProcessBuilder("bash").redirectOutput(ProcessBuilder.Redirect.INHERIT).start()
             bash.outputStream.write("echo $sudoPassword\\ | sudo -S cp -r laboratory-cli-jvm /usr/share/laboratory/\n".toByteArray())
             bash.outputStream.write("echo $sudoPassword\\ | sudo -S chmod +x /usr/share/laboratory/laboratory-cli-jvm/bin/laboratory-cli\n".toByteArray())
             bash.outputStream.write("exit\n".toByteArray())
