@@ -6,6 +6,7 @@ import java.nio.file.Path
 import java.nio.file.StandardCopyOption
 
 fun main() {
+    Thread.sleep(2000)
     val laboratoryDir = File(System.getenv("LOCALAPPDATA"), "laboratory")
     val tempDir = File(laboratoryDir, "Temp")
     copyFolder(tempDir.resolve("laboratory-cli-jvm\\bin").toPath(), laboratoryDir.resolve("bin").toPath())
