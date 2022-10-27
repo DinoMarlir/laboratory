@@ -71,7 +71,6 @@ fun unzipMrPackFile(mrPack: File, destination: Path): ModrinthPack? {
     runCatching {
         val zipFile = ZipFile(mrPack)
         val modrinthPack = json.decodeFromString<ModrinthPack>(zipFile.getInputStream(zipFile.getEntry("modrinth.index.json")).readAllBytes().toString(Charsets.UTF_8))
-        // copy
         val zip4jFile = net.lingala.zip4j.ZipFile(mrPack)
         zip4jFile.extractAll(destination.absolutePathString())
         zip4jFile.close()

@@ -5,6 +5,7 @@ import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.arguments.optional
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
+import com.github.ajalt.mordant.rendering.TextColors
 import com.github.ajalt.mordant.rendering.TextStyles
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,7 +19,7 @@ import me.obsilabor.laboratory.terminal.chooseServer
 
 class ExecuteCommand : CliktCommand(
     name = "execute",
-    help = "Executes a command on the given server [unix-only]"
+    help = "Runs a command on the given server. ${TextStyles.italic(TextColors.brightYellow("Only on unix."))}"
 ) {
     private val query by argument(
         "query",

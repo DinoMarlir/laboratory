@@ -2,15 +2,12 @@ package me.obsilabor.laboratory.commands
 
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.mordant.rendering.TextColors
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
+import com.github.ajalt.mordant.rendering.TextStyles
 import kotlinx.coroutines.launch
 import me.obsilabor.laboratory.VERSION
-import me.obsilabor.laboratory.config.Config
-import me.obsilabor.laboratory.httpClient
+import me.obsilabor.laboratory.internal.UpdateManager
 import me.obsilabor.laboratory.mainScope
 import me.obsilabor.laboratory.terminal
-import me.obsilabor.laboratory.terminal.SpinnerAnimation
 
 class InfoCommand : CliktCommand(
     name = "info",
@@ -20,10 +17,10 @@ class InfoCommand : CliktCommand(
         terminal.println("Laboratory version: ${TextColors.brightCyan(VERSION)}")
         mainScope.launch {
             runCatching {
-                val latest = httpClient.get("https://raw.githubusercontent.com/mooziii/laboratory/${Config.userConfig.updateBranch}/.meta/version").bodyAsText()
-                terminal.println("Newest version: ${TextColors.brightGreen(latest)}")
-                if (latest != VERSION) {
-                    terminal.println(TextColors.brightRed("Your version doesn't match the newest one. Please update laboratory."))
+                terminal.println("Newest version: ${TextColors.brightGreen(UpdateManager.getLatestVersion())}")
+                if (UpdateManager.isUpdateAvailable()) {
+                    terminal.println(TextColors.brightRed("Your version doesn't match the newest one. Please update laboratory using ${(TextColors.brightWhite on TextColors.gray)(
+                        TextStyles.italic("laboratory update"))}."))
                 }
             }.onFailure {
                 terminal.println(TextColors.red("Fetching failed: ${it.message}"))

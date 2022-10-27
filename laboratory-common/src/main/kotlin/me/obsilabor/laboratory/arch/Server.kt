@@ -10,7 +10,9 @@ import me.obsilabor.laboratory.config.Config
 import me.obsilabor.laboratory.db.JsonDatabase
 import me.obsilabor.laboratory.platform.IPlatform
 import me.obsilabor.laboratory.platform.PlatformResolver
+import me.obsilabor.laboratory.platform.impl.MojMapPaperPlatform
 import me.obsilabor.laboratory.platform.impl.PaperPlatform
+import me.obsilabor.laboratory.platform.impl.PurpurPlatform
 import me.obsilabor.laboratory.terminal
 import me.obsilabor.laboratory.terminal.SpinnerAnimation
 import me.obsilabor.laboratory.terminal.promptYesOrNo
@@ -171,7 +173,7 @@ data class Server(
                     val pid = process.pid()+2 // don't ask, pid of the process is actually 2 numbers higher
                     this.pid = pid
                     JsonDatabase.editServer(this)
-                    terminal.println("Server is now running with PID $pid. Attach using ${(TextColors.brightWhite on TextColors.gray)(TextStyles.italic("screen -dr $name-$id"))}")
+                    terminal.println("Server is now running with PID $pid. Attach using ${(TextColors.brightWhite on TextColors.gray)(TextStyles.italic("laboratory attach $name"))}")
                 } else {
                     val process = processBuilder.inheritIO().start()
                     val pid = process.pid()+2 // don't ask, pid of the process is actually 2 numbers higher
@@ -263,7 +265,7 @@ data class Server(
         runCatching {
             if (worldsOnly) {
                 copyFolder(directory.toPath().resolve("world"), outputFolder.resolve("world"))
-                if (platform == PaperPlatform) {
+                if (platform == PaperPlatform || platform == PurpurPlatform || platform == MojMapPaperPlatform) {
                     copyFolder(directory.toPath().resolve("world_nether"), outputFolder.resolve("world_nether"))
                     copyFolder(directory.toPath().resolve("world_the_end"), outputFolder.resolve("world_the_end"))
                 }

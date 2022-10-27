@@ -134,7 +134,7 @@ class ModrinthCommand : CliktCommand(
                 // In case someone wants to know what this while loop is for,
                 // I have to wait until all files are downloaded so I added this loop
                 // But because something is dumb, the while loop only notices that the condition is false
-                // when it gets printed to sout or appended.
+                // when it gets printed or appended.
 
                 // If you know why this happens or if anyone has a solution, please open a issue or pull request
             }

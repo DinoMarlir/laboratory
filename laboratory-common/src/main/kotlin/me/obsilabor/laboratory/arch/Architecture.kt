@@ -1,9 +1,12 @@
 package me.obsilabor.laboratory.arch
 
+import com.github.ajalt.mordant.rendering.TextColors
 import me.obsilabor.laboratory.platform.IPlatform
+import me.obsilabor.laboratory.terminal
 import me.obsilabor.laboratory.utils.getDirectory
 import java.io.File
 import java.nio.file.Path
+import kotlin.system.exitProcess
 
 object Architecture {
 
@@ -40,7 +43,10 @@ object Architecture {
         val platformFolder = getDirectory(Platforms, platform.name)
         val file = File(platformFolder, platform.jarNamePattern.replace("\$mcVersion", version).replace("\$build", build))
         if (!file.exists()) {
-            platform.downloadJarFile(file.toPath(), version, build)
+            if (!platform.downloadJarFile(file.toPath(), version, build)) {
+                terminal.println(TextColors.red("Download of ${platform.name} failed"))
+                exitProcess(0)
+            }
         }
         return file.toPath()
     }

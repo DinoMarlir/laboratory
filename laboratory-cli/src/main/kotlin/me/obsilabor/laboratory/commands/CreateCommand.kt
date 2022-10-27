@@ -5,7 +5,6 @@ import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.arguments.default
 import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.mordant.rendering.TextColors
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.obsilabor.laboratory.arch.Server
 import me.obsilabor.laboratory.arch.ServerState
@@ -17,7 +16,6 @@ import me.obsilabor.laboratory.terminal.SpinnerAnimation
 import me.obsilabor.laboratory.terminal.awaitMemoryInput
 import me.obsilabor.laboratory.terminal.promptYesOrNo
 import java.awt.Desktop
-import java.util.Random
 
 class CreateCommand : CliktCommand(
     name = "create",
