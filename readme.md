@@ -10,7 +10,12 @@ Run this command `curl -sS https://raw.githubusercontent.com/mooziii/laboratory/
 You will be prompted for your sudo password (user specific installation methods that don't require root access will come soon).
 
 **Windows:**
-soon
+
+Open a PowerShell terminal and run:
+```powershell
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser # Required to run remote scripts
+irm https://raw.githubusercontent.com/mooziii/laboratory/dev/chemicae/packages/install-windows.ps1 | iex
+```
 
 **macOS:**
 Same as linux but didn't test it

@@ -39,4 +39,8 @@ Just restart your shell after the installation and it works just fine.
 
 ## Windows
 
-*soon*
+Open a PowerShell terminal and run:
+```powershell
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser # Required to run remote scripts
+irm https://raw.githubusercontent.com/mooziii/laboratory/dev/chemicae/packages/install-windows.ps1 | iex
+```
