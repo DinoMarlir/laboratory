@@ -1,3 +1,5 @@
+cd ~
+rm -rf laboratory-installation
 git clone https://github.com/mooziii/laboratory.git laboratory-installation
 cd laboratory-installation
 git checkout dev/chemicae
