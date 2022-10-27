@@ -20,18 +20,24 @@ object UpdateManager {
         if (!tempDir.exists()) tempDir.mkdir()
         val archiveFile = File(tempDir, "laboratory-cli-jvm.zip")
         downloadFileV2(getDownloadURL(getLatestVersion()), archiveFile.toPath())
+        val spinner = SpinnerAnimation("Extracting files")
+        spinner.start()
         val zipArchive = ZipFile(archiveFile)
         zipArchive.extractAll(tempDir.absolutePath)
         zipArchive.close()
         archiveFile.delete()
+        spinner.update("Tweaking files")
         val linuxExecutable = File(tempDir, "bin\\laboratory-cli-jvm")
         if (linuxExecutable.exists()) {
             linuxExecutable.delete()
         }
         File(tempDir, "bin\\laboratory-cli.bat").renameTo(File(tempDir, "bin\\laboratory.bat"))
+        spinner.update("Copying files")
         copyFolder(tempDir.resolve("bin").toPath(), laboratoryDir.resolve("bin").toPath())
         copyFolder(tempDir.resolve("lib").toPath(), laboratoryDir.resolve("lib").toPath())
+        spinner.update("Removing temporary files")
         tempDir.deleteRecursively()
+        spinner.stop("done")
     }
 
     suspend fun updateOnLinux(sudoPassword: String) { // Only for manual installations, installation via package manager is preferred.
