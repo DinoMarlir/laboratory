@@ -35,8 +35,12 @@ object UpdateManager {
         spinner.update("Copying files")
         copyFolder(tempDir.resolve("laboratory-cli-jvm\\bin").toPath(), laboratoryDir.resolve("bin").toPath())
         val libDirectory = laboratoryDir.resolve("lib")
-        libDirectory.deleteRecursively()
-        libDirectory.mkdir()
+        kotlin.runCatching {
+            libDirectory.deleteRecursively()
+            libDirectory.mkdir()
+        }.onFailure {
+            it.printStackTrace()
+        }
         copyFolder(tempDir.resolve("laboratory-cli-jvm\\lib").toPath(), libDirectory.toPath())
         spinner.update("Removing temporary files")
         tempDir.deleteRecursively()
