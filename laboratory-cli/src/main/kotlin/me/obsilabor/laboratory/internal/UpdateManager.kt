@@ -15,11 +15,6 @@ import java.io.File
 object UpdateManager {
 
     suspend fun updateOnWindows() {
-        val process = ProcessBuilder("powershell").inheritIO().start()
-        process.outputStream.write("irm https://raw.githubusercontent.com/mooziii/laboratory/dev/chemicae/packages/install-windows.ps1 | iex\n".toByteArray())
-        process.outputStream.flush()
-        process.waitFor()
-        /*
         val laboratoryDir = File(System.getenv("LOCALAPPDATA"), "laboratory")
         val tempDir = File(laboratoryDir, "Temp")
         if (!tempDir.exists()) tempDir.mkdir()
@@ -38,19 +33,12 @@ object UpdateManager {
         }
         File(tempDir, "laboratory-cli-jvm\\bin\\laboratory-cli.bat").renameTo(File(tempDir, "laboratory-cli-jvm\\bin\\laboratory.bat"))
         spinner.update("Copying files")
+        println("Copying ${tempDir.resolve("laboratory-cli-jvm\\bin").absolutePath} to ${laboratoryDir.resolve("bin").absolutePath}")
         copyFolder(tempDir.resolve("laboratory-cli-jvm\\bin").toPath(), laboratoryDir.resolve("bin").toPath())
-        val libDirectory = laboratoryDir.resolve("lib")
-        kotlin.runCatching {
-            libDirectory.deleteRecursively()
-            libDirectory.mkdir()
-        }.onFailure {
-            it.printStackTrace()
-        }
-        copyFolder(tempDir.resolve("laboratory-cli-jvm\\lib").toPath(), libDirectory.toPath())
+        copyFolder(tempDir.resolve("laboratory-cli-jvm\\lib").toPath(), laboratoryDir.resolve("lib").toPath())
         spinner.update("Removing temporary files")
         tempDir.deleteRecursively()
         spinner.stop("done")
-         */
     }
 
     suspend fun updateOnLinux(sudoPassword: String) { // Only for manual installations, installation via package manager is preferred.
