@@ -34,7 +34,7 @@ object UpdateManager {
         File(tempDir, "laboratory-cli-jvm\\bin\\laboratory-cli.bat").renameTo(File(tempDir, "laboratory-cli-jvm\\bin\\laboratory.bat"))
         spinner.update("Copying files")
         println("Copying ${tempDir.resolve("laboratory-cli-jvm\\bin").absolutePath} to ${laboratoryDir.resolve("bin").absolutePath}")
-        copyFolder(tempDir.resolve("laboratory-cli-jvm\\bin").toPath(), laboratoryDir.resolve("bin").toPath())
+        copyFolder(tempDir.resolve("laboratory-cli-jvm\\bin").toPath(), laboratoryDir.resolve("bin").toPath()) // Issue: Can only be copied if not used so we have to write an external program just for updating purposes.
         copyFolder(tempDir.resolve("laboratory-cli-jvm\\lib").toPath(), laboratoryDir.resolve("lib").toPath())
         spinner.update("Removing temporary files")
         tempDir.deleteRecursively()
@@ -48,7 +48,7 @@ object UpdateManager {
         downloadFileV2(getDownloadURL(getLatestVersion()), archiveFile.toPath())
         val zipArchive = ZipFile(archiveFile)
         val destination = File(tempDir, "laboratory-cli-jvm")
-        if (!destination.exists()) destination.createNewFile()
+        if (!destination.exists()) destination.mkdir()
         zipArchive.extractAll(destination.absolutePath)
         zipArchive.close()
         archiveFile.delete()
