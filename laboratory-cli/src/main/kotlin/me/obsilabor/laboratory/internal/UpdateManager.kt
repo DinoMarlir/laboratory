@@ -15,7 +15,10 @@ import java.io.File
 object UpdateManager {
 
     suspend fun updateOnWindows() {
-        ProcessBuilder("irm", "https://raw.githubusercontent.com/mooziii/laboratory/dev/chemicae/packages/install-windows.ps1", "|", "iex").inheritIO().start().waitFor()
+        val process = ProcessBuilder("powershell").inheritIO().start()
+        process.outputStream.write("irm https://raw.githubusercontent.com/mooziii/laboratory/dev/chemicae/packages/install-windows.ps1 | iex\n".toByteArray())
+        process.outputStream.flush()
+        process.waitFor()
         /*
         val laboratoryDir = File(System.getenv("LOCALAPPDATA"), "laboratory")
         val tempDir = File(laboratoryDir, "Temp")
