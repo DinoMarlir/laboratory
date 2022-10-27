@@ -39,7 +39,7 @@ signing {
 }
 
 val publishVersion: String
-    get() = File("../.meta/version").readText()
+    get() = File("$rootDir/.meta/version").readText()
 
 tasks {
     compileJava {
