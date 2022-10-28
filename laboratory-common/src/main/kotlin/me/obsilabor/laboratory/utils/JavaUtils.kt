@@ -32,7 +32,9 @@ fun searchForJavaInstallations(): List<File> {
             }
             val homebrewFolder = File("/home/linuxbrew/.linuxbrew/Cellar/")
             if (homebrewFolder.exists()) {
-                list.addAll(homebrewFolder.listFiles().filter { it.isDirectory && it.name.lowercase().contains("jdk") })
+                homebrewFolder.listFiles().filter { it.isDirectory && it.name.lowercase().contains("jdk") }.forEach { file ->
+                    list.addAll(file.listFiles().filter { dir -> dir.isDirectory })
+                }
             }
         }
         OperatingSystem.MACOS -> {
@@ -42,7 +44,9 @@ fun searchForJavaInstallations(): List<File> {
             }
             val homebrewFolder = File("/usr/local/Cellar/")
             if (homebrewFolder.exists()) {
-                list.addAll(homebrewFolder.listFiles().filter { it.isDirectory && it.name.lowercase().contains("jdk") })
+                homebrewFolder.listFiles().filter { it.isDirectory && it.name.lowercase().contains("jdk") }.forEach { file ->
+                    list.addAll(file.listFiles().filter { dir -> dir.isDirectory })
+                }
             }
         }
         else -> {}
