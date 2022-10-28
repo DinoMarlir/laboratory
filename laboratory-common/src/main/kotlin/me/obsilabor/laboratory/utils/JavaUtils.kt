@@ -20,7 +20,9 @@ fun searchForJavaInstallations(): List<File> {
             }
             val scoopFolder = File(System.getProperty("user.home"), "scoop/apps")
             if (scoopFolder.exists()) {
-                list.addAll(scoopFolder.listFiles().filter { it.isDirectory && it.name.lowercase().contains("jdk") })
+                scoopFolder.listFiles().filter { it.isDirectory && it.name.lowercase().contains("jdk") }.forEach { file ->
+                    list.addAll(file.listFiles().filter { dir -> dir.isDirectory })
+                }
             }
         }
         OperatingSystem.LINUX -> {
