@@ -26,7 +26,7 @@ class ServerCommand : CliktCommand(
     help = "Manage your servers"
 ) {
     init {
-        subcommands(Modify(), Delete(), Config())
+        subcommands(Modify(), Delete(), Config(), Update())
     }
 
     override fun run() = Unit
@@ -101,6 +101,24 @@ class ServerCommand : CliktCommand(
                     val process = processBuilder.start()
                     process.waitFor()
                 }
+            }
+        }
+    }
+
+    class Update : CliktCommand(
+        name = "update",
+        help = "Update a server to the newest version"
+    ) {
+        private val query by argument("query", help = "Name or id of the server to delete").optional()
+        private val yesFlag by option(
+            "-y", "--yes",
+            help = "When this flag is not, the user will no longer be prompted for any actions"
+        ).flag()
+
+        override fun run() {
+            val server = terminal.chooseServer(query ?: "") ?: return
+            mainScope.launch {
+                server.update(PlatformResolver.resolvePlatform(server.platform), noConfirm = yesFlag)
             }
         }
     }

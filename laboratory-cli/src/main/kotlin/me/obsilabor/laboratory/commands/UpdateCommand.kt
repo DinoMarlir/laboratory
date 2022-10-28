@@ -48,6 +48,8 @@ class UpdateCommand : CliktCommand(
                             terminal.println("Update completed.")
                         }
                     }
+                } else {
+                    terminal.println("Everything is up-to-date!")
                 }
             }.onFailure {
                 terminal.println(TextColors.red("Fetching failed: ${it.message}"))
