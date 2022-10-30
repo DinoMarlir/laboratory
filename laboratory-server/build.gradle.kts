@@ -27,12 +27,12 @@ dependencies {
     implementation("io.ktor:ktor-server-netty:2.1.2")
     implementation("io.ktor:ktor-server-websockets:2.1.2")
 
-    implementation("io.ktor:ktor-client-core:2.1.2")
-    implementation("io.ktor:ktor-client-cio:2.1.2")
-    implementation("io.ktor:ktor-client-content-negotiation:2.1.2")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:2.1.2")
+    implementation("io.ktor:ktor-client-core:2.1.3")
+    implementation("io.ktor:ktor-client-cio:2.1.3")
+    implementation("io.ktor:ktor-client-content-negotiation:2.1.3")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.1.3")
 
-    implementation("me.obsilabor:piston-meta-kt:1.0.2")
+    implementation("me.obsilabor:piston-meta-kt:1.0.3")
 }
 
 tasks {

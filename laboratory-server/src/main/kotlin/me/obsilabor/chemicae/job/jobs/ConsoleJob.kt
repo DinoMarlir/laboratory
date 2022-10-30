@@ -29,6 +29,7 @@ class ConsoleJob : IJob {
                             runningCmd = false
                         }
                     }.onFailure {
+                        it.printStackTrace()
                         terminal.println(TextColors.red("Could not execute laboratory."))
                     }
                 }
