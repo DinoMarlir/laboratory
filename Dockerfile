@@ -1,7 +1,7 @@
 FROM ubuntu:latest
 RUN useradd -s /bin/sh -m chemicae
 RUN apt update
-RUN apt install sudo curl git screen openjdk-17-jre -y
+RUN apt install sudo unzip curl git screen openjdk-17-jre -y
 RUN curl -sS https://raw.githubusercontent.com/mooziii/laboratory/dev/chemicae/packages/autoinstall.sh | bash # Install normal laboratory as it is required by chemicae
 USER chemicae
 WORKDIR /home/chemicae
