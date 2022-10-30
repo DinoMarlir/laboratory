@@ -1,7 +1,7 @@
 FROM ubuntu:latest
 RUN useradd -s /bin/sh -m chemicae
 RUN apt update
-RUN apt install curl git screen openjdk-17-jre -y
+RUN apt install sudo curl git screen openjdk-17-jre -y
 USER chemicae
 WORKDIR /home/chemicae
 RUN git clone https://github.com/mooziii/laboratory.git install
