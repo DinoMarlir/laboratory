@@ -152,7 +152,7 @@ enum class ServerEditAction(val actionString: String, val perform: (Server) -> U
     }),
     CHANGE_PORT("Change the servers port", perform = {
         mainScope.launch {
-            val port = terminal.prompt("Please eund bnter the new port to listen on", "25565")?.toIntOrNull() ?: return@launch
+            val port = terminal.prompt("Please enter the new port to listen on", "25565")?.toIntOrNull() ?: return@launch
             it.port = port
             JsonDatabase.editServer(it)
             terminal.println(TextColors.brightGreen("Port of server ${it.terminalString} changed to $port"))

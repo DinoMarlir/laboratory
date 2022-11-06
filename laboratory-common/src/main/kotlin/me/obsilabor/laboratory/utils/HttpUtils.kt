@@ -1,13 +1,11 @@
 package me.obsilabor.laboratory.utils
 
-import com.github.ajalt.mordant.animation.progressAnimation
 import com.github.ajalt.mordant.rendering.TextColors
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.obsilabor.laboratory.mainScope
 import me.obsilabor.laboratory.httpClient
