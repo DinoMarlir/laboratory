@@ -29,7 +29,7 @@ val httpClient = HttpClient {
     }
 }
 
-const val VERSION = "0.5.17-dev"
+const val VERSION = "0.5.18-dev"
 
 val DATE_FORMAT: DateTimeFormatter = DateTimeFormatter.BASIC_ISO_DATE.withZone(ZoneId.systemDefault())
 val TIME_FORMAT: DateTimeFormatter = DateTimeFormatter.ISO_TIME.withZone(ZoneId.systemDefault())

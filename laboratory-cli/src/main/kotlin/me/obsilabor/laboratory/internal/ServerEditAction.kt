@@ -161,11 +161,16 @@ enum class ServerEditAction(val actionString: String, val perform: (Server) -> U
     TOGGLE_AUTOMATIC_BACKUPS("Toggle automatic backups", perform = {
         it.backupOnUpdate = !(it.backupOnUpdate ?: true)
         JsonDatabase.editServer(it)
-        terminal.println(TextColors.brightGreen("The server ${it.terminalString} is no${if (it.backupOnUpdate != false) "w creating backups when updating" else "no longer creating automatic backups"}"))
+        terminal.println(TextColors.brightGreen("The server ${it.terminalString} is no${if (it.backupOnUpdate != false) "w creating backups when updating" else " longer creating automatic backups"}"))
     }),
     CHANGE_JAVA_VERSION("Change java version", perform = {
         it.javaCommand = "${terminal.choose("Please select a new java version", searchForJavaInstallations().map { jvm -> jvm to jvm.name })?.toPath()?.resolve("bin")?.resolve("java${if (!OperatingSystem.notWindows) ".exe" else ""}")?.absolutePathString()}"
         JsonDatabase.editServer(it)
         terminal.println(TextColors.brightGreen("Java version changed."))
+    }),
+    TOGGLE_AUTOMATIC_RESTARTS("Toggle automatic restarts", perform = {
+        it.automaticRestarts = !(it.automaticRestarts ?: true)
+        JsonDatabase.editServer(it)
+        terminal.println(TextColors.brightGreen("The server ${it.terminalString} is no${if (it.backupOnUpdate != false) "w automaticially restarting" else " longer automaticially restarting"}"))
     })
 }
