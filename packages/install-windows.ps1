@@ -13,7 +13,7 @@ Remove bin/laboratory-cli -Force
 Set-Location bin
 Rename-Item laboratory-cli.bat laboratory.bat
 
-$FinalPath = [Environment]::GetEnvironmentVariable("PATH", "User") + $Pwd
+$FinalPath = [Environment]::GetEnvironmentVariable("PATH", "User") + ";" + $Pwd
 [Environment]::SetEnvironmentVariable( "Path", $FinalPath, "User" )
 
 Set-Location $InitPwd
