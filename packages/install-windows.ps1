@@ -9,7 +9,7 @@ git checkout dev/chemicae
 Copy-Item laboratory-cli\build\install\laboratory-cli\* .. -Recurse
 Set-Location ..
 Remove-Item install -Recurse -Force
-Remove bin/laboratory-cli -Force
+Remove-Item bin/laboratory-cli -Force
 Set-Location bin
 Rename-Item laboratory-cli.bat laboratory.bat
 
