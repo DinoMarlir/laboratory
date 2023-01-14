@@ -17,3 +17,5 @@ $FinalPath = [Environment]::GetEnvironmentVariable("PATH", "User") + ";" + $Pwd
 [Environment]::SetEnvironmentVariable( "Path", $FinalPath, "User" )
 
 Set-Location $InitPwd
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
+
