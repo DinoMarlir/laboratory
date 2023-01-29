@@ -9,7 +9,7 @@ git checkout dev/chemicae
 Copy-Item laboratory-cli\build\install\laboratory-cli\* .. -Recurse
 Set-Location ..
 Remove-Item install -Recurse -Force
-Remove bin/laboratory-cli -Force
+Remove-Item bin/laboratory-cli -Force
 Set-Location bin
 Rename-Item laboratory-cli.bat laboratory.bat
 
@@ -17,3 +17,5 @@ $FinalPath = [Environment]::GetEnvironmentVariable("PATH", "User") + ";" + $Pwd
 [Environment]::SetEnvironmentVariable( "Path", $FinalPath, "User" )
 
 Set-Location $InitPwd
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
+
