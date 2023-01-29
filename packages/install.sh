@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!bash
 cd ..
 chmod +x gradlew
 ./gradlew distZip
