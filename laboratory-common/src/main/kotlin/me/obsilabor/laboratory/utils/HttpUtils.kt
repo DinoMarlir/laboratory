@@ -15,7 +15,7 @@ import kotlin.math.roundToInt
 
 suspend fun downloadFile(url: String, destination: Path, silent: Boolean = false, callback: () -> Unit = {}) {
     if (silent) {
-        downloadFile(url, destination, 1, 1, silent, callback)
+        downloadFile(url, destination, 1, 1, true, callback)
     } else {
         downloadFileV2(url, destination, callback)
     }
@@ -65,7 +65,6 @@ suspend fun downloadFileV2(url: String, destination: Path, callback: () -> Unit 
                 repeat(dashes) {
                     append(TextColors.brightGreen(if (OperatingSystem.notWindows) "━" else "#"))
                 }
-                //append(" ")
                 repeat(50 - dashes) {
                     append(TextColors.black(if (OperatingSystem.notWindows) "━" else "#"))
                 }

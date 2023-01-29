@@ -83,13 +83,6 @@ object ServerRoutes {
                 terminal.chooseServerHeadless(call.parameters["server"] ?: return@post)?.stop(call.parameters["force"] == "true")
                 call.respondText(json.encodeToString(JsonDatabase.servers), ContentType.Application.Json)
             }
-            /*
-            webSocket("{server}/console") {
-                if(!call.checkHeader()) return@webSocket
-                if (!call.requireParameter("server")) return@webSocket
-                call.respond(HttpStatusCode.ServiceUnavailable, "This route is lacking windows support. Sorry :/")
-            }
-             */
         }
     }
 }

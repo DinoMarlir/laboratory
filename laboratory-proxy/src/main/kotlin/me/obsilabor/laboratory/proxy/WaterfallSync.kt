@@ -12,6 +12,7 @@ class WaterfallSync : Plugin() {
         val server = ProxyServer.getInstance()
         val config = server.config
         val coroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        server.servers.clear()
         coroutineScope.launch {
             val file = File(System.getProperty("user.home") + "/laboratory/live/proxysync.ps")
             if (!file.exists()) {

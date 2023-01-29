@@ -79,22 +79,6 @@ data class Server(
                 if (!Files.exists(propertiesPath) && !resolvedPlatform.isProxy) {
                     Files.copy(serverDotProperties, propertiesPath)
                 }
-                val spigotYml = Path.of(directory.absolutePath, "spigot.yml").toFile()
-                if (!spigotYml.exists()) {
-                    spigotYml.createNewFile()
-                }
-                spigotYml.writeText("""
-                    settings:
-                      restart-script: ./restart.sh
-                """.trimIndent())
-                val restartSh = Path.of(directory.absolutePath,"restart.sh").toFile()
-                if (!restartSh.exists()) {
-                    restartSh.createNewFile()
-                }
-                restartSh.writeText("""
-                    laboratory start $name-$id -s
-                """.trimIndent())
-                restartSh.setExecutable(true)
             }
             if (automaticUpdates) {
                 update(resolvedPlatform, if(disableIO || noScreen) true else !Config.userConfig.promptOnMajorUpdates)
@@ -115,8 +99,8 @@ data class Server(
                     val file = File(pluginsFolder, "laboratory-proxy-sync.jar")
                     if (!file.exists()) {
                         file.createNewFile()
+                        downloadFileV2("https://github.com/mooziii/laboratory/raw/${Config.userConfig.updateBranch}/.meta/plugins/laboratory-proxy-sync.jar", file.toPath())
                     }
-                    downloadFileV2("https://github.com/mooziii/laboratory/raw/${Config.userConfig.updateBranch}/.meta/plugins/laboratory-proxy-sync.jar", file.toPath())
                 }
             }
             val jar = Architecture.findOrCreateJar(resolvedPlatform, mcVersion, platformBuild)

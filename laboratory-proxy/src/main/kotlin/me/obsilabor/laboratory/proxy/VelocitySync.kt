@@ -15,9 +15,12 @@ import java.net.InetSocketAddress
     authors = ["mooziii"],
     description = "Plugin to automatically register laboratory servers."
 )
-class VelocitySync @Inject constructor(val server: ProxyServer) {
+class VelocitySync @Inject constructor(private val server: ProxyServer) {
 
     init {
+        server.allServers.forEach {
+            server.unregisterServer(it.serverInfo)
+        }
         val coroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         coroutineScope.launch {
             val file = File(System.getProperty("user.home") + "/laboratory/live/proxysync.ps")
