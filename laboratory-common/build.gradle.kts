@@ -1,6 +1,8 @@
 plugins {
     kotlin("jvm") version "1.7.20"
     kotlin("plugin.serialization") version "1.7.20"
+    id("maven-publish")
+    id("signing")
 }
 
 group = "me.obsilabor"
@@ -33,5 +35,46 @@ tasks {
     }
     compileKotlin {
         kotlinOptions.jvmTarget = "17"
+    }
+}
+
+signing {
+    sign(publishing.publications)
+}
+
+val publishVersion: String
+    get() = File("$rootDir/.meta/version").readText()
+
+val output by tasks.registering(Jar::class) {
+    archiveClassifier.set("jar")
+}
+
+publishing {
+    kotlin.runCatching {
+        repositories {
+            maven("https://repo.obsilabor.me/snapshots") {
+                name = "obsilaborRepoSnapshots"
+                credentials(PasswordCredentials::class) {
+                    username = (property("obsilaborRepoUsername") ?: return@credentials) as String
+                    password = (property("obsilaborRepoPassword") ?: return@credentials) as String
+                }
+                authentication {
+                    create<BasicAuthentication>("basic")
+                }
+            }
+        }
+    }.onFailure {
+        println("Unable to add publishing repositories: ${it.message}")
+    }
+
+    publications {
+        create<MavenPublication>(project.name) {
+            from(components["java"])
+            artifact(output)
+
+            this.groupId = project.group.toString()
+            this.artifactId = project.name.toLowerCase()
+            this.version = publishVersion
+        }
     }
 }

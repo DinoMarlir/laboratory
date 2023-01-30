@@ -46,7 +46,8 @@ data class Server(
     var pid: Long? = null,
     var automaticRestarts: Boolean? = true,
     var state: ServerState = ServerState.STOPPED,
-    var scheduledTasks: List<ScheduledTask> = emptyList()
+    var scheduledTasks: List<ScheduledTask> = emptyList(),
+    val customData: MutableSet<CustomProperties> = mutableSetOf()
 ) {
     val terminalString: String
         get() = "${TextStyles.bold(PlatformResolver.resolvePlatform(platform).coloredName)}${TextColors.white("/")}${TextStyles.bold("${TextColors.brightWhite("$name-$id ")}${TextColors.green("$mcVersion-$platformBuild")}")}"
@@ -185,13 +186,9 @@ data class Server(
                         "-Dlaboratory.server=$name-$id"
                     )
                     args.addAll(jvmArguments)
-                    args.add("-jar")
-                    args.add("server.jar")
-                    args.add("--port")
-                    args.add("$port")
+                    args.addAll(listOf("-jar", "server.jar", "--port", "$port"))
                     args.addAll(processArguments)
-                    val processBuilder = ProcessBuilder(args)
-                        .directory(directory)
+                    val processBuilder = ProcessBuilder(args).directory(directory)
                     if (!disableIO) {
                         processBuilder.redirectErrorStream(true).redirectOutput(ProcessBuilder.Redirect.INHERIT).redirectInput(ProcessBuilder.Redirect.INHERIT)
                     }
