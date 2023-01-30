@@ -1,4 +1,3 @@
-#!/usr/bin/bash
 echo "unzip is required to run this script, also this script must be executed with root privileges"
 
 unzip -q laboratory-cli-jvm.zip
