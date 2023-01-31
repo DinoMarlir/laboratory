@@ -49,6 +49,10 @@ val output by tasks.registering(Jar::class) {
     archiveClassifier.set("jar")
 }
 
+java {
+    withSourcesJar()
+}
+
 publishing {
     kotlin.runCatching {
         repositories {
