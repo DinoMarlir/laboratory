@@ -11,6 +11,8 @@ import me.obsilabor.laboratory.mainScope
 import me.obsilabor.laboratory.httpClient
 import me.obsilabor.laboratory.terminal
 import java.nio.file.Path
+import kotlin.io.path.createFile
+import kotlin.io.path.exists
 import kotlin.math.roundToInt
 
 suspend fun downloadFile(url: String, destination: Path, silent: Boolean = false, callback: () -> Unit = {}) {
@@ -55,6 +57,9 @@ suspend fun downloadFile(url: String, destination: Path, current: Int, total: In
 }
 
 suspend fun downloadFileV2(url: String, destination: Path, callback: () -> Unit = {}) {
+    if (!destination.exists()) {
+        destination.createFile()
+    }
     val downloadedContent = httpClient.get(url) {
         onDownload { bytesSentTotal, contentLength ->
             val progress = bytesSentTotal.toDouble() / contentLength.toDouble()
