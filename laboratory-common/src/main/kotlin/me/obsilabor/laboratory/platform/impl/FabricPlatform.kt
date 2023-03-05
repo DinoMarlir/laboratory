@@ -69,7 +69,6 @@ object FabricPlatform : IPlatform {
                 Files.copy(Path.of(workingDirectory.absolutePathString(), "fabric-server-launch.jar"), Path.of(
                     Architecture.Platforms.absolutePath, "fabricmc/fabricmc-$build.jar"), StandardCopyOption.REPLACE_EXISTING)
                 spinner.stop("FabricMC installed")
-                VanillaPlatform.downloadJarFile(Path.of(Architecture.Platforms.absolutePath, "vanilla/vanilla-$mcVersion.jar"), mcVersion, build)
             }
         }
     }
@@ -77,8 +76,14 @@ object FabricPlatform : IPlatform {
     override suspend fun copyOtherFiles(destinationFolder: Path, mcVersion: String, build: String, server: Server) {
         val fabricServerLauncherProperties = getFile(destinationFolder.toFile(), "fabric-server-launcher.properties")
         fabricServerLauncherProperties.writeText("serverJar=vanilla-$mcVersion.jar")
-        Files.copy(Path.of(Architecture.Platforms.absolutePath, "vanilla/vanilla-$mcVersion.jar"), Path.of(destinationFolder.absolutePathString(), "vanilla-$mcVersion.jar"), StandardCopyOption.REPLACE_EXISTING)
         copyFolder(Path.of(Architecture.Platforms.absolutePath, "fabricmc/libraries"), Path.of(destinationFolder.absolutePathString(), "libraries"))
+        runCatching {
+            Files.copy(Path.of(Architecture.Platforms.absolutePath, "vanilla/vanilla-$mcVersion.jar"), Path.of(destinationFolder.absolutePathString(), "vanilla-$mcVersion.jar"), StandardCopyOption.REPLACE_EXISTING)
+        }.onFailure {
+            VanillaPlatform.downloadJarFile(Path.of(Architecture.Platforms.absolutePath, "vanilla/vanilla-$mcVersion.jar"), mcVersion, build)
+            Files.copy(Path.of(Architecture.Platforms.absolutePath, "vanilla/vanilla-$mcVersion.jar"), Path.of(destinationFolder.absolutePathString(), "vanilla-$mcVersion.jar"), StandardCopyOption.REPLACE_EXISTING)
+
+        }
         Files.copy(Path.of(Architecture.Platforms.absolutePath, "fabricmc/fabric-server-launch.jar"), Path.of(destinationFolder.absolutePathString(), "server.jar"), StandardCopyOption.REPLACE_EXISTING)
     }
 
