@@ -33,6 +33,6 @@ If you want to handle port management by your own, you can use the `host` networ
 
 ## Manage servers from the outside
 
-To manage servers from the outside of the container, I recommend to add an aliash to your `.bashrc`.
+To manage servers from the outside of the container, I recommend to add an alias to your `.bashrc`.
 Do this by running the following command:
 `echo alias 'laboratory'='docker exec -it chemicae bash laboratory' >> ~/.bashrc`
