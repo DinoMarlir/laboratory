@@ -68,7 +68,6 @@ object LegacyFabricPlatform : IPlatform {
                 Files.copy(Path.of(workingDirectory.absolutePathString(), "fabric-server-launch.jar"), Path.of(
                     Architecture.Platforms.absolutePath, "legacyfabric/legacyfabric-$build.jar"), StandardCopyOption.REPLACE_EXISTING)
                 spinner.stop("LegacyFabric installed")
-                VanillaPlatform.downloadJarFile(Path.of(Architecture.Platforms.absolutePath, "vanilla/vanilla-$mcVersion.jar"), mcVersion, build)
             }
         }
     }
@@ -76,7 +75,13 @@ object LegacyFabricPlatform : IPlatform {
     override suspend fun copyOtherFiles(destinationFolder: Path, mcVersion: String, build: String, server: Server) {
         val fabricServerLauncherProperties = getFile(destinationFolder.toFile(), "fabric-server-launcher.properties")
         fabricServerLauncherProperties.writeText("serverJar=vanilla-$mcVersion.jar")
-        Files.copy(Path.of(Architecture.Platforms.absolutePath, "vanilla/vanilla-$mcVersion.jar"), Path.of(destinationFolder.absolutePathString(), "vanilla-$mcVersion.jar"), StandardCopyOption.REPLACE_EXISTING)
+        runCatching {
+            Files.copy(Path.of(Architecture.Platforms.absolutePath, "vanilla/vanilla-$mcVersion.jar"), Path.of(destinationFolder.absolutePathString(), "vanilla-$mcVersion.jar"), StandardCopyOption.REPLACE_EXISTING)
+        }.onFailure {
+            VanillaPlatform.downloadJarFile(Path.of(Architecture.Platforms.absolutePath, "vanilla/vanilla-$mcVersion.jar"), mcVersion, build)
+            Files.copy(Path.of(Architecture.Platforms.absolutePath, "vanilla/vanilla-$mcVersion.jar"), Path.of(destinationFolder.absolutePathString(), "vanilla-$mcVersion.jar"), StandardCopyOption.REPLACE_EXISTING)
+
+        }
         copyFolder(Path.of(Architecture.Platforms.absolutePath, "legacyfabric/libraries"), Path.of(destinationFolder.absolutePathString(), "libraries"))
         Files.copy(Path.of(Architecture.Platforms.absolutePath, "legacyfabric/fabric-server-launch.jar"), Path.of(destinationFolder.absolutePathString(), "server.jar"), StandardCopyOption.REPLACE_EXISTING)
     }

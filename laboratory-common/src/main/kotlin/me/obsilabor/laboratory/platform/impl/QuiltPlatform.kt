@@ -61,7 +61,6 @@ object QuiltPlatform : IPlatform {
                 processBuilder.start().waitFor()
                 Files.copy(Path.of(workingDirectory.absolutePathString(), "server","quilt-server-launch.jar"), Path.of(Architecture.Platforms.absolutePath, "quiltmc/quiltmc-$build.jar"), StandardCopyOption.REPLACE_EXISTING)
                 spinner.stop("QuiltMC installed")
-                VanillaPlatform.downloadJarFile(Path.of(Architecture.Platforms.absolutePath, "vanilla/vanilla-$mcVersion.jar"), mcVersion, build)
             }
         }
     }
@@ -69,7 +68,12 @@ object QuiltPlatform : IPlatform {
     override suspend fun copyOtherFiles(destinationFolder: Path, mcVersion: String, build: String, server: Server) {
         val quiltServerLauncherProperties = getFile(destinationFolder.toFile(), "quilt-server-launcher.properties")
         quiltServerLauncherProperties.writeText("serverJar=vanilla-$mcVersion.jar")
-        Files.copy(Path.of(Architecture.Platforms.absolutePath, "vanilla/vanilla-$mcVersion.jar"), Path.of(destinationFolder.absolutePathString(), "vanilla-$mcVersion.jar"), StandardCopyOption.REPLACE_EXISTING)
+        runCatching {
+            Files.copy(Path.of(Architecture.Platforms.absolutePath, "vanilla/vanilla-$mcVersion.jar"), Path.of(destinationFolder.absolutePathString(), "vanilla-$mcVersion.jar"), StandardCopyOption.REPLACE_EXISTING)
+        }.onFailure {
+            VanillaPlatform.downloadJarFile(Path.of(Architecture.Platforms.absolutePath, "vanilla/vanilla-$mcVersion.jar"), mcVersion, build)
+            Files.copy(Path.of(Architecture.Platforms.absolutePath, "vanilla/vanilla-$mcVersion.jar"), Path.of(destinationFolder.absolutePathString(), "vanilla-$mcVersion.jar"), StandardCopyOption.REPLACE_EXISTING)
+        }
         copyFolder(Path.of(Architecture.Platforms.absolutePath, "quiltmc/server/libraries"), Path.of(destinationFolder.absolutePathString(), "libraries"))
         Files.copy(Path.of(Architecture.Platforms.absolutePath, "quiltmc/server/quilt-server-launch.jar"), Path.of(destinationFolder.absolutePathString(), "server.jar"), StandardCopyOption.REPLACE_EXISTING)
     }
