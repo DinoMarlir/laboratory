@@ -84,7 +84,7 @@ class CreateCommand : CliktCommand(
             JsonDatabase.writeFile(db)
             if (terminal.promptYesOrNo("Do you want to configure your new server right now?", true)) {
                 server.static = terminal.promptYesOrNo("Do you want your new server to be static?", true)
-                server.automaticUpdates = terminal.promptYesOrNo("Do you want laboratory to keep your server up-to-date?", true)
+                server.automaticUpdates = terminal.promptYesOrNo("Do you want laboratory to keep your server up-to-date?", updates)
                 server.maxHeapMemory = terminal.awaitMemoryInput("How much heap space do you want to give your server?", "1024M")
                 server.port = terminal.prompt("Enter the port for your server", "25565")?.toIntOrNull() ?: 25565
             }
