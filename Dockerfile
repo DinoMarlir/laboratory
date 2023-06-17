@@ -2,7 +2,7 @@ FROM openjdk:17-jdk-buster
 RUN useradd -s /bin/sh -m chemicae
 RUN apt update
 RUN apt install sudo unzip bash curl git screen -y
-RUN curl -sS https://raw.githubusercontent.com/mooziii/laboratory/dev/chemicae/packages/autoinstall.sh | bash
+RUN curl -sS https://raw.githubusercontent.com/DinoMarlir/laboratory/dev/reborn/packages/autoinstall.sh | bash
 USER chemicae
 WORKDIR /home/chemicae
 RUN git clone https://github.com/mooziii/laboratory.git install
