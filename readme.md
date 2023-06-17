@@ -55,3 +55,6 @@ laboratory currently supports the following server softwares:
 - Mojang Mapped Paper Servers (not on paper downloads site as of now)
 
 This project was inspired by [pacmc](https://github.com/jakobkmar/pacmc) and [CloudNet](https://github.com/CloudNetService/CloudNet-v3)
+
+### TODO
+[ ] Windows installer (.msi), Linux Installers (e.g. .deb, .rpm,...) and macOS (.dmg)
