@@ -1,5 +1,5 @@
-# laboratory
-
+# laboratory - reborn **unofficial**
+Since laboratory was archived by [mooziii](mooziii), I created a fork to continue maintaining it.
 laboratory is the next generation [Minecraft](https://minecraft.net) server management tool fully written in [Kotlin](https://kotlinlang.org)
 
 ### Installation
