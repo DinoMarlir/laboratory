@@ -2,9 +2,9 @@ $InitPwd = $Pwd
 
 mkdir ~\AppData\Local\laboratory
 Set-Location ~\AppData\Local\laboratory
-git clone https://github.com/mooziii/laboratory install
+git clone https://github.com/DinoMarlir/laboratory install
 Set-Location install
-git checkout dev/chemicae
+git checkout dev/reborn
 ./gradlew installDist
 Copy-Item laboratory-cli\build\install\laboratory-cli\* .. -Recurse
 Set-Location ..
