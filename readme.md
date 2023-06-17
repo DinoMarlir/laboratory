@@ -57,4 +57,4 @@ laboratory currently supports the following server softwares:
 This project was inspired by [pacmc](https://github.com/jakobkmar/pacmc) and [CloudNet](https://github.com/CloudNetService/CloudNet-v3)
 
 ### TODO
-[ ] Windows installer (.msi), Linux Installers (e.g. .deb, .rpm,...) and macOS (.dmg)
+- [ ] Windows installer (.msi), Linux Installers (e.g. .deb, .rpm,...) and macOS (.dmg)
