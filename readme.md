@@ -8,7 +8,7 @@ laboratory is the next generation [Minecraft](https://minecraft.net) server mana
 
 Run this command:
 ```bash
-curl -sS https://raw.githubusercontent.com/mooziii/laboratory/dev/chemicae/packages/autoinstall.sh | bash
+curl -sS https://raw.githubusercontent.com/DinoMarlir/laboratory/dev/reborn/packages/autoinstall.sh | bash
 ```
 You will be prompted for your sudo password (user specific installation methods that don't require root access will come soon).
 
@@ -17,7 +17,7 @@ You will be prompted for your sudo password (user specific installation methods 
 Open a PowerShell terminal and run:
 ```powershell
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser # Required to run remote scripts
-irm https://raw.githubusercontent.com/mooziii/laboratory/dev/chemicae/packages/install-windows.ps1 | iex
+irm https://raw.githubusercontent.com/DinoMarlir/laboratory/dev/reborn/packages/install-windows.ps1 | iex
 ```
 
 **macOS:**
