@@ -58,3 +58,4 @@ This project was inspired by [pacmc](https://github.com/jakobkmar/pacmc) and [Cl
 
 ### TODO
 - [ ] Windows installer (.msi), Linux Installers (e.g. .deb, .rpm,...) and macOS (.dmg)
+- [ ] Scaling
