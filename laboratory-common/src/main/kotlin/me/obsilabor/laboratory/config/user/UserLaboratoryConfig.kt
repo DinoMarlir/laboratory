@@ -9,7 +9,7 @@ data class UserLaboratoryConfig(
     val folderForAutomaticBackups: String,
     val textEditor: String,
     val promptOnMajorUpdates: Boolean,
-    val updateBranch: String = "dev/chemicae",
+    val updateBranch: String = "dev/reborn",
     var acceptedEULA: Boolean = false
 ) {
     companion object {
