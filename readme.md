@@ -20,6 +20,16 @@ Set-ExecutionPolicy RemoteSigned -Scope CurrentUser # Required to run remote scr
 irm https://raw.githubusercontent.com/DinoMarlir/laboratory/dev/reborn/packages/install-windows.ps1 | iex
 ```
 
+**change from mooziii/laboratory**
+
+*Windows*
+```powershell
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser # Required to run remote scripts
+irm https://raw.githubusercontent.com/DinoMarlir/laboratory/dev/reborn/packages/change-repo.ps1 | iex
+```
+*Linux*
+coming soon
+
 **macOS:**
 Same as linux but didn't test it
 
