@@ -1,1 +1,1 @@
-https://repo.obsilabor.me/snapshots/me/obsilabor/laboratory-cli/${version}/laboratory-cli-${version}.zip
+https://github.com/DinoMarlir/laboratory/releases/download/${version}/laboratory-cli-jvm.zip
