@@ -16,7 +16,7 @@ class LaboratoryCommand: SimpleCommand {
             if (source.hasPermission("laboratory.use")) {
                 CoroutineScope(Dispatchers.IO).launch {
                     mainScope = this
-                    LaboratoryCommand().main(arrayOf("info"))
+                    LaboratoryCommand().main(invocation.arguments())
                 }
             }
         }
