@@ -28,7 +28,9 @@ Set-ExecutionPolicy RemoteSigned -Scope CurrentUser # Required to run remote scr
 irm https://raw.githubusercontent.com/DinoMarlir/laboratory/dev/reborn/packages/change-repo.ps1 | iex
 ```
 *Linux*
-coming soon
+```bash
+curl -sS https://raw.githubusercontent.com/DinoMarlir/laboratory/dev/reborn/packages/change-repo.sh | bash
+```
 
 **macOS:**
 Same as linux but didn't test it
