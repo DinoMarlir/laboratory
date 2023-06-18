@@ -2,7 +2,6 @@ package me.obsilabor.laboratory.commands
 
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.subcommands
-import com.github.ajalt.mordant.rendering.TextColors
 import com.github.ajalt.mordant.rendering.TextStyles
 
 class LaboratoryCommand : CliktCommand(

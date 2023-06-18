@@ -7,7 +7,7 @@ USER chemicae
 WORKDIR /home/chemicae
 RUN git clone https://github.com/mooziii/laboratory.git install
 WORKDIR /home/chemicae/install
-RUN git checkout dev/chemicae
+RUN git checkout dev/reborn
 RUN chmod +x gradlew
 RUN ./gradlew laboratory-server:shadowJar
 CMD ["java", "-jar", "laboratory-server/build/libs/laboratory-server-jvm-all.jar"]
